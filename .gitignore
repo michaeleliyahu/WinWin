@@ -1,0 +1,42 @@
+# ----- frontend -----
+
+# node modules
+job-platform-frontend/node_modules/
+
+# build/output folders
+job-platform-frontend/dist/
+job-platform-frontend/build/
+
+# environment files
+job-platform-frontend/.env
+job-platform-frontend/.env.local
+job-platform-frontend/.env.*.local
+
+# vscode settings
+.vscode/
+
+# npm logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ----- backend -----
+
+# DotNet build outputs
+job-platform-backend/bin/
+job-platform-backend/obj/
+
+# user-specific files
+job-platform-backend/*.user
+job-platform-backend/*.suo
+job-platform-backend/*.userosscache
+job-platform-backend/*.sln.docstates
+
+# environment files
+job-platform-backend/.env
+
+# Rider IDE files
+.idea/
+
+# logs
+*.log
