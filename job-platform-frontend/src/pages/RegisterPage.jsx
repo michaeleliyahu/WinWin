@@ -17,7 +17,7 @@ export default function RegisterPage() {
     try {
       const data = await registerUser({ firstName, lastName, email, password });
       localStorage.setItem("token", data.token);
-      navigate("/");
+      navigate("/role-selection");
     } catch (err) {
       setError("Registration failed. Please try again.");
     }
