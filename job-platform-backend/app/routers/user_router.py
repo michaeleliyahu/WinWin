@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException, Depends
-from app.schemas.user_schema import UserCreate, UserLogin, UserOut
+from app.schemas.user_schema import UserCreate, UserLogin, UserOut, TokenUserResponse
 from app.services import user_service
 from fastapi.responses import JSONResponse
 
@@ -12,10 +12,10 @@ async def register(user: UserCreate):
     return new_user
 
 
-@router.post("/login")
+@router.post("/login", response_model=TokenUserResponse)
 async def login(user: UserLogin):
-    token = await user_service.authenticate_user(user)
-    return token
+    token_data = await user_service.authenticate_user(user)
+    return token_data
 
 
 @router.put("/{user_id}")

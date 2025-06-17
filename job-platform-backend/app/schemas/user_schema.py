@@ -22,3 +22,9 @@ class UserOut(BaseModel):
     authProvider: str
     googleId: Optional[str]
     companyId: Optional[str]
+
+
+class TokenUserResponse(BaseModel):
+    access_token: str
+    token_type: str
+    user: UserOut

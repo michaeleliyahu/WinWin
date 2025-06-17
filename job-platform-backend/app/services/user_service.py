@@ -1,6 +1,6 @@
 from app.db import db
 from app.auth.jwt_handler import hash_password, verify_password, create_access_token
-from app.schemas.user_schema import UserCreate, UserLogin
+from app.schemas.user_schema import UserCreate, UserLogin, UserOut
 from fastapi import HTTPException
 from bson import ObjectId
 
@@ -31,7 +31,11 @@ async def authenticate_user(user: UserLogin):
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
     token = create_access_token({"sub": str(db_user["_id"])})
-    return {"access_token": token, "token_type": "bearer"}
+
+    db_user["_id"] = str(db_user["_id"])
+    user_data = UserOut(**db_user)
+
+    return {"access_token": token, "token_type": "bearer", "user": user_data}
 
 
 async def get_user_by_id(user_id: str):
