@@ -22,7 +22,18 @@ async def create_user(user: UserCreate):
     result = await users_collection.insert_one(user_dict)
     user_dict["_id"] = str(result.inserted_id)
 
-    return user_dict
+    # מחיקה של הסיסמה מהתגובה
+    user_dict.pop("password")
+
+    user_data = UserOut(**user_dict)
+
+    token = create_access_token({"sub": user_dict["_id"]})
+
+    return {
+        "access_token": token,
+        "token_type": "bearer",
+        "user": user_data
+    }
 
 
 async def authenticate_user(user: UserLogin):
@@ -33,9 +44,22 @@ async def authenticate_user(user: UserLogin):
     token = create_access_token({"sub": str(db_user["_id"])})
 
     db_user["_id"] = str(db_user["_id"])
+
+    # שליפת החברה והוספתה לאובייקט
+    company = None
+    if db_user.get("companyId"):
+        company_doc = await companies_collection.find_one({"_id": ObjectId(db_user["companyId"])})
+        if company_doc:
+            company_doc["_id"] = str(company_doc["_id"])
+            db_user["company"] = company_doc
+
     user_data = UserOut(**db_user)
 
-    return {"access_token": token, "token_type": "bearer", "user": user_data}
+    return {
+        "access_token": token,
+        "token_type": "bearer",
+        "user": user_data
+    }
 
 
 async def get_user_by_id(user_id: str):

@@ -6,10 +6,9 @@ from fastapi.responses import JSONResponse
 router = APIRouter(prefix="/users", tags=["users"])
 
 
-@router.post("/register", response_model=UserOut)
+@router.post("/register", response_model=TokenUserResponse)
 async def register(user: UserCreate):
-    new_user = await user_service.create_user(user)
-    return new_user
+    return await user_service.create_user(user)
 
 
 @router.post("/login", response_model=TokenUserResponse)

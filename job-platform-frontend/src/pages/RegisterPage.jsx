@@ -16,10 +16,13 @@ export default function RegisterPage() {
 
     try {
       const data = await registerUser({ firstName, lastName, email, password });
-      localStorage.setItem("token", data.token);
+      localStorage.setItem("token", data.access_token);
+      localStorage.setItem("user", JSON.stringify(data.user));
+      localStorage.setItem("token_type", data.token_type);
       navigate("/role-selection");
     } catch (err) {
-      setError("Registration failed. Please try again.");
+      console.error("Registration error:", err.message);
+      setError(err.message); // ⬅ מציג את השגיאה מהשרת למשתמש
     }
   };
 

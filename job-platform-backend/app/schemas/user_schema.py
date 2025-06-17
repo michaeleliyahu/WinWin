@@ -1,5 +1,6 @@
 from pydantic import BaseModel, EmailStr, Field
 from typing import Optional
+from .company_schema import CompanyOut
 
 
 class UserCreate(BaseModel):
@@ -21,7 +22,7 @@ class UserOut(BaseModel):
     email: EmailStr
     authProvider: str
     googleId: Optional[str]
-    companyId: Optional[str]
+    company: Optional[CompanyOut] = None  # 👈 אובייקט חברה מקונן
 
 
 class TokenUserResponse(BaseModel):

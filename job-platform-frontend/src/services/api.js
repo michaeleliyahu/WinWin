@@ -16,6 +16,18 @@ export const registerUser = async (userData) => {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(userData),
   });
-  if (!res.ok) throw new Error("Registration failed");
-  return res.json();
+
+  const text = await res.text();
+
+  if (!res.ok) {
+    let detail;
+    try {
+      detail = JSON.parse(text).detail; // ⬅ תופס את הודעת השגיאה
+    } catch {
+      detail = text;
+    }
+    throw new Error(detail); // ⬅ זורק את ההודעה האמיתית
+  }
+
+  return JSON.parse(text);
 };
