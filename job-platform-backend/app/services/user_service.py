@@ -20,7 +20,8 @@ async def create_user(user: UserCreate):
     user_dict["companyId"] = None
 
     result = await users_collection.insert_one(user_dict)
-    user_dict["_id"] = result.inserted_id
+    user_dict["_id"] = str(result.inserted_id)
+
     return user_dict
 
 
