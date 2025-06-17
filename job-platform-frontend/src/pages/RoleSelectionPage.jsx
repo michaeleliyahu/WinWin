@@ -9,7 +9,7 @@ export default function RoleSelectionPage() {
     if (role === "job-seeker") {
       navigate("/job-seeker");
     } else if (role === "company-employee") {
-      navigate("/company-employee");
+      navigate("/company");
     }
   };
 

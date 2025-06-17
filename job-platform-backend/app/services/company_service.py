@@ -3,7 +3,7 @@ from app.schemas.company_schema import CompanyCreate
 from fastapi import HTTPException
 from bson import ObjectId
 
-companies_collection = db["companies"]
+companies_collection = db["company"]
 
 
 async def create_company(company: CompanyCreate):
@@ -11,9 +11,11 @@ async def create_company(company: CompanyCreate):
     if existing:
         raise HTTPException(status_code=400, detail="Company already exists")
 
+    print("Data received to insert:", company.dict())  # <-- כאן
+
     result = await companies_collection.insert_one(company.dict())
     company_data = company.dict()
-    company_data["_id"] = result.inserted_id
+    company_data["_id"] = str(result.inserted_id)  # המרה כאן!
     return company_data
 
 

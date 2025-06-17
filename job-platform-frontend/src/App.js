@@ -3,6 +3,7 @@ import HeaderBar from "./components/HeaderBar";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import RoleSelectionPage from "./pages/RoleSelectionPage"; // הוספה
+import CompanyPage from "./pages/CompanyPage";
 
 function App() {
   return (
@@ -13,6 +14,8 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/role-selection" element={<RoleSelectionPage />} />
+        <Route path="/company" element={<CompanyPage />} />
+
       </Routes>
     </>
   );
