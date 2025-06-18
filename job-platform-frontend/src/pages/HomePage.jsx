@@ -1,13 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 import EmployerCompany from "../components/EmployerCompany";
 import CompanyPage from "./CompanyPage";
+import ApplicationPage from "./ApplicationPage";
 
 export default function HomePage() {
+  const [showApplications, setShowApplications] = useState(false);
+
+  const toggleView = () => setShowApplications((prev) => !prev);
+
   return (
     <div style={styles.container}>
       <h1>דף הבית</h1>
-      <EmployerCompany />
-      <CompanyPage />
+
+      <div onClick={toggleView} style={{ cursor: "pointer" }}>
+        <EmployerCompany />
+      </div>
+
+      {showApplications ? <ApplicationPage /> : <CompanyPage />}
     </div>
   );
 }

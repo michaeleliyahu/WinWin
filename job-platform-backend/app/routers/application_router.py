@@ -3,6 +3,8 @@ from app.schemas.application_schema import ApplicationCreate, ApplicationOut
 from app.services import application_service
 from fastapi.responses import JSONResponse
 from typing import List
+from fastapi import APIRouter, Query
+from fastapi import Path
 
 router = APIRouter(prefix="/applications", tags=["applications"])
 
@@ -13,15 +15,17 @@ async def create_application(app: ApplicationCreate):
     return new_app
 
 
-@router.get("/", response_model=List[ApplicationOut])
-async def get_applications():
-    return await application_service.get_all_applications()
+@router.get("/by-company", response_model=List[ApplicationOut])
+async def get_applications_by_company(companyId: str = Query(...)):
+    return await application_service.get_applications_by_company(companyId)
 
 
-@router.put("/{application_id}/submit")
-async def mark_submitted(application_id: str):
-    await application_service.mark_as_submitted(application_id)
-    return JSONResponse(content={"message": "Application marked as submitted"})
+@router.patch("/{application_id}/submit")
+async def submit_application(application_id: str = Path(...)):
+    updated_app = await application_service.update_application_submitted(application_id)
+    if not updated_app:
+        raise HTTPException(status_code=404, detail="Application not found")
+    return {"message": "Application submitted successfully", "application": updated_app}
 
 
 @router.delete("/{application_id}")
