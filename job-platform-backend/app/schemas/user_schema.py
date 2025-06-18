@@ -21,7 +21,8 @@ class UserOut(BaseModel):
     lastName: str
     email: EmailStr
     authProvider: str
-    googleId: Optional[str]
+    googleId: Optional[str] = None
+    companyId: Optional[str] = None
     company: Optional[CompanyOut] = None  # 👈 אובייקט חברה מקונן
 
 

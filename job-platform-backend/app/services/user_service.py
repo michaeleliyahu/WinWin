@@ -5,6 +5,7 @@ from fastapi import HTTPException
 from bson import ObjectId
 
 users_collection = db["users"]
+companies_collection = db["company"]
 
 
 async def create_user(user: UserCreate):

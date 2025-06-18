@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { createCompany, updateCompany, deleteCompany } from "../services/companyService";
+import { assignCompanyToUser } from "../services/userService";
 
 export default function CompanyPage() {
   const [user, setUser] = useState(null);
@@ -21,9 +22,13 @@ export default function CompanyPage() {
 const handleCreate = async () => {
   try {
     const newCompany = await createCompany({ name, description });
+    await assignCompanyToUser(user._id, newCompany._id);
+
+    const updatedUser = { ...user, company: newCompany };
     setCompany(newCompany);
-    setUser((prev) => ({ ...prev, company: newCompany }));
-    localStorage.setItem("user", JSON.stringify({ ...user, company: newCompany }));
+    setUser(updatedUser);
+    localStorage.setItem("user", JSON.stringify(updatedUser));
+
     setName("");
     setDescription("");
   } catch (error) {
@@ -32,13 +37,9 @@ const handleCreate = async () => {
 };
 
   const handleUpdate = async () => {
-    // שלח PUT לשרת לעדכן את החברה
-    // עדכן את החברה במצב
   };
 
   const handleDelete = async () => {
-    // שלח DELETE לשרת למחוק את החברה
-    // הסר אותה מהמצב ומהמשתמש
   };
 
   if (!user) return <p>טוען...</p>;
