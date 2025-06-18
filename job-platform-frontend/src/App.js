@@ -9,7 +9,7 @@ import ApplicationPage from "./pages/ApplicationPage";
 
 function App() {
   return (
-    <>
+    <div className="app-container">
       <HeaderBar />
       <Routes>
         <Route path="/" element={<Navigate to="/HomePage" replace />} />
@@ -20,8 +20,9 @@ function App() {
         <Route path="/ApplicationPage" element={<ApplicationPage />} />
         <Route path="/submit/:id" element={<CandidateApplication />} />
       </Routes>
-    </>
+    </div>
   );
 }
+
 
 export default App;

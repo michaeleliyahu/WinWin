@@ -9,7 +9,6 @@ import {
   Select,
   InputLabel,
   FormControl,
-  Box,
   Stack,
 } from "@mui/material";
 import { getAllCompanies, createCompany, updateCompany } from "../services/companyService";

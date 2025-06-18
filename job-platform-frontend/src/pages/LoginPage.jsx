@@ -1,14 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../services/userService";
-import {
-  Box,
-  TextField,
-  Button,
-  Typography,
-  Alert,
-  Paper,
-} from "@mui/material";
+import "../styles/Login.css"; // Your CSS
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -24,63 +17,73 @@ export default function LoginPage() {
       const data = await loginUser({ email, password });
       localStorage.setItem("token", data.access_token);
       localStorage.setItem("user", JSON.stringify(data.user));
-      navigate("/company");
+      navigate("/HomePage");
     } catch (err) {
-      setError("ההתחברות נכשלה. בדוק את הפרטים ונסה שוב.");
+      setError("Login failed. Please check your credentials and try again.");
     }
   };
 
   return (
-    <Box
-      sx={{
-        maxWidth: 400,
-        margin: "3rem auto",
-        padding: 4,
-        direction: "rtl",
-      }}
-    >
-      <Paper elevation={3} sx={{ p: 4 }}>
-        <Typography variant="h5" mb={3} align="center">
-          התחברות
-        </Typography>
+    <section className="container forms">
+      <div className="form login">
+        <div className="form-content">
+          <header>Login</header>
+          <form onSubmit={handleSubmit}>
+            <div className="field input-field">
+              <input
+                type="email"
+                placeholder="Email"
+                className="input"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
 
-        {error && (
-          <Alert severity="error" sx={{ mb: 2 }}>
-            {error}
-          </Alert>
-        )}
+            <div className="field input-field">
+              <input
+                type="password"
+                placeholder="Password"
+                className="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+              <i className="bx bx-hide eye-icon"></i>
+            </div>
 
-        <form onSubmit={handleSubmit}>
-          <TextField
-            label="אימייל"
-            type="email"
-            fullWidth
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            margin="normal"
-          />
+            {error && <p style={{ color: "red", marginTop: "10px" }}>{error}</p>}
 
-          <TextField
-            label="סיסמה"
-            type="password"
-            fullWidth
-            required
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            margin="normal"
-          />
+            <div className="form-link">
+              <a href="#" className="forgot-pass">Forgot password?</a>
+            </div>
 
-          <Button
-            type="submit"
-            variant="contained"
-            fullWidth
-            sx={{ mt: 3 }}
-          >
-            התחבר
-          </Button>
-        </form>
-      </Paper>
-    </Box>
+            <div className="field button-field">
+              <button type="submit">Login</button>
+            </div>
+          </form>
+
+          <div className="form-link">
+            <span>Don't have an account? <a href="/register" className="link signup-link">Signup</a></span>
+          </div>
+        </div>
+
+        <div className="line"></div>
+
+        <div className="media-options">
+          <button type="button" className="field facebook">
+            <i className="bx bxl-facebook facebook-icon"></i>
+            <span>Sign up with Facebook</span>
+          </button>
+        </div>
+
+        <div className="media-options">
+          <button type="button" className="field google">
+            <img src="/images/google.png" alt="Google" className="google-img" />
+            <span>Sign up with Google</span>
+          </button>
+        </div>
+      </div>
+    </section>
   );
 }
