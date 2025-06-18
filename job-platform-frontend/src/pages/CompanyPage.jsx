@@ -1,107 +1,49 @@
-import React, { useState, useEffect } from "react";
-import { createCompany, updateCompany, deleteCompany } from "../services/companyService";
-import { assignCompanyToUser } from "../services/userService";
+import React, { useEffect, useState } from "react";
+import { getAllCompanies } from "../services/companyService";
+import CompanyCard from "../components/CompanyCard";
+import { Box, Typography } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 export default function CompanyPage() {
-  const [user, setUser] = useState(null);
-  const [company, setCompany] = useState(null);
-  const [editing, setEditing] = useState(false);
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
+  const [companies, setCompanies] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem("user"));
-    setUser(storedUser);
-    setCompany(storedUser?.company || null);
-    if (storedUser?.company) {
-      setName(storedUser.company.name);
-      setDescription(storedUser.company.description || "");
-    }
+    const fetchCompanies = async () => {
+      try {
+        const all = await getAllCompanies();
+        setCompanies(all);
+      } catch (err) {
+        console.error("שגיאה בשליפת חברות", err);
+      }
+    };
+    fetchCompanies();
   }, []);
 
-const handleCreate = async () => {
-  try {
-    const newCompany = await createCompany({ name, description });
-    await assignCompanyToUser(user._id, newCompany._id);
-
-    const updatedUser = { ...user, company: newCompany };
-    setCompany(newCompany);
-    setUser(updatedUser);
-    localStorage.setItem("user", JSON.stringify(updatedUser));
-
-    setName("");
-    setDescription("");
-  } catch (error) {
-    alert("שגיאה ביצירת חברה: " + error.message);
-  }
-};
-
-  const handleUpdate = async () => {
+  const handleCardClick = (company) => {
+    // // נניח שיצרנו דף פרטי חברה עם נתיב /company/:id
+    // navigate(`/company/${company._id}`);
   };
-
-  const handleDelete = async () => {
-  };
-
-  if (!user) return <p>טוען...</p>;
 
   return (
-    <div style={styles.container}>
-      <h2>ניהול חברה</h2>
+    <Box sx={{ maxWidth: 900, margin: "0 auto", padding: 3, direction: "rtl" }}>
+      <Typography variant="h4" mb={3} align="center">
+        רשימת חברות
+      </Typography>
 
-      {company ? (
-        editing ? (
-          <>
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="שם חברה"
-              style={styles.input}
-            />
-            <textarea
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="תיאור"
-              style={styles.textarea}
-            />
-            <button onClick={handleUpdate} style={styles.button}>שמור</button>
-            <button onClick={() => setEditing(false)} style={styles.buttonCancel}>ביטול</button>
-          </>
-        ) : (
-          <>
-            <p><strong>שם:</strong> {company.name}</p>
-            <p><strong>תיאור:</strong> {company.description}</p>
-            <button onClick={() => setEditing(true)} style={styles.button}>עדכן</button>
-            <button onClick={handleDelete} style={styles.buttonDanger}>מחק</button>
-          </>
-        )
-      ) : (
-        <>
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="שם חברה"
-            style={styles.input}
-          />
-          <textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="תיאור"
-            style={styles.textarea}
-          />
-          <button onClick={handleCreate} style={styles.button}>צור חברה</button>
-        </>
-      )}
-    </div>
+      {companies.length === 0 && <Typography>טוען חברות...</Typography>}
+
+      <Box
+        sx={{
+          display: "flex",
+          flexWrap: "wrap",
+          justifyContent: "center",
+        }}
+      >
+        {companies.map((company) => (
+          <CompanyCard key={company._id} company={company} onClick={handleCardClick} />
+        ))}
+      </Box>
+    </Box>
   );
 }
-
-const styles = {
-  container: { padding: "2rem", maxWidth: "600px", margin: "0 auto" },
-  input: { padding: "0.5rem", width: "100%", marginBottom: "1rem" },
-  textarea: { padding: "0.5rem", width: "100%", minHeight: "80px", marginBottom: "1rem" },
-  button: { padding: "0.5rem", background: "#004aad", color: "white", border: "none", marginRight: "0.5rem" },
-  buttonCancel: { padding: "0.5rem", background: "#888", color: "white", border: "none" },
-  buttonDanger: { padding: "0.5rem", background: "red", color: "white", border: "none", marginTop: "1rem" }
-};

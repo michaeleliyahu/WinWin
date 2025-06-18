@@ -14,10 +14,9 @@ export default function LoginPage() {
 
     try {
       const data = await loginUser({ email, password });
-        console.log("Login response:", data); // 👈 מדפיס את כל מה שחזר מהשרת
       localStorage.setItem("token", data.access_token);
       localStorage.setItem("user", JSON.stringify(data.user));
-      navigate("/role-selection");
+      navigate("/company");
     } catch (err) {
       setError("Login failed. Please check your credentials.");
     }

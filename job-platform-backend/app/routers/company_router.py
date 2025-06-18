@@ -3,6 +3,8 @@ from app.schemas.company_schema import CompanyCreate, CompanyOut
 from app.services import company_service
 from fastapi.responses import JSONResponse
 from typing import List
+from fastapi import Body
+from fastapi import Path
 
 router = APIRouter(prefix="/companies", tags=["companies"])
 
@@ -22,3 +24,10 @@ async def get_companies():
 async def delete_company(company_id: str):
     await company_service.delete_company(company_id)
     return JSONResponse(content={"message": "Company deleted successfully"})
+
+
+@router.put("/{company_id}")
+async def update_company(company_id: str = Path(...), data: dict = None):
+    updated = await company_service.update_company(company_id, data)
+    updated["_id"] = str(updated["_id"])
+    return updated

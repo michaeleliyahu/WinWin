@@ -2,6 +2,7 @@ from fastapi import APIRouter, HTTPException, Depends
 from app.schemas.user_schema import UserCreate, UserLogin, UserOut, TokenUserResponse
 from app.services import user_service
 from fastapi.responses import JSONResponse
+from fastapi import Path
 
 router = APIRouter(prefix="/users", tags=["users"])
 

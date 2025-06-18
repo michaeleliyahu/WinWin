@@ -17,15 +17,15 @@ export const createCompany = async (companyData) => {
   return res.json();
 };
 
-export const updateCompany = async (companyId, companyData) => {
+export const updateCompany = async (companyId, data) => {
   const token = localStorage.getItem("token");
   const res = await fetch(`${API_URL}/companies/${companyId}`, {
     method: "PUT",
-    headers: { 
+    headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`
     },
-    body: JSON.stringify(companyData),
+    body: JSON.stringify(data),
   });
   if (!res.ok) {
     const errorData = await res.json();
@@ -33,6 +33,7 @@ export const updateCompany = async (companyId, companyData) => {
   }
   return res.json();
 };
+
 
 export const deleteCompany = async (companyId) => {
   const token = localStorage.getItem("token");
@@ -47,4 +48,10 @@ export const deleteCompany = async (companyId) => {
     throw new Error(errorData.detail || "Failed to delete company");
   }
   return true;
+};
+
+export const getAllCompanies = async () => {
+  const res = await fetch(`${API_URL}/companies`);
+  if (!res.ok) throw new Error("Failed to fetch companies");
+  return res.json();
 };
