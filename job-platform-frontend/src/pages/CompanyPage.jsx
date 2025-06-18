@@ -21,9 +21,9 @@ export default function CompanyPage() {
   }, []);
 
   const handleCardClick = (company) => {
-    // // נניח שיצרנו דף פרטי חברה עם נתיב /company/:id
-    // navigate(`/company/${company._id}`);
+    navigate(`/submit/${company._id}`, { state: { company } });
   };
+
 
   return (
     <Box sx={{ maxWidth: 900, margin: "0 auto", padding: 3, direction: "rtl" }}>

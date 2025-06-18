@@ -43,3 +43,8 @@ async def update_company(company_id: str, data: dict):
     return await companies_collection.find_one({"_id": ObjectId(company_id)})
 
 
+async def get_company_by_id(company_id: str):
+    company = await companies_collection.find_one({"_id": ObjectId(company_id)})
+    if company:
+        company["_id"] = str(company["_id"])
+    return company

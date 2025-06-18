@@ -31,3 +31,10 @@ async def update_company(company_id: str = Path(...), data: dict = None):
     updated = await company_service.update_company(company_id, data)
     updated["_id"] = str(updated["_id"])
     return updated
+
+@router.get("/{company_id}", response_model=CompanyOut)
+async def get_company(company_id: str):
+    company = await company_service.get_company_by_id(company_id)
+    if not company:
+        return JSONResponse(status_code=404, content={"detail": "Company not found"})
+    return company

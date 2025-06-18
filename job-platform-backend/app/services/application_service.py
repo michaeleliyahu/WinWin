@@ -6,12 +6,15 @@ from bson import ObjectId
 applications_collection = db["applications"]
 
 
-async def create_application(app_data: ApplicationCreate):
-    app_dict = app_data.dict()
+async def create_application(app_create: ApplicationCreate):
+    app_dict = app_create.dict()
     app_dict["submitted"] = False
     result = await applications_collection.insert_one(app_dict)
-    app_dict["_id"] = result.inserted_id
-    return app_dict
+    new_app = await applications_collection.find_one({"_id": result.inserted_id})
+
+    new_app["_id"] = str(new_app["_id"])
+
+    return new_app
 
 
 async def get_all_applications():

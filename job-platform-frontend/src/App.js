@@ -4,6 +4,7 @@ import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import CompanyPage from "./pages/CompanyPage";
 import HomePage from "./pages/HomePage";
+import CandidateApplication from "./components/CandidateApplication";
 
 function App() {
   return (
@@ -15,7 +16,7 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/CompanyPage" element={<CompanyPage />} />
-
+        <Route path="/submit/:id" element={<CandidateApplication />} />
       </Routes>
     </>
   );

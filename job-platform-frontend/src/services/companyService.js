@@ -55,3 +55,12 @@ export const getAllCompanies = async () => {
   if (!res.ok) throw new Error("Failed to fetch companies");
   return res.json();
 };
+
+export const getCompanyById = async (companyId) => {
+  const res = await fetch(`${API_URL}/companies/${companyId}`);
+  if (!res.ok) {
+    const errorData = await res.json();
+    throw new Error(errorData.detail || "Failed to fetch company");
+  }
+  return res.json();
+};
