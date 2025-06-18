@@ -31,3 +31,22 @@ export const registerUser = async (userData) => {
 
   return JSON.parse(text);
 };
+
+export const assignCompanyToUser = async (userId, companyId) => {
+  const token = localStorage.getItem("token");
+  const res = await fetch(`${API_URL}/users/${userId}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`
+    },
+    body: JSON.stringify({ companyId }), 
+  });
+
+  if (!res.ok) {
+    const errorData = await res.json();
+    throw new Error(errorData.detail || "Failed to assign company");
+  }
+
+  return res.json();
+};
