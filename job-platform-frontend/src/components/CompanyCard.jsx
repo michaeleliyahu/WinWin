@@ -1,9 +1,9 @@
-import React from "react";
 import { Card, CardContent, Typography, CardActionArea } from "@mui/material";
+import "../styles/companyCard.css"; 
 
 export default function CompanyCard({ company, onClick }) {
   return (
-    <Card sx={{ maxWidth: 345, margin: "1rem" }}>
+    <Card className="custom-company-card">
       <CardActionArea onClick={() => onClick(company)}>
         <CardContent>
           <Typography variant="h6" gutterBottom>

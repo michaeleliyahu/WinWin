@@ -1,0 +1,25 @@
+.companies-row {
+  align-content: center;
+  align-items: center;
+  display: flex;
+  flex: none;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  gap: 10px;
+  height: min-content;
+  justify-content: center;
+  max-width: 100%;
+  overflow: visible;
+  padding: 40px 0;
+  position: relative;
+  width: 960px;
+}
+
+/* תגובת מדיה למובייל - אפשר לשנות ל-wrap ולמספר עמודות קטן */
+@media (max-width: 600px) {
+  .companies-row {
+    flex-wrap: wrap;
+    width: 100%;
+    justify-content: center;
+  }
+}
