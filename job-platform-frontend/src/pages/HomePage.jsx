@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import EmployerCompany from "../components/EmployerCompany";
 import CompanyPage from "./CompanyPage";
 import ApplicationPage from "./ApplicationPage";
-import "../styles/homePage.css"; // 👉 ייבוא CSS לעיצוב כמו Framer
+import PillButton from "../components/PillButton";
+import "../styles/homePage.css";
 
 export default function HomePage() {
   const [showApplications, setShowApplications] = useState(false);
-
   const toggleView = () => setShowApplications((prev) => !prev);
 
   return (
@@ -17,12 +17,8 @@ export default function HomePage() {
       </div>
 
       <div className="framer-style-buttons">
-        <div className="nav-pill dark-pill">
-          <p>Add Company</p>
-        </div>
-        <div className="nav-pill light-pill" onClick={toggleView}>
-          <p>View Companies</p>
-        </div>
+        <PillButton label="Add Company" variant="dark" />
+        <PillButton label="View Companies" onClick={toggleView} />
       </div>
 
       <div className="employer-box" onClick={toggleView}>
