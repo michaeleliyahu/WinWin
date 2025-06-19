@@ -6,10 +6,11 @@ import CompanyPage from "./pages/CompanyPage";
 import HomePage from "./pages/HomePage";
 import CandidateApplication from "./components/CandidateApplication";
 import ApplicationPage from "./pages/ApplicationPage";
+import AppLayout from "./components/AppLayout";
 
 function App() {
   return (
-    <div className="app-container">
+    <AppLayout>
       <HeaderBar />
       <Routes>
         <Route path="/" element={<Navigate to="/HomePage" replace />} />
@@ -20,7 +21,7 @@ function App() {
         <Route path="/ApplicationPage" element={<ApplicationPage />} />
         <Route path="/submit/:id" element={<CandidateApplication />} />
       </Routes>
-    </div>
+    </AppLayout>
   );
 }
 

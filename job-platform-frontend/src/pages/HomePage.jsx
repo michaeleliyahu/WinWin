@@ -1,13 +1,9 @@
-import React, { useState } from "react";
-import EmployerCompany from "../components/EmployerCompany";
-import CompanyPage from "./CompanyPage";
-import ApplicationPage from "./ApplicationPage";
+import { useNavigate } from "react-router-dom";
 import PillButton from "../components/PillButton";
 import "../styles/homePage.css";
 
 export default function HomePage() {
-  const [showApplications, setShowApplications] = useState(false);
-  const toggleView = () => setShowApplications((prev) => !prev);
+  const navigate = useNavigate();
 
   return (
     <div className="homepage-container">
@@ -18,14 +14,8 @@ export default function HomePage() {
 
       <div className="framer-style-buttons">
         <PillButton label="Add Company" variant="dark" />
-        <PillButton label="View Companies" onClick={toggleView} />
+        <PillButton label="View Companies" onClick={() => navigate("/CompanyPage")} />
       </div>
-
-      <div className="employer-box" onClick={toggleView}>
-        <EmployerCompany />
-      </div>
-
-      {showApplications ? <ApplicationPage /> : <CompanyPage />}
     </div>
   );
 }

@@ -3,7 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 import {
   Box,
   Typography,
-  Button,
   IconButton,
   Drawer,
   List,
@@ -15,7 +14,9 @@ import {
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 import { useTheme } from "@mui/material/styles";
-import "../styles/headerBar.css"; 
+
+import PillButton from "./PillButton"; // נניח שזה הנתיב הנכון אל הקומפוננטה
+import "../styles/headerBar.css";
 
 export default function HeaderBar() {
   const navigate = useNavigate();
@@ -33,28 +34,43 @@ export default function HeaderBar() {
     navigate("/login");
   };
 
+  // עכשיו יש רק קישור אחד: About
   const navLinks = [
-    { label: "Browse", path: "/browse" },
-    { label: "Add Company", path: "/add-company" },
     { label: "About", path: "/about" },
   ];
 
   const renderNavLinks = () =>
     navLinks.map((link) => (
-      <div className="nav-pill" key={link.path}>
-        <Link to={link.path} onClick={() => setDrawerOpen(false)}>
-          {link.label}
-        </Link>
-      </div>
+      <PillButton
+        key={link.path}
+        label={link.label}
+        variant="light"
+        onClick={() => {
+          navigate(link.path);
+          setDrawerOpen(false);
+        }}
+      />
     ));
 
   return (
     <>
-      <Box className="header-bar">
+      <Box className="header-bar" sx={{ display: "flex", alignItems: "center", p: 1 }}>
+        {/* הלוגו */}
         <Typography
           component={Link}
           to="/"
           className="logo"
+          sx={{
+            fontWeight: 700,
+            fontSize: 32,
+            fontFamily: '"Inter Variable", "Inter Placeholder", sans-serif',
+            cursor: "pointer",
+            userSelect: "none",
+            flexShrink: 0,
+            mr: 3,
+            color: "black",
+            textDecoration: "none",
+          }}
         >
           CompanyHub®
         </Typography>
@@ -64,25 +80,29 @@ export default function HeaderBar() {
             <MenuIcon />
           </IconButton>
         ) : (
-          <Box className="nav-links">
+          <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
             {renderNavLinks()}
+
             {token && user ? (
               <>
-                <Typography className="welcome-text">
+                <Typography
+                  sx={{
+                    fontWeight: 500,
+                    fontSize: 14,
+                    fontFamily: '"Inter Variable", "Inter Placeholder", sans-serif',
+                    userSelect: "none",
+                    ml: 3,
+                  }}
+                >
                   Hello, {user.firstName}
                 </Typography>
-                <Button onClick={handleLogout} className="auth-button">
-                  Logout
-                </Button>
+
+                <PillButton label="Logout" variant="dark" onClick={handleLogout} />
               </>
             ) : (
               <>
-                <Button component={Link} to="/login" className="auth-button">
-                  Login
-                </Button>
-                <Button component={Link} to="/register" className="auth-button">
-                  Register
-                </Button>
+                <PillButton label="Login" variant="light" onClick={() => navigate("/login")} />
+                <PillButton label="Register" variant="dark" onClick={() => navigate("/register")} />
               </>
             )}
           </Box>
@@ -103,9 +123,10 @@ export default function HeaderBar() {
               <ListItem
                 button
                 key={link.path}
-                component={Link}
-                to={link.path}
-                onClick={() => setDrawerOpen(false)}
+                onClick={() => {
+                  navigate(link.path);
+                  setDrawerOpen(false);
+                }}
               >
                 <ListItemText primary={link.label} />
               </ListItem>
@@ -122,14 +143,21 @@ export default function HeaderBar() {
               </>
             ) : (
               <>
-                <ListItem button component={Link} to="/login" onClick={() => setDrawerOpen(false)}>
+                <ListItem
+                  button
+                  onClick={() => {
+                    navigate("/login");
+                    setDrawerOpen(false);
+                  }}
+                >
                   <ListItemText primary="Login" />
                 </ListItem>
                 <ListItem
                   button
-                  component={Link}
-                  to="/register"
-                  onClick={() => setDrawerOpen(false)}
+                  onClick={() => {
+                    navigate("/register");
+                    setDrawerOpen(false);
+                  }}
                 >
                   <ListItemText primary="Register" />
                 </ListItem>
