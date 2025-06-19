@@ -56,7 +56,7 @@ export default function ApplicationPage() {
         jobLink: "",
         resumeFile: null,
       });
-      navigate("/thank-you"); // למשל, ניווט לעמוד תודה אחרי הגשה
+      navigate("/thank-you"); 
     } catch (error) {
       alert("Failed to submit application. Please try again.");
       console.error(error);

@@ -7,6 +7,7 @@ import HomePage from "./pages/HomePage";
 import CandidateApplication from "./components/CandidateApplication";
 import ApplicationPage from "./pages/ApplicationPage";
 import AppLayout from "./components/AppLayout";
+import ThankYouPage from "./pages/ThankYouPage.jsx";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/CompanyPage" element={<CompanyPage />} />
+        <Route path="/thank-you" element={<ThankYouPage />} />
         <Route path="/submit/:id" element={<ApplicationPage />} />
       </Routes>
     </AppLayout>
