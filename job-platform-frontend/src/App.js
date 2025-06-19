@@ -18,8 +18,7 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/CompanyPage" element={<CompanyPage />} />
-        <Route path="/ApplicationPage" element={<ApplicationPage />} />
-        <Route path="/submit/:id" element={<CandidateApplication />} />
+        <Route path="/submit/:id" element={<ApplicationPage />} />
       </Routes>
     </AppLayout>
   );

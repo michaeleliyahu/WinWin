@@ -1,17 +1,38 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Form, UploadFile, File, Query, Path
+from fastapi.responses import JSONResponse
+from typing import Annotated, List
+from pydantic import EmailStr
+
 from app.schemas.application_schema import ApplicationCreate, ApplicationOut
 from app.services import application_service
-from fastapi.responses import JSONResponse
-from typing import List
-from fastapi import APIRouter, Query
-from fastapi import Path
+
 
 router = APIRouter(prefix="/applications", tags=["applications"])
 
 
 @router.post("/", response_model=ApplicationOut)
-async def create_application(app: ApplicationCreate):
-    new_app = await application_service.create_application(app)
+async def create_application(
+        userId: Annotated[str, Form()],
+        companyId: Annotated[str, Form()],
+        jobLink: Annotated[str, Form()],
+        resume: Annotated[UploadFile, File()],
+        email: Annotated[EmailStr, Form()],
+        phone: Annotated[str, Form()],
+):
+    contents = await resume.read()
+
+    app_data = {
+        "userId": userId,
+        "companyId": companyId,
+        "jobLink": jobLink,
+        "resumeLink": resume.filename,
+        "email": email,
+        "phone": phone,
+    }
+
+    app_create = ApplicationCreate(**app_data)
+
+    new_app = await application_service.create_application(app_create)
     return new_app
 
 

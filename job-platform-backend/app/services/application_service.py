@@ -1,5 +1,5 @@
 from app.db import db
-from app.schemas.application_schema import ApplicationCreate
+from app.schemas.application_schema import ApplicationCreate, ApplicationOut
 from fastapi import HTTPException
 from bson import ObjectId
 from fastapi import Path
@@ -7,15 +7,13 @@ from fastapi import Path
 applications_collection = db["applications"]
 
 
-async def create_application(app_create: ApplicationCreate):
+async def create_application(app_create: ApplicationCreate) -> ApplicationOut:
     app_dict = app_create.dict()
     app_dict["submitted"] = False
     result = await applications_collection.insert_one(app_dict)
     new_app = await applications_collection.find_one({"_id": result.inserted_id})
-
     new_app["_id"] = str(new_app["_id"])
-
-    return new_app
+    return ApplicationOut(**new_app)
 
 
 async def get_applications_by_company(company_id: str):

@@ -1,100 +1,137 @@
-import React, { useEffect, useState } from "react";
-import { getApplicationsByCompany, submitApplication } from "../services/applicationService";
-import { Box, Typography, Card, CardContent, Stack, Button, Alert } from "@mui/material";
+import React, { useState } from "react";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
+import { createApplication } from "../services/applicationService";
 
 export default function ApplicationPage() {
-  const [applications, setApplications] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [submittingId, setSubmittingId] = useState(null);
-  const [successMessage, setSuccessMessage] = useState(null);
+  const userId = localStorage.getItem("userId");
+  const { id: companyId } = useParams();
+  const location = useLocation();
+  const company = location.state?.company || null;
 
-  useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    if (!user || !user.company?._id) return;
+  const [formData, setFormData] = useState({
+    email: "",
+    phone: "",
+    jobLink: "",
+    resumeFile: null,
+  });
 
-    const fetchApplications = async () => {
-      try {
-        const data = await getApplicationsByCompany(user.company._id);
-        setApplications(data);
-      } catch (err) {
-        console.error("שגיאה בטעינת ההגשות", err);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const navigate = useNavigate();
 
-    fetchApplications();
-  }, []);
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((f) => ({ ...f, [name]: value }));
+  };
 
-  const handleSubmit = async (applicationId) => {
-    setSubmittingId(applicationId);
+  const handleFileChange = (e) => {
+    setFormData((f) => ({ ...f, resumeFile: e.target.files[0] }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log(formData)
+    if (!formData.email || !formData.phone || !formData.jobLink || !formData.resumeFile) {
+      alert("Please fill all fields and upload your resume.");
+      return;
+    }
+
+    if (!companyId) {
+      alert("Company ID is missing.");
+      return;
+    }
+
+    const data = new FormData();
+    data.append("userId", userId);
+    data.append("companyId", companyId);
+    data.append("jobLink", formData.jobLink);
+    data.append("resume", formData.resumeFile);
+    data.append("email", formData.email);
+    data.append("phone", formData.phone);
+
     try {
-      await submitApplication(applicationId);
-      setApplications((prevApps) =>
-        prevApps.map((app) =>
-          app._id === applicationId ? { ...app, submitted: true } : app
-        )
-      );
-      setSuccessMessage("ההגשה נשלחה בהצלחה!");
-      setTimeout(() => setSuccessMessage(null), 3000); // מסתיר אחרי 3 שניות
-    } catch (err) {
-      alert("אירעה שגיאה בעת שליחת ההגשה");
-      console.error(err);
-    } finally {
-      setSubmittingId(null);
+      await createApplication(data);
+      alert("Application submitted successfully!");
+      setFormData({
+        email: "",
+        phone: "",
+        jobLink: "",
+        resumeFile: null,
+      });
+      navigate("/thank-you"); // למשל, ניווט לעמוד תודה אחרי הגשה
+    } catch (error) {
+      alert("Failed to submit application. Please try again.");
+      console.error(error);
     }
   };
 
-  if (loading) return <Typography>טוען הגשות...</Typography>;
-  if (applications.length === 0) return <Typography>אין עדיין הגשות</Typography>;
-
   return (
-    <Box sx={{ maxWidth: 700, margin: "2rem auto", direction: "rtl" }}>
-      <Typography variant="h5" gutterBottom align="center">
-        הגשות לחברה שלך
-      </Typography>
+    <div className="homepage-container">
+      <div className="framer-style-header">
+        <h1 className="main-title">Apply through a company employee.</h1>
+        <h1 className="sub-title">
+          {company ? `Submitting to: ${company.name}` : "Let someone inside submit for you."}
+        </h1>
+      </div>
 
-      {successMessage && (
-        <Alert severity="success" sx={{ mb: 2, textAlign: "center" }}>
-          {successMessage}
-        </Alert>
-      )}
+      <form onSubmit={handleSubmit} style={{ maxWidth: 500, marginTop: 20 }}>
+        <label>
+          Email:<br />
+          <input
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleInputChange}
+            style={{ width: "100%", padding: 8, marginBottom: 12 }}
+            required
+          />
+        </label>
+        <label>
+          Phone Number:<br />
+          <input
+            type="tel"
+            name="phone"
+            value={formData.phone}
+            onChange={handleInputChange}
+            style={{ width: "100%", padding: 8, marginBottom: 12 }}
+            required
+          />
+        </label>
+        <label>
+          Job Link:<br />
+          <input
+            type="url"
+            name="jobLink"
+            value={formData.jobLink}
+            onChange={handleInputChange}
+            style={{ width: "100%", padding: 8, marginBottom: 12 }}
+            required
+          />
+        </label>
+        <label>
+          Upload Resume:<br />
+          <input
+            type="file"
+            accept=".pdf,.doc,.docx"
+            onChange={handleFileChange}
+            style={{ marginBottom: 20 }}
+            required
+          />
+        </label>
 
-      <Stack spacing={2}>
-        {applications.map((app) => (
-          <Card key={app._id}>
-            <CardContent>
-              <Typography>
-                <strong>קישור למשרה:</strong>{" "}
-                <a href={app.jobLink} target="_blank" rel="noopener noreferrer">
-                  {app.jobLink}
-                </a>
-              </Typography>
-              <Typography>
-                <strong>קורות חיים:</strong>{" "}
-                <a href={app.resumeLink} target="_blank" rel="noopener noreferrer">
-                  {app.resumeLink}
-                </a>
-              </Typography>
-              <Typography>
-                <strong>הוגש:</strong> {app.submitted ? "כן" : "לא"}
-              </Typography>
-
-              {!app.submitted && (
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => handleSubmit(app._id)}
-                  disabled={submittingId === app._id}
-                  sx={{ mt: 2 }}
-                >
-                  {submittingId === app._id ? "שולח..." : "Submit"}
-                </Button>
-              )}
-            </CardContent>
-          </Card>
-        ))}
-      </Stack>
-    </Box>
+        <button
+          type="submit"
+          style={{
+            padding: "10px 20px",
+            backgroundColor: "#007BFF",
+            color: "white",
+            border: "none",
+            borderRadius: 6,
+            cursor: "pointer",
+            fontSize: 16,
+          }}
+        >
+          Submit Application
+        </button>
+      </form>
+    </div>
   );
 }

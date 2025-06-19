@@ -37,7 +37,6 @@ export default function CompanyPage() {
 
     {companies.length === 0 ? (
       <Typography textAlign="center" sx={{ mt: 4 }}>
-        טוען חברות...
       </Typography>
     ) : (
       <Box

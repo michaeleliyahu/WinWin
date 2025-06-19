@@ -1,109 +1,150 @@
-import React, { useEffect, useState } from "react";
-import { useParams, useNavigate, useLocation } from "react-router-dom";
-import { getCompanyById } from "../services/companyService";
+import React, { useState } from "react";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { createApplication } from "../services/applicationService";
-import {
-  Box,
-  Typography,
-  TextField,
-  Button,
-  Card,
-  CardContent,
-  Stack,
-} from "@mui/material";
 
-export default function CandidateApplication() {
-  const { id } = useParams();
+export default function ApplicationPage() {
+  const { companyId } = useParams();
   const location = useLocation();
+  const company = location.state?.company || null;
+
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    jobLink: "",
+    resumeFile: null,
+  });
+
   const navigate = useNavigate();
-  const passedCompany = location.state?.company;
 
-  const [company, setCompany] = useState(passedCompany || null);
-  const [jobLink, setJobLink] = useState("");
-  const [resumeLink, setResumeLink] = useState("");
-  const [loading, setLoading] = useState(!passedCompany);
-  const [saving, setSaving] = useState(false);
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((f) => ({ ...f, [name]: value }));
+  };
 
-  useEffect(() => {
-    if (!passedCompany) {
-      const fetchCompany = async () => {
-        try {
-          const comp = await getCompanyById(id);
-          setCompany(comp);
-        } catch (err) {
-          console.error("שגיאה בטעינת החברה", err);
-        } finally {
-          setLoading(false);
-        }
-      };
-      fetchCompany();
-    }
-  }, [id, passedCompany]);
+  const handleFileChange = (e) => {
+    setFormData((f) => ({ ...f, resumeFile: e.target.files[0] }));
+  };
 
-  const handleSubmit = async () => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    if (!user) {
-      alert("אנא התחבר לפני הגשת קורות חיים");
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!formData.email || !formData.phone || !formData.name || !formData.jobLink || !formData.resumeFile) {
+      alert("Please fill all fields and upload your resume.");
       return;
     }
-    if (!jobLink || !resumeLink) {
-      alert("אנא מלא את כל השדות");
+
+    if (!companyId) {
+      alert("Company ID is missing.");
       return;
     }
-    setSaving(true);
+
+    const data = new FormData();
+    data.append("name", formData.name);
+    data.append("email", formData.email);
+    data.append("phone", formData.phone);
+    data.append("jobLink", formData.jobLink);
+    data.append("resume", formData.resumeFile);
+    data.append("companyId", companyId);  // מוסיף companyId למשלוח
+
     try {
-      await createApplication({
-        userId: user._id,
-        companyId: id,
-        jobLink,
-        resumeLink,
+      await createApplication(data);
+      alert("Application submitted successfully!");
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        jobLink: "",
+        resumeFile: null,
       });
-      alert("הגשת קורות חיים נשמרה בהצלחה!");
-      navigate("/HomePage");
-    } catch (err) {
-      alert("שגיאה בשמירת ההגשה");
-      console.error(err);
-    } finally {
-      setSaving(false);
+      navigate("/thank-you"); // למשל, ניווט לעמוד תודה אחרי הגשה
+    } catch (error) {
+      alert("Failed to submit application. Please try again.");
+      console.error(error);
     }
   };
 
-  if (loading) return <Typography>טוען...</Typography>;
-  if (!company) return <Typography>חברה לא נמצאה</Typography>;
-
   return (
-    <Card sx={{ maxWidth: 600, margin: "2rem auto", p: 3, direction: "rtl" }}>
-      <CardContent>
-        <Typography variant="h5" gutterBottom>
-          {company.name}
-        </Typography>
-        <Typography variant="body1" gutterBottom>
-          מספר עובדים: {company.number_of_employees}
-        </Typography>
+    <div className="homepage-container">
+      <div className="framer-style-header">
+        <h1 className="main-title">Apply through a company employee.</h1>
+        <h1 className="sub-title">
+          {company ? `Submitting to: ${company.name}` : "Let someone inside submit for you."}
+        </h1>
+      </div>
 
-        <Box component="form" noValidate autoComplete="off" sx={{ mt: 3 }}>
-          <Stack spacing={2}>
-            <TextField
-              label="קישור למשרה"
-              variant="outlined"
-              fullWidth
-              value={jobLink}
-              onChange={(e) => setJobLink(e.target.value)}
-            />
-            <TextField
-              label="קישור לקורות חיים"
-              variant="outlined"
-              fullWidth
-              value={resumeLink}
-              onChange={(e) => setResumeLink(e.target.value)}
-            />
+      <form onSubmit={handleSubmit} style={{ maxWidth: 500, marginTop: 20 }}>
+        {/* ... שדות הטופס כפי שכתבנו קודם ... */}
+        <label>
+          Name:<br />
+          <input
+            type="text"
+            name="name"
+            value={formData.name}
+            onChange={handleInputChange}
+            style={{ width: "100%", padding: 8, marginBottom: 12 }}
+            required
+          />
+        </label>
+        <label>
+          Email:<br />
+          <input
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleInputChange}
+            style={{ width: "100%", padding: 8, marginBottom: 12 }}
+            required
+          />
+        </label>
+        <label>
+          Phone Number:<br />
+          <input
+            type="tel"
+            name="phone"
+            value={formData.phone}
+            onChange={handleInputChange}
+            style={{ width: "100%", padding: 8, marginBottom: 12 }}
+            required
+          />
+        </label>
+        <label>
+          Job Link:<br />
+          <input
+            type="url"
+            name="jobLink"
+            value={formData.jobLink}
+            onChange={handleInputChange}
+            style={{ width: "100%", padding: 8, marginBottom: 12 }}
+            required
+          />
+        </label>
+        <label>
+          Upload Resume:<br />
+          <input
+            type="file"
+            accept=".pdf,.doc,.docx"
+            onChange={handleFileChange}
+            style={{ marginBottom: 20 }}
+            required
+          />
+        </label>
 
-            <Button variant="contained" onClick={handleSubmit} disabled={saving}>
-              {saving ? "שומר..." : "הגש קורות חיים"}
-            </Button>
-          </Stack>
-        </Box>
-      </CardContent>
-    </Card>
+        <button
+          type="submit"
+          style={{
+            padding: "10px 20px",
+            backgroundColor: "#007BFF",
+            color: "white",
+            border: "none",
+            borderRadius: 6,
+            cursor: "pointer",
+            fontSize: 16,
+          }}
+        >
+          Submit Application
+        </button>
+      </form>
+    </div>
   );
 }
