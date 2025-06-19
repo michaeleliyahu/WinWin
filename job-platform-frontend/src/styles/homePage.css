@@ -1,15 +1,19 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap");
 
 .homepage-container {
-  padding: 2rem;
-  max-width: 600px;
-  margin: 0 auto;
+  min-height: 100vh;
+  background-color: #ffffff;
+  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   text-align: center;
   font-family: 'Inter', sans-serif;
   direction: rtl;
 }
 
 .framer-style-header {
+  padding-top: 5rem;
   margin-bottom: 2rem;
 }
 
@@ -19,6 +23,7 @@
   letter-spacing: -0.04em;
   line-height: 1em;
   color: #000;
+  margin-bottom: 1rem;
 }
 
 .sub-title {
@@ -27,13 +32,14 @@
   letter-spacing: -0.04em;
   line-height: 1em;
   color: #999;
-  margin-top: 0.5rem;
+  margin-bottom: 2rem;
 }
 
 .framer-style-buttons {
   display: flex;
-  justify-content: center;
   gap: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
   margin-bottom: 2rem;
 }
 
@@ -44,11 +50,11 @@
   justify-content: center;
   padding: 8px 20px;
   cursor: pointer;
-  min-width: fit-content;
   font-size: 14px;
   font-weight: 600;
-  line-height: 1em;
   letter-spacing: -0.01em;
+  transition: background-color 0.2s ease;
+  min-width: fit-content;
 }
 
 .dark-pill {
@@ -63,4 +69,29 @@
 
 .employer-box {
   cursor: pointer;
+}
+
+/* רספונסיביות */
+@media (max-width: 600px) {
+  .main-title {
+    font-size: 28px;
+  }
+
+  .sub-title {
+    font-size: 24px;
+  }
+
+  .nav-pill {
+    padding: 6px 16px;
+    font-size: 14px;
+  }
+
+  .framer-style-buttons {
+    flex-direction: row;
+    gap: 12px;
+  }
+
+  .homepage-container {
+    padding: 0 12px;
+  }
 }
