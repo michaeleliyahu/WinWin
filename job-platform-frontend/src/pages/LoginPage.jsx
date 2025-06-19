@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { loginUser } from "../services/userService";
 import "../styles/Login.css";
 
@@ -7,7 +7,9 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const location = useLocation();
   const navigate = useNavigate();
+  const redirectTo = location.state?.redirectTo || "/HomePage";
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -17,7 +19,7 @@ export default function LoginPage() {
       const data = await loginUser({ email, password });
       localStorage.setItem("token", data.access_token);
       localStorage.setItem("user", JSON.stringify(data.user));
-      navigate("/HomePage");
+      navigate(redirectTo, { state: location.state }); // אם צריך, גם את ה-company
     } catch (err) {
       setError("Login failed. Please check your credentials and try again.");
     }

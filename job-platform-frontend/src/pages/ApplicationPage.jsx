@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { createApplication } from "../services/applicationService";
+import { FaUpload } from "react-icons/fa";
+import PillButton from "../components/PillButton";
 
 export default function ApplicationPage() {
   const userId = localStorage.getItem("userId");
@@ -28,7 +30,7 @@ export default function ApplicationPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData)
+
     if (!formData.email || !formData.phone || !formData.jobLink || !formData.resumeFile) {
       alert("Please fill all fields and upload your resume.");
       return;
@@ -56,7 +58,7 @@ export default function ApplicationPage() {
         jobLink: "",
         resumeFile: null,
       });
-      navigate("/thank-you"); 
+      navigate("/thank-you");
     } catch (error) {
       alert("Failed to submit application. Please try again.");
       console.error(error);
@@ -106,31 +108,39 @@ export default function ApplicationPage() {
             required
           />
         </label>
-        <label>
-          Upload Resume:<br />
+
+        <label style={{ display: "block", marginBottom: 20 }}>
+          <span
+            onClick={() => document.getElementById("resume-upload").click()}
+            style={{
+              cursor: "pointer",
+              color: "#007BFF",
+              textDecoration: "underline",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 8,
+              marginTop: 8,
+            }}
+          >
+            <FaUpload /> Attach Resume
+          </span>
           <input
+            id="resume-upload"
             type="file"
             accept=".pdf,.doc,.docx"
             onChange={handleFileChange}
-            style={{ marginBottom: 20 }}
+            style={{ display: "none" }}
             required
           />
+          {formData.resumeFile && (
+            <div style={{ marginTop: 8, fontSize: "0.95rem", color: "#333" }}>
+              <strong>{formData.resumeFile.name}</strong>
+            </div>
+          )}
         </label>
 
-        <button
-          type="submit"
-          style={{
-            padding: "10px 20px",
-            backgroundColor: "#007BFF",
-            color: "white",
-            border: "none",
-            borderRadius: 6,
-            cursor: "pointer",
-            fontSize: 16,
-          }}
-        >
-          Submit Application
-        </button>
+
+        <PillButton label="Submit Application" variant="dark" />
       </form>
     </div>
   );

@@ -24,9 +24,17 @@ export default function CompanyPage() {
     fetchCompanies();
   }, []);
 
-  const handleCardClick = (company) => {
-    navigate(`/submit/${company._id}`, { state: { company } });
-  };
+const handleCardClick = (company) => {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    navigate("/login", {
+      state: { redirectTo: `/submit/${company._id}`, company },
+    });
+    return;
+  }
+
+  navigate(`/submit/${company._id}`, { state: { company } });
+};
 
   return (
     <div className="homepage-container">
