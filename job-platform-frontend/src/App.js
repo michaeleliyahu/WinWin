@@ -4,7 +4,6 @@ import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import CompanyPage from "./pages/CompanyPage";
 import HomePage from "./pages/HomePage";
-import CandidateApplication from "./components/CandidateApplication";
 import ApplicationPage from "./pages/ApplicationPage";
 import AppLayout from "./components/AppLayout";
 import ThankYouPage from "./pages/ThankYouPage.jsx";

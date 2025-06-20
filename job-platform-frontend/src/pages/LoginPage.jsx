@@ -57,7 +57,7 @@ export default function LoginPage() {
             {error && <p style={{ color: "red", marginTop: "10px" }}>{error}</p>}
 
             <div className="form-link">
-              <a href="#" className="forgot-pass">Forgot password?</a>
+              {/* <a href="#" className="forgot-pass">Forgot password?</a> */}
             </div>
 
             <div className="field button-field">

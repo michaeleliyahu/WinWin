@@ -1,16 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { getAllCompanies } from "../services/companyService";
 import CompanyCard from "../components/CompanyCard";
-import { Box, Typography, useMediaQuery } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
+import { Box, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import "../styles/companyPage.css";
 
 export default function CompanyPage() {
   const [companies, setCompanies] = useState([]);
   const navigate = useNavigate();
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   useEffect(() => {
     const fetchCompanies = async () => {
