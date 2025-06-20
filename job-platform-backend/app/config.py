@@ -1,14 +1,13 @@
-import motor.motor_asyncio
-import os
-from dotenv import load_dotenv
-
-load_dotenv()
-
-MONGODB_URL = os.getenv("MONGODB_URL")  # תיקון כאן
-
-client = motor.motor_asyncio.AsyncIOMotorClient(MONGODB_URL)
-database = client["job_platform"]
+from pydantic_settings import BaseSettings
 
 
-def get_database():
-    return database
+class Settings(BaseSettings):
+    mongodb_url: str
+    secret_key: str
+    opencorporates_api_token: str
+
+    class Config:
+        env_file = ".env"
+
+
+settings = Settings()
