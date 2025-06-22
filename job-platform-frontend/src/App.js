@@ -7,6 +7,7 @@ import HomePage from "./pages/HomePage";
 import ApplicationPage from "./pages/ApplicationPage";
 import AppLayout from "./components/AppLayout";
 import ThankYouPage from "./pages/ThankYouPage.jsx";
+import LoginSuccess from "./components/LoginSuccess.jsx";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/" element={<Navigate to="/HomePage" replace />} />
         <Route path="/HomePage" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/login-success" element={<LoginSuccess />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/CompanyPage" element={<CompanyPage />} />
         <Route path="/thank-you" element={<ThankYouPage />} />

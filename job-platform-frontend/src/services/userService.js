@@ -22,11 +22,11 @@ export const registerUser = async (userData) => {
   if (!res.ok) {
     let detail;
     try {
-      detail = JSON.parse(text).detail; // ⬅ תופס את הודעת השגיאה
+      detail = JSON.parse(text).detail;
     } catch {
       detail = text;
     }
-    throw new Error(detail); // ⬅ זורק את ההודעה האמיתית
+    throw new Error(detail);
   }
 
   return JSON.parse(text);
@@ -50,3 +50,14 @@ export const assignCompanyToUser = async (userId, companyId) => {
 
   return res.json();
 };
+
+export async function getCurrentUser() {
+  const token = localStorage.getItem("token");
+  const res = await fetch("http://localhost:8000/users/me", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  if (!res.ok) throw new Error("Failed to fetch user");
+  return await res.json();
+}

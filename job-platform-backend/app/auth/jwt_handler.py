@@ -6,7 +6,7 @@ from passlib.context import CryptContext
 
 load_dotenv()
 
-SECRET_KEY = os.getenv("SECRET_KEY", "super-secret")
+SECRET_KEY = os.getenv("JWT_SECRET", "super-secret")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 

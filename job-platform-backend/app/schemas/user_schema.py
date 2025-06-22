@@ -23,7 +23,7 @@ class UserOut(BaseModel):
     authProvider: str
     googleId: Optional[str] = None
     companyId: Optional[str] = None
-    company: Optional[CompanyOut] = None  # 👈 אובייקט חברה מקונן
+    company: Optional[CompanyOut] = None
 
 
 class TokenUserResponse(BaseModel):

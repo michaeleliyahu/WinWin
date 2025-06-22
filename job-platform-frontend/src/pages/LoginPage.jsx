@@ -19,10 +19,13 @@ export default function LoginPage() {
       const data = await loginUser({ email, password });
       localStorage.setItem("token", data.access_token);
       localStorage.setItem("user", JSON.stringify(data.user));
-      navigate(redirectTo, { state: location.state }); // אם צריך, גם את ה-company
+      navigate(redirectTo, { state: location.state });
     } catch (err) {
       setError("Login failed. Please check your credentials and try again.");
     }
+  };
+  const handleGoogleLogin = () => {
+    window.location.href = "http://localhost:8000/auth/google/login";
   };
 
   return (
@@ -80,9 +83,9 @@ export default function LoginPage() {
         </div>
 
         <div className="media-options">
-          <button type="button" className="field google">
+          <button type="button" className="field google" onClick={handleGoogleLogin}>
             <img src="/images/google.png" alt="Google" className="google-img" />
-            <span>Sign up with Google</span>
+            <span>Sign in with Google</span>
           </button>
         </div>
       </div>

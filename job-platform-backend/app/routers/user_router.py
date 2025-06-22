@@ -3,6 +3,7 @@ from app.schemas.user_schema import UserCreate, UserLogin, UserOut, TokenUserRes
 from app.services import user_service
 from fastapi.responses import JSONResponse
 from fastapi import Path
+from app.dependencies import get_current_user
 
 router = APIRouter(prefix="/users", tags=["users"])
 
@@ -28,3 +29,8 @@ async def update(user_id: str, data: dict):
 async def delete(user_id: str):
     await user_service.delete_user(user_id)
     return JSONResponse(content={"message": "User deleted successfully"})
+
+
+@router.get("/me")
+async def get_current_user_data(user: UserOut = Depends(get_current_user)):
+    return user
