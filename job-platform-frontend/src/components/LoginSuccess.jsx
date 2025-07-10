@@ -15,7 +15,6 @@ export default function LoginSuccess() {
       try {
         if (token) {
           localStorage.setItem("token", token);
-          console.log(token);
           const user = await getCurrentUser();
           localStorage.setItem("user", JSON.stringify(user));
           navigate(redirectTo, { state: location.state });
