@@ -1,3 +1,16 @@
+/* עבור ה-Paper (הטופס חיפוש) */
+.search-form {
+  padding: 2px 4px;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 600px;
+  margin: 16px auto 0 auto;  /* mt: 4 זה בערך 16px */
+  border-radius: 30px;
+  box-shadow: 0px 3px 6px rgba(0,0,0,0.16); /* תחליף ל-boxShadow: 3 */
+}
+
+/* עבור ה-Box companies-row כבר יש לך: */
 .companies-row {
   align-content: center;
   align-items: center;
@@ -13,6 +26,9 @@
   padding: 40px 0;
   position: relative;
   width: 960px;
+  padding-left: 16px;  /* px: 2 ~ 8px, אפשר להגדיל ל-16px כדי להתאים */
+  padding-right: 16px;
+  margin-top: 24px; /* mt: 3 ~ 24px */
 }
 
 /* תגובת מדיה למובייל - אפשר לשנות ל-wrap ולמספר עמודות קטן */
