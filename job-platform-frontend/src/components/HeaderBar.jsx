@@ -4,15 +4,10 @@ import {
   Box,
   Typography,
   IconButton,
-  Drawer,
-  List,
-  ListItem,
-  ListItemText,
-  Divider,
+
   useMediaQuery,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import CloseIcon from "@mui/icons-material/Close";
 import { useTheme } from "@mui/material/styles";
 
 import PillButton from "./PillButton"; // נניח שזה הנתיב הנכון אל הקומפוננטה
@@ -20,7 +15,7 @@ import "../styles/headerBar.css";
 
 export default function HeaderBar() {
   const navigate = useNavigate();
-  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [setDrawerOpen] = useState(false);
   const token = localStorage.getItem("token");
   const userJson = localStorage.getItem("user");
   const user = userJson ? JSON.parse(userJson) : null;
@@ -108,64 +103,6 @@ export default function HeaderBar() {
           </Box>
         )}
       </Box>
-
-      <Drawer anchor="right" open={drawerOpen} onClose={() => setDrawerOpen(false)}>
-        <Box sx={{ width: 250, p: 2 }}>
-          <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <Typography variant="h6">Menu</Typography>
-            <IconButton onClick={() => setDrawerOpen(false)}>
-              <CloseIcon />
-            </IconButton>
-          </Box>
-          <Divider sx={{ my: 2 }} />
-          <List>
-            {navLinks.map((link) => (
-              <ListItem
-                button
-                key={link.path}
-                onClick={() => {
-                  navigate(link.path);
-                  setDrawerOpen(false);
-                }}
-              >
-                <ListItemText primary={link.label} />
-              </ListItem>
-            ))}
-            <Divider sx={{ my: 1 }} />
-            {token && user ? (
-              <>
-                <ListItem>
-                  <ListItemText primary={`Hello, ${user.firstName}`} />
-                </ListItem>
-                <ListItem button onClick={handleLogout}>
-                  <ListItemText primary="Logout" />
-                </ListItem>
-              </>
-            ) : (
-              <>
-                <ListItem
-                  button
-                  onClick={() => {
-                    navigate("/login");
-                    setDrawerOpen(false);
-                  }}
-                >
-                  <ListItemText primary="Login" />
-                </ListItem>
-                <ListItem
-                  button
-                  onClick={() => {
-                    navigate("/register");
-                    setDrawerOpen(false);
-                  }}
-                >
-                  <ListItemText primary="Register" />
-                </ListItem>
-              </>
-            )}
-          </List>
-        </Box>
-      </Drawer>
     </>
   );
 }

@@ -2,18 +2,24 @@
 
 .homepage-container {
   min-height: 100vh;
-  background-color: #ffffff;
-  padding: 0 20px;
+  background-color: #f5f5f5;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
   font-family: 'Inter', sans-serif;
   direction: rtl;
+  padding-top: 2rem;
 }
-
+.p-card {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  background-color: white;
+  border-radius: 16px;
+  padding: 4rem;
+  margin: 0 auto;
+}
 .framer-style-header {
-  padding-top: 10rem;
+  padding-top: 2rem;
   margin-bottom: 2rem;
 }
 
@@ -91,7 +97,4 @@
     gap: 12px;
   }
 
-  .homepage-container {
-    padding: 0 12px;
-  }
 }
