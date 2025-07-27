@@ -11,6 +11,8 @@ class Settings(BaseSettings):
     google_client_secret: str = Field(..., env="GOOGLE_CLIENT_SECRET")
     google_redirect_uri: str = Field(..., env="GOOGLE_REDIRECT_URI")
     jwt_secret: str = Field(..., env="JWT_SECRET")
+    openAi_api_key: str = Field(..., env="OPENAI_API_KEY")
+
 
     class Config:
         env_file = ".env"

@@ -2,8 +2,8 @@ from app.db import db
 from app.models.user_model import UserModel
 from fastapi import HTTPException
 from bson import ObjectId
-from app.auth.jwt_handler import create_access_token
 from app.schemas.user_schema import UserOut, UserCreate, UserLogin
+from app.auth.jwt_handler import hash_password, verify_password, create_access_token
 
 users_collection = db["users"]
 companies_collection = db["company"]
