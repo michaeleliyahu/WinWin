@@ -63,7 +63,8 @@ async def create_company(company: CompanyCreate):
     logo_url = get_clearbit_logo(company.name)
 
 
-    await companies_collection.insert_one({
+
+    result = await companies_collection.insert_one({
         "name": company.name,
         "description": response_data.get("description", ""),
         "industry": response_data.get("industry", ""),
@@ -74,6 +75,7 @@ async def create_company(company: CompanyCreate):
         "tagline": response_data.get("tagline", ""),
         "logo": logo_url
     })
+    response_data["_id"] = str(result.inserted_id)
     return response_data
 
 
