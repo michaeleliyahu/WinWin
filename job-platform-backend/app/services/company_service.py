@@ -3,6 +3,8 @@ from app.schemas.company_schema import CompanyCreate
 from fastapi import HTTPException
 from bson import ObjectId
 from .llmService import ask_openai
+import json
+import requests
 
 companies_collection = db["company"]
 
@@ -31,6 +33,12 @@ The user provides the name of a company. Your task is to check if the company ex
 Return only valid JSON — no markdown, no bullet points, no explanations.
 """
 
+def get_clearbit_logo(company_name):
+    fallback_domain = company_name.replace(" ", "") + ".com"
+    logo_url = f"https://logo.clearbit.com/{fallback_domain}"
+    return logo_url
+
+
 async def create_company(company: CompanyCreate):
     print(f"Creating company with data service: {company}")
 
@@ -44,7 +52,29 @@ async def create_company(company: CompanyCreate):
     ]
     response = await ask_openai(context)
     print(f"OpenAI response: {response}")   
-    return response
+
+    # Parse the response string to a dict
+    try:
+        response_data = json.loads(response)
+    except Exception:
+        raise HTTPException(status_code=500, detail="Invalid response from LLM")
+
+    # Get logo from Clearbit
+    logo_url = get_clearbit_logo(company.name)
+
+
+    await companies_collection.insert_one({
+        "name": company.name,
+        "description": response_data.get("description", ""),
+        "industry": response_data.get("industry", ""),
+        "category": response_data.get("category", ""),
+        "headquarters": response_data.get("headquarters", ""),
+        "employees": response_data.get("employees", ""),
+        "followers": response_data.get("followers", ""),
+        "tagline": response_data.get("tagline", ""),
+        "logo": logo_url
+    })
+    return response_data
 
 
 async def get_all_companies():
