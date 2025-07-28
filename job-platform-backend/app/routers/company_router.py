@@ -11,6 +11,7 @@ router = APIRouter(prefix="/companies", tags=["companies"])
 
 @router.post("/", response_model=str)
 async def create_company(company: CompanyCreate):
+    print(f"Creating company with data router: {company}")
     new_company = await company_service.create_company(company)
     return new_company
 

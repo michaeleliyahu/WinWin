@@ -31,14 +31,17 @@ The user provides the name of a company. Your task is to check if the company ex
 Return only valid JSON — no markdown, no bullet points, no explanations.
 """
 
-async def create_company(company: str):
-    print(f"Creating company with data: {company}")
+async def create_company(company: CompanyCreate):
+    print(f"Creating company with data service: {company}")
 
-    existing = await companies_collection.find_one({"name": company})
+    existing = await companies_collection.find_one({"name": company.name})
     if existing:
         raise HTTPException(status_code=400, detail="Company already exists")
     
-    context = [{"role": "user", "content": agent_instructions}]
+    context = [
+        {"role": "system", "content": agent_instructions},
+        {"role": "user", "content": company.name}
+    ]
     response = await ask_openai(context)
     print(f"OpenAI response: {response}")   
     return response

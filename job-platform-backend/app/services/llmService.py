@@ -4,6 +4,7 @@ from openai import AsyncOpenAI
 
 async def ask_openai(messages):
     try:
+        print(f"Creating company with data openAI: {messages}")
         api_key = os.getenv("OPENAI_API_KEY")
         if not api_key:
             raise Exception("❌OpenAI API Key not found in environment variables.")
