@@ -4,10 +4,8 @@ import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import CompanyPage from "./pages/CompanyPage";
 import HomePage from "./pages/HomePage";
-import ApplicationPage from "./pages/ApplicationPage";
-import AppLayout from "./components/AppLayout";
-import ThankYouPage from "./pages/ThankYouPage.jsx";
 import LoginSuccess from "./components/LoginSuccess.jsx";
+import AppLayout from "./components/AppLayout";
 
 function App() {
   return (
@@ -20,8 +18,6 @@ function App() {
         <Route path="/login-success" element={<LoginSuccess />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/CompanyPage" element={<CompanyPage />} />
-        <Route path="/thank-you" element={<ThankYouPage />} />
-        <Route path="/submit/:id" element={<ApplicationPage />} />
       </Routes>
     </AppLayout>
   );

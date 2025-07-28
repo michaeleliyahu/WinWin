@@ -2,20 +2,46 @@ from app.db import db
 from app.schemas.company_schema import CompanyCreate
 from fastapi import HTTPException
 from bson import ObjectId
+from .llmService import ask_openai
 
 companies_collection = db["company"]
 
+agent_instructions = """
+## 🎯 Goal
+The user provides the name of a company. Your task is to check if the company exists and return relevant profile information.
 
-async def create_company(company: CompanyCreate):
-    existing = await companies_collection.find_one({"name": company.name})
+## ✅ If the company exists, return a JSON object with the following fields:
+{
+  "name": "<Company Name>",
+  "description": "<One-line description>",
+  "industry": "<Industry>",
+  "category": "<Product or Service Category>",
+  "headquarters": "<City, Country>",
+  "employees": "<Estimated number of employees, e.g., '1K–5K'>",
+  "followers": "<Approximate follower count, e.g., '340K'>",
+  "tagline": "<Short promotional sentence>"
+}
+
+## ❌ Rules:
+- Do NOT include any explanation or extra text.
+- If the company clearly doesn't exist or no reliable information is available, return: { "error": "Company not found or not enough data available." }
+- Do NOT hallucinate. Only use real data.
+
+## 📌 Output format:
+Return only valid JSON — no markdown, no bullet points, no explanations.
+"""
+
+async def create_company(company: str):
+    print(f"Creating company with data: {company}")
+
+    existing = await companies_collection.find_one({"name": company})
     if existing:
         raise HTTPException(status_code=400, detail="Company already exists")
-
-    company.number_of_employees = 1
-    result = await companies_collection.insert_one(company.dict())
-    company_data = company.dict()
-    company_data["_id"] = str(result.inserted_id)
-    return company_data
+    
+    context = [{"role": "user", "content": agent_instructions}]
+    response = await ask_openai(context)
+    print(f"OpenAI response: {response}")   
+    return response
 
 
 async def get_all_companies():

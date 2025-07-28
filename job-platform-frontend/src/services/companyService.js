@@ -1,6 +1,7 @@
 const API_URL = process.env.REACT_APP_API_URL || "http://localhost:8000";
 
 export const createCompany = async (companyData) => {
+  console.log("Creating company with data:", companyData);
   const token = localStorage.getItem("token");
   const res = await fetch(`${API_URL}/companies`, {
     method: "POST",

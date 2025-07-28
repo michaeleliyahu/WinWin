@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getAllCompanies } from "../services/companyService";
+import { getAllCompanies, createCompany } from "../services/companyService";
 import CompanyCard from "../components/CompanyCard";
 import { Box, Typography } from "@mui/material";
 import { InputBase, IconButton, Paper } from "@mui/material";
@@ -12,6 +12,7 @@ import ChatComponent from "../components/ChatComponent"; // <-- Add this line
 export default function CompanyPage() {
   const [companies, setCompanies] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -38,6 +39,22 @@ export default function CompanyPage() {
     navigate(`/submit/${company._id}`, { state: { company } });
   };
 
+  const handleInputKeyDown = async (e) => {
+    if (e.key === "Enter" && searchTerm.trim()) {
+      e.preventDefault();
+      setLoading(true);
+      try {
+        const newCompany = await createCompany({ name: searchTerm.trim() });
+        setCompanies((prev) => [...prev, newCompany]);
+        setSearchTerm("");
+      } catch (err) {
+        alert(err.message || "Failed to create company");
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+
   const filteredCompanies = companies.filter((company) =>
     company.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -58,6 +75,8 @@ export default function CompanyPage() {
           inputProps={{ 'aria-label': 'search companies' }}
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
+          onKeyDown={handleInputKeyDown}
+          disabled={loading}
         />
         {searchTerm && (
           <IconButton
