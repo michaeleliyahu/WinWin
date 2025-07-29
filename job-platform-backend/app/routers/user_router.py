@@ -19,13 +19,13 @@ async def login(user: UserLogin):
     return token_data
 
 
-@router.put("/{id}")
-async def update(id: str, data: UserUpdate, current_user: TokenUserResponse = Depends(get_current_user)):
+@router.put("/updateUserCompany/{id}")
+async def updateUserCompany(id: str, data: UserUpdate, current_user: TokenUserResponse = Depends(get_current_user)):
 
     if id != current_user.id:
         raise HTTPException(status_code=403, detail="You can only update your own profile.")
     
-    await user_service.update_user(id, data.dict(exclude_unset=True))
+    await user_service.updateUserCompany(id, data.dict(exclude_unset=True))
     return JSONResponse(content={"message": "User updated successfully"})
 
 @router.get("/me")

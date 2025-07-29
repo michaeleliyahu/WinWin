@@ -1,6 +1,6 @@
 import { Card, CardContent, Typography, Box, Avatar, Button } from "@mui/material";
 import "../styles/companyCard.css"; 
-import { updateUser } from "../services/userService"; 
+import { updateUserCompany } from "../services/userService"; 
 import { incrementUsers } from "../services/companyService";
 import { useState } from "react";
 
@@ -12,7 +12,7 @@ export default function CompanyCard({ company: initialCompany, onClick }) {
     try {
       const user = JSON.parse(localStorage.getItem("user"));
       const userId = user._id;
-      await updateUser(userId, { companyId: company._id });
+      await updateUserCompany(userId, { companyId: company._id });
       await incrementUsers(company._id);
 
       setCompany(prev => ({

@@ -1,46 +1,59 @@
+import axios from 'axios';
+
 const API_URL = process.env.REACT_APP_API_URL || "http://localhost:8000";
 
+const userApi = axios.create({
+  baseURL: `${API_URL}/users`, //
+  headers: {
+    "Content-Type": "application/json",
+  }
+});
+
+userApi.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
 export const loginUser = async (credentials) => {
-  const res = await fetch(`${API_URL}/users/login`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(credentials),
-  });
-  if (!res.ok) throw new Error("Login failed");
-  return res.json();
+  try {
+    const res = await userApi.post("/login", credentials);
+    return res.data; 
+  } catch (error) {
+    throw new Error(error.response?.data?.detail || "Login failed");
+  }
 };
 
 export const registerUser = async (userData) => {
-  const res = await fetch(`${API_URL}/users/register`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(userData),
-  });
-  if (!res.ok) throw new Error("Registration failed");
-  return res.json();
+  try {
+    const res = await userApi.post("/register", userData);
+    return res.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.detail || "Registration failed");
+  }
 };
 
-export const updateUser = async (userId, data) => {
-  const token = localStorage.getItem("token");
-  const res = await fetch(`${API_URL}/users/${userId}`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`
-    },
-    body: JSON.stringify(data),
-  });
-  if (!res.ok) throw new Error("Update failed");
-  return res.json();
+export const updateUserCompany = async (userId, data) => {
+  try {
+    const res = await userApi.put(`/updateUserCompany/${userId}`, data);
+    return res.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.detail || "Update failed");
+  }
 };
 
 export async function getCurrentUser() {
-  const token = localStorage.getItem("token");
-  const res = await fetch("http://localhost:8000/users/me", {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  if (!res.ok) throw new Error("Failed to fetch user");
-  return await res.json();
+  try {
+    const res = await userApi.get("/me");
+    return res.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.detail || "Failed to fetch user");
+  }
 }

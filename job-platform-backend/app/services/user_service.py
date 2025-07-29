@@ -114,7 +114,7 @@ async def get_user_by_id(user_id: str):
     return await users_collection.find_one({"_id": ObjectId(user_id)})
 
 
-async def update_user(user_id: str, data: dict):
+async def updateUserCompany(user_id: str, data: dict):
     result = await users_collection.update_one(
         {"_id": ObjectId(user_id)},
         {"$set": data}
