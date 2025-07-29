@@ -1,22 +1,7 @@
 .custom-company-card {
-  display: flex;
-  flex-direction: column;
-  flex-wrap: nowrap;
-  flex: 1 0 0px;
-  align-items: center;
-  justify-content: center;
   align-content: center;
-  
   aspect-ratio: 1 / 1; /* שומר על יחס רוחב/גובה של 1:1 */
   width: 100%; /* תתאים את הרוחב לפי הגריד/מיכל האב */
   max-width: 345px; /* אפשר להשאיר או להוריד לפי הצורך */
-  
-  background-color: #f5f5f5; /* תחליף משתנה CSS ל-color רגיל */
   border-radius: 10px;
-  gap: 10px;
-  padding: 0;
-  height: auto; /* אפשר לשנות ל־313px אם רוצים גובה קבוע */
-  overflow: visible;
-  position: relative;
-  margin: 1rem; /* שומר על מרווח בין הכרטיסים */
 }

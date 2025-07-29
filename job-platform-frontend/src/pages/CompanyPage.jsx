@@ -61,33 +61,32 @@ export default function CompanyPage() {
 
   return (
     <div className="homepage-container">
-      <div className="framer-style-header">
-        <h1 className="main-title">Apply through a company employee.</h1>
-        <h1 className="sub-title">Let someone inside submit for you.</h1>
-      </div>
-      <Paper component="form" className="search-form">
-        <IconButton sx={{ p: '10px' }} aria-label="search">
-          <SearchIcon />
-        </IconButton>
-        <InputBase
-          sx={{ ml: 1, flex: 1 }}
-          placeholder="חפש חברה לפי שם"
-          inputProps={{ 'aria-label': 'search companies' }}
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          onKeyDown={handleInputKeyDown}
-          disabled={loading}
-        />
-        {searchTerm && (
-          <IconButton
-            sx={{ p: '10px' }}
-            onClick={() => setSearchTerm("")}
-            aria-label="clear"
-          >
-            <ClearIcon />
+      <div className="p-card"> 
+        <h1 className="text-2xl font-bold text-gray-900 mb-4">Find Your Next Opportunity</h1>
+        <Paper component="form" className="search-form">
+          <IconButton sx={{ p: '10px' }} aria-label="search">
+            <SearchIcon />
           </IconButton>
-        )}
+          <InputBase
+            sx={{ ml: 1, flex: 1 }}
+            placeholder="Search for companies..."
+            inputProps={{ 'aria-label': 'search companies' }}
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            onKeyDown={handleInputKeyDown}
+            disabled={loading}
+          />
+          {searchTerm && (
+            <IconButton
+              sx={{ p: '10px' }}
+              onClick={() => setSearchTerm("")}
+              aria-label="clear"
+            >
+              <ClearIcon />
+            </IconButton>
+          )}
       </Paper>
+      </div>
       {companies.length === 0 ? (
         <Typography textAlign="center" sx={{ mt: 4 }}>
         </Typography>

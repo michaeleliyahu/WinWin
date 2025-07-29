@@ -24,55 +24,98 @@ export default function CompanyCard({ company: initialCompany, onClick }) {
     }
   };
   return (
-    <Card className="custom-company-card" sx={{ minWidth: 300, maxWidth: 350, m: 1 }}>
-      <CardContent onClick={() => onClick(company)} style={{ cursor: "pointer" }}>
-        <Box display="flex" alignItems="center" mb={1}>
-          <Avatar
-            src={company.logo}
-            alt={company.name}
-            sx={{ width: 40, height: 40, mr: 1 }}
-            variant="square"
-          />
-          <Box>
-            <Typography variant="h6" component="div" fontWeight="bold">
-              {company.name}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              {company.category || company.industry || "Software Development"}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              {company.headquarters || company.location || ""}
-            </Typography>
-          </Box>
-        </Box>
-        <Box display="flex" alignItems="center" mb={1}>
-          <Typography variant="body2" color="text.secondary" sx={{ mr: 1 }}>
-            <span role="img" aria-label="users">👥</span> {company.users || "0"} 
-          </Typography>
-        </Box>
-        <Box display="flex" gap={1}>
-          <Button
-            variant="contained"
-            color="primary"
-            size="small"
-            sx={{ textTransform: "none" }}
-            onClick={handleJoinCompany}
-          >
-            <span style={{ display: "flex", alignItems: "center" }}>
-              <span style={{ marginRight: 4, fontSize: 16 }}>✈️</span> i work here
-            </span>
-          </Button>
-          <Button
-            variant="outlined"
-            color="primary"
-            size="small"
-            sx={{ textTransform: "none" }}
-            onClick={e => e.stopPropagation()}
-          >
-            ✓ Following
-          </Button>
-        </Box>
-      </CardContent>
-    </Card>
+<Card
+  className="custom-company-card"
+  sx={{
+    minWidth: 300,
+    maxWidth: 350,
+    m: 1,
+    direction: 'ltr',
+    textAlign: 'left',
+    borderRadius: 5,
+  }}
+>
+  <Box sx={{
+    paddingRight: '1rem',
+    paddingLeft: '1rem'
+  }}>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+      }}
+    >
+      <Avatar
+        src={company.logo}
+        sx={{ width: 40, height: 40, mr: 1 }}
+        variant="square"
+      />
+      <Box>
+        <Typography variant="h6" component="div" fontWeight="bold">
+          {company.name}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          {company.industry || "Software Development"}
+        </Typography>
+      </Box>
+    </Box>
+
+    <Box sx={{ mt: 1 }}>
+      <Typography variant="body2" color="text.secondary">
+        <span role="img" aria-label="employees">👥</span>{company.employees + " employees"}
+      </Typography>
+      <Typography variant="body2" color="text.secondary">
+        <span role="img" aria-label="location">📌</span>{" "}
+        {company.headquarters || company.location || ""}
+      </Typography>
+      <Typography variant="body2" color="text.secondary" sx={{ mr: 1 }}>
+        <span role="img" aria-label="users">👥</span> {company.users || "0"}
+      </Typography>      
+      <Typography variant="body2" color="text.secondary" sx={{ mr: 1 }}>
+        <span role="img" aria-label="description"></span> {company.description}
+      </Typography>
+    </Box>
+
+    <CardContent onClick={() => onClick(company)} sx={{padding: 0,}}>
+      <Box display="flex" gap={1}>
+        <Button
+          variant="contained"
+          color="primary"
+          size="small"
+          sx={{
+            textTransform: "none",
+            display: "flex",
+            alignItems: "center",
+            whiteSpace: "nowrap",
+            borderRadius: 3,
+          }}
+          onClick={handleJoinCompany}
+        >
+          <span style={{ display: "flex", alignItems: "center" }}>
+            <span style={{ marginRight: 4, fontSize: 16 }}>✈️</span> i work here
+          </span>
+        </Button>
+        <Button
+          variant="outlined"
+          color="primary"
+          size="small"
+          sx={{
+            textTransform: "none",
+            display: "flex",
+            alignItems: "center",
+            whiteSpace: "nowrap",
+            borderRadius: 3,
+          }}
+          onClick={e => e.stopPropagation()}
+        >
+          <span style={{ display: "flex", alignItems: "center" }}>
+            <span style={{ marginRight: 4, fontSize: 16 }}>📄</span> Submit Resume
+          </span>
+        </Button>
+      </Box>
+    </CardContent>
+  </Box>
+</Card>
   );
 }

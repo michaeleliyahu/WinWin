@@ -1,4 +1,14 @@
-/* עבור ה-Paper (הטופס חיפוש) */
+.p-card {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  background-color: white;
+  border-radius: 16px;
+  padding: 4rem;
+  margin: 0 auto;
+  direction: ltr;
+  width: 70%;
+}
+
+
 .search-form {
   padding: 2px 4px;
   display: flex;
