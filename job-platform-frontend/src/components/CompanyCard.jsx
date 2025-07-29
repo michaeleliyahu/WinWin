@@ -1,14 +1,26 @@
 import { Card, CardContent, Typography, Box, Avatar, Button } from "@mui/material";
 import "../styles/companyCard.css"; 
+import { updateUser } from "../services/userService"; 
 
 export default function CompanyCard({ company, onClick }) {
+  const handleJoinCompany = async (e) => {
+    e.stopPropagation();
+
+    try {
+      const user = JSON.parse(localStorage.getItem("user"));
+      const token = localStorage.getItem("token");
+      const userId = user._id;
+      console.log("token: ", token);
+      await updateUser(userId, { companyId: company._id });
+
+    } catch (error) {
+      console.error("error on update user", error);
+    }
+  };
+
   return (
     <Card className="custom-company-card" sx={{ minWidth: 300, maxWidth: 350, m: 1 }}>
-      {/* Remove CardActionArea to avoid nested button issue */}
-      <CardContent
-        onClick={() => onClick(company)}
-        style={{ cursor: "pointer" }}
-      >
+      <CardContent onClick={() => onClick(company)} style={{ cursor: "pointer" }}>
         <Box display="flex" alignItems="center" mb={1}>
           <Avatar
             src={company.logo}
@@ -39,10 +51,10 @@ export default function CompanyCard({ company, onClick }) {
             color="primary"
             size="small"
             sx={{ textTransform: "none" }}
-            onClick={e => { e.stopPropagation(); /* handle message */ }}
+            onClick={handleJoinCompany}
           >
             <span style={{ display: "flex", alignItems: "center" }}>
-              <span style={{ marginRight: 4, fontSize: 16 }}>✈️</span> Message
+              <span style={{ marginRight: 4, fontSize: 16 }}>✈️</span> i work here
             </span>
           </Button>
           <Button

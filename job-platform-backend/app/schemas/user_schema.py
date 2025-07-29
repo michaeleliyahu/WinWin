@@ -30,3 +30,8 @@ class TokenUserResponse(BaseModel):
     access_token: str
     token_type: str
     user: UserOut
+
+class UserUpdate(BaseModel):
+    # name: Optional[str]
+    # email: Optional[str]
+    companyId: Optional[str] = Field(None, alias="companyId")

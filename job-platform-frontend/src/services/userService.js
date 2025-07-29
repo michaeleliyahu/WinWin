@@ -16,23 +16,11 @@ export const registerUser = async (userData) => {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(userData),
   });
-
-  const text = await res.text();
-
-  if (!res.ok) {
-    let detail;
-    try {
-      detail = JSON.parse(text).detail;
-    } catch {
-      detail = text;
-    }
-    throw new Error(detail);
-  }
-
-  return JSON.parse(text);
+  if (!res.ok) throw new Error("Registration failed");
+  return res.json();
 };
 
-export const assignCompanyToUser = async (userId, companyId) => {
+export const updateUser = async (userId, data) => {
   const token = localStorage.getItem("token");
   const res = await fetch(`${API_URL}/users/${userId}`, {
     method: "PUT",
@@ -40,14 +28,9 @@ export const assignCompanyToUser = async (userId, companyId) => {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`
     },
-    body: JSON.stringify({ companyId }), 
+    body: JSON.stringify(data),
   });
-
-  if (!res.ok) {
-    const errorData = await res.json();
-    throw new Error(errorData.detail || "Failed to assign company");
-  }
-
+  if (!res.ok) throw new Error("Update failed");
   return res.json();
 };
 

@@ -7,7 +7,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import ClearIcon from "@mui/icons-material/Clear";
 import { useNavigate } from "react-router-dom";
 import "../styles/companyPage.css";
-import ChatComponent from "../components/ChatComponent"; // <-- Add this line
+import ChatComponent from "../components/ChatComponent";
 
 export default function CompanyPage() {
   const [companies, setCompanies] = useState([]);
