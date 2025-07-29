@@ -1,67 +1,54 @@
+import axios from 'axios';
+
 const API_URL = process.env.REACT_APP_API_URL || "http://localhost:8000";
 
+const api = axios.create({
+  baseURL: `${API_URL}/companies`, 
+  headers: {
+    "Content-Type": "application/json",
+  }
+});
+
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
 export const createCompany = async (companyData) => {
-  console.log("Creating company with data JS:", companyData);
-  const token = localStorage.getItem("token");
-  const res = await fetch(`${API_URL}/companies`, {
-    method: "POST",
-    headers: { 
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`
-    },
-    body: JSON.stringify(companyData),
-  });
-  if (!res.ok) {
-    const errorData = await res.json();
-    throw new Error(errorData.detail || "Failed to create company");
+  try {
+    const res = await api.post("/", companyData); 
+    return res.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.detail || "Failed to create company");
   }
-  return res.json();
 };
 
-export const updateCompany = async (companyId, data) => {
-  const token = localStorage.getItem("token");
-  const res = await fetch(`${API_URL}/companies/${companyId}`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`
-    },
-    body: JSON.stringify(data),
-  });
-  if (!res.ok) {
-    const errorData = await res.json();
-    throw new Error(errorData.detail || "Failed to update company");
+export const incrementUsers = async (companyId) => {
+  try {
+    const res = await api.put(`/${companyId}/incrementUsers`);
+    return res.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.detail || "increment_users failed");
   }
-  return res.json();
-};
-
-
-export const deleteCompany = async (companyId) => {
-  const token = localStorage.getItem("token");
-  const res = await fetch(`${API_URL}/companies/${companyId}`, {
-    method: "DELETE",
-    headers: { 
-      Authorization: `Bearer ${token}`
-    }
-  });
-  if (!res.ok) {
-    const errorData = await res.json();
-    throw new Error(errorData.detail || "Failed to delete company");
-  }
-  return true;
 };
 
 export const getAllCompanies = async () => {
-  const res = await fetch(`${API_URL}/companies`);
-  if (!res.ok) throw new Error("Failed to fetch companies");
-  return res.json();
+  try {
+    const res = await api.get("/");
+    return res.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.detail || "Failed to fetch companies");
+  }
 };
 
 export const getCompanyById = async (companyId) => {
-  const res = await fetch(`${API_URL}/companies/${companyId}`);
-  if (!res.ok) {
-    const errorData = await res.json();
-    throw new Error(errorData.detail || "Failed to fetch company");
+  try {
+    const res = await api.get(`/${companyId}`);
+    return res.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.detail || "Failed to fetch company");
   }
-  return res.json();
 };

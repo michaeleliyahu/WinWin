@@ -21,9 +21,9 @@ async def get_companies():
     return await company_service.get_all_companies()
 
 
-@router.put("/{company_id}")
-async def update_company(company_id: str = Path(...), data: dict = None):
-    updated = await company_service.update_company(company_id, data)
+@router.put("/{company_id}/incrementUsers")
+async def increment_users(company_id: str):
+    updated = await company_service.increase_company_user_count(company_id)
     updated["_id"] = str(updated["_id"])
     return updated
 

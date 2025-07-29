@@ -95,12 +95,12 @@ async def delete_company(company_id: str):
     return True
 
 
-async def update_company(company_id: str, data: dict):
+async def increase_company_user_count(company_id: str):
     result = await companies_collection.update_one(
         {"_id": ObjectId(company_id)},
-        {"$set": data}
+        {"$inc": {"users": 1}}  # הגדלה בטוחה של השדה
     )
-    if result.modified_count == 0:
+    if result.matched_count == 0:
         raise HTTPException(status_code=404, detail="Company not found")
     return await companies_collection.find_one({"_id": ObjectId(company_id)})
 

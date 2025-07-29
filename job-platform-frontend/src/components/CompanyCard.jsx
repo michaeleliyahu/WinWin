@@ -1,23 +1,28 @@
 import { Card, CardContent, Typography, Box, Avatar, Button } from "@mui/material";
 import "../styles/companyCard.css"; 
 import { updateUser } from "../services/userService"; 
+import { incrementUsers } from "../services/companyService";
+import { useState } from "react";
 
-export default function CompanyCard({ company, onClick }) {
+export default function CompanyCard({ company: initialCompany, onClick }) {
+  const [company, setCompany] = useState(initialCompany);
   const handleJoinCompany = async (e) => {
     e.stopPropagation();
 
     try {
       const user = JSON.parse(localStorage.getItem("user"));
-      const token = localStorage.getItem("token");
       const userId = user._id;
-      console.log("token: ", token);
       await updateUser(userId, { companyId: company._id });
+      await incrementUsers(company._id);
 
+      setCompany(prev => ({
+      ...prev,
+      users: (prev.users || 0) + 1
+    }));
     } catch (error) {
       console.error("error on update user", error);
     }
   };
-
   return (
     <Card className="custom-company-card" sx={{ minWidth: 300, maxWidth: 350, m: 1 }}>
       <CardContent onClick={() => onClick(company)} style={{ cursor: "pointer" }}>
