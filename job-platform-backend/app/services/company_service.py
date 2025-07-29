@@ -15,7 +15,7 @@ The user provides the name of a company. Your task is to check if the company ex
 ## ✅ If the company exists, return a JSON object with the following fields:
 {
   "name": "<Company Name>",
-  "description": "<One-line description>",
+  "description": "<One-line description (max 90 characters)>",
   "industry": "<Industry>",
   "category": "<Product or Service Category>",
   "headquarters": "<City, Country>",
@@ -98,7 +98,7 @@ async def delete_company(company_id: str):
 async def increase_company_user_count(company_id: str):
     result = await companies_collection.update_one(
         {"_id": ObjectId(company_id)},
-        {"$inc": {"users": 1}}  # הגדלה בטוחה של השדה
+        {"$inc": {"users": 0}}  # הגדלה בטוחה של השדה
     )
     if result.matched_count == 0:
         raise HTTPException(status_code=404, detail="Company not found")
