@@ -73,7 +73,8 @@ async def create_company(company: CompanyCreate):
         "employees": response_data.get("employees", ""),
         "followers": response_data.get("followers", ""),
         "tagline": response_data.get("tagline", ""),
-        "logo": logo_url
+        "logo": logo_url,
+        "users": 1
     })
     response_data["_id"] = str(result.inserted_id)
     return response_data

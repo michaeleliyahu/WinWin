@@ -17,3 +17,5 @@ class CompanyOut(BaseModel):
     followers: Optional[str] = None
     tagline: Optional[str] = None
     logo: Optional[str] = None
+    users: Optional[int] = None
+

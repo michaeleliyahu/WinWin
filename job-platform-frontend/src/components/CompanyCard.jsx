@@ -30,7 +30,7 @@ export default function CompanyCard({ company, onClick }) {
         </Box>
         <Box display="flex" alignItems="center" mb={1}>
           <Typography variant="body2" color="text.secondary" sx={{ mr: 1 }}>
-            <span role="img" aria-label="followers">👥</span> {company.followers || "0"} followers
+            <span role="img" aria-label="users">👥</span> {company.users || "0"} 
           </Typography>
         </Box>
         <Box display="flex" gap={1}>
