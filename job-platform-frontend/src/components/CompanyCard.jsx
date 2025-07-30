@@ -3,9 +3,12 @@ import "../styles/companyCard.css";
 import { updateUserCompany } from "../services/userService"; 
 import { incrementUsers } from "../services/companyService";
 import { useState } from "react";
+import ResumeDialog from "./SubmitResume";
 
 export default function CompanyCard({ company: initialCompany, onClick }) {
   const [company, setCompany] = useState(initialCompany);
+  const [openResumeDialog, setOpenResumeDialog] = useState(false);
+
   const handleJoinCompany = async (e) => {
     e.stopPropagation();
 
@@ -23,6 +26,15 @@ export default function CompanyCard({ company: initialCompany, onClick }) {
       console.error("error on update user", error);
     }
   };
+
+const handleOpenResumeDialog = (e) => {
+  e.stopPropagation();
+  setOpenResumeDialog(true);
+};
+
+const handleCloseResumeDialog = () => {
+  setOpenResumeDialog(false);
+};
   return (
 <Card
   className="custom-company-card"
@@ -107,7 +119,7 @@ export default function CompanyCard({ company: initialCompany, onClick }) {
             whiteSpace: "nowrap",
             borderRadius: 3,
           }}
-          onClick={e => e.stopPropagation()}
+          onClick={handleOpenResumeDialog}
         >
           <span style={{ display: "flex", alignItems: "center" }}>
             <span style={{ marginRight: 4, fontSize: 16 }}>📄</span> Submit Resume
@@ -116,6 +128,11 @@ export default function CompanyCard({ company: initialCompany, onClick }) {
       </Box>
     </CardContent>
   </Box>
+  <ResumeDialog
+  open={openResumeDialog}
+  onClose={handleCloseResumeDialog}
+  company={company}
+  />
 </Card>
   );
 }
