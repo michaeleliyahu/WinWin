@@ -4,6 +4,7 @@ import { updateUserCompany } from "../services/userService";
 import { incrementUsers } from "../services/companyService";
 import { useState } from "react";
 import ResumeDialog from "./SubmitResume";
+import { Tooltip } from "@mui/material";
 
 export default function CompanyCard({ company: initialCompany, onClick }) {
   const [company, setCompany] = useState(initialCompany);
@@ -83,9 +84,19 @@ const handleCloseResumeDialog = () => {
       <Typography variant="body2" color="text.secondary" className="custom-typography" sx={{ mr: 1 }}>
         <span role="img" aria-label="users">👥</span> {company.users || "0"}
       </Typography>      
-      <Typography variant="body2" color="text.secondary" className="custom-typography"  sx={{ mr: 1,  paddingTop: '0.5rem'}}>
-        <span role="img" aria-label="description"></span> {company.description}
-      </Typography>
+      <Tooltip title={company.description}>
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          className="custom-typography"
+          sx={{ mr: 1, paddingTop: '0.5rem' }}
+        >
+          <span role="img" aria-label="description"></span>
+          {company.description.length > 150
+            ? company.description.slice(0, 130) + '...'
+            : company.description}
+        </Typography>
+      </Tooltip>
     </Box>
 
     <Box sx={{ paddingTop: '0.5rem' }}> 

@@ -15,7 +15,7 @@ The user provides the name of a company. Your task is to check if the company ex
 ## ✅ If the company exists, return a JSON object with the following fields:
 {
   "name": "<Company Name>",
-  "description": "<One-line description (min 50 characters, max 90 characters)>",
+  "description": "<One-line description (min 110 characters, max 130 characters)>",
   "industry": "<Industry>",
   "category": "<Product or Service Category>",
   "headquarters": "<City, Country>",
