@@ -4,9 +4,6 @@ const API_URL = process.env.REACT_APP_API_URL || "http://localhost:8000";
 
 const api = axios.create({
   baseURL: `${API_URL}/companies`, 
-  headers: {
-    "Content-Type": "companies/json",
-  }
 });
 
 api.interceptors.request.use((config) => {
@@ -19,6 +16,7 @@ api.interceptors.request.use((config) => {
 
 export const createCompany = async (companyData) => {
   try {
+    console.log("Creating company with data:", companyData);
     const res = await api.post("/", companyData); 
     return res.data;
   } catch (error) {
