@@ -22,26 +22,21 @@
 
 /* עבור ה-Box companies-row כבר יש לך: */
 .companies-row {
-  align-content: center;
   align-items: center;
   display: flex;
-  flex: none;
   flex-direction: row;
-  flex-wrap: nowrap;
-  gap: 10px;
-  height: min-content;
-  justify-content: center;
-  max-width: 100%;
-  overflow: visible;
-  padding: 40px 0;
-  position: relative;
-  width: 960px;
-  padding-left: 16px;  /* px: 2 ~ 8px, אפשר להגדיל ל-16px כדי להתאים */
-  padding-right: 16px;
-  margin-top: 24px; /* mt: 3 ~ 24px */
+  justify-content: flex-end;
+  flex-wrap: wrap; 
+  gap: 1rem; 
+  padding-top: 1rem;
+      width: 70%;
 }
 
-/* תגובת מדיה למובייל - אפשר לשנות ל-wrap ולמספר עמודות קטן */
+.company-card {
+  flex: 0 1 calc(33.333% - 1rem); 
+  max-width: calc(33.333% - 1rem); 
+}
+
 @media (max-width: 600px) {
   .companies-row {
     flex-wrap: wrap;

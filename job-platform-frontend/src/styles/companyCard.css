@@ -1,7 +1,16 @@
+
+
+/*
+
 .custom-company-card {
-  align-content: center;
-  aspect-ratio: 1 / 1; /* שומר על יחס רוחב/גובה של 1:1 */
-  width: 100%; /* תתאים את הרוחב לפי הגריד/מיכל האב */
-  max-width: 345px; /* אפשר להשאיר או להוריד לפי הצורך */
+  aspect-ratio: 1 / 1;
+  width: 100%; 
+  max-width: 345px; 
   border-radius: 10px;
 }
+.custom-typography {
+  font-weight: 500;
+  font-size: 0.8rem;
+}
+
+*/

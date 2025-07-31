@@ -48,8 +48,7 @@ const handleCloseResumeDialog = () => {
   }}
 >
   <Box sx={{
-    paddingRight: '1rem',
-    paddingLeft: '1rem'
+    padding: '1rem'
   }}>
     <Box
       sx={{
@@ -60,11 +59,11 @@ const handleCloseResumeDialog = () => {
     >
       <Avatar
         src={company.logo}
-        sx={{ width: 40, height: 40, mr: 1 }}
+        sx={{ width: 50, height: 50, mr: 1, borderRadius: 2}}
         variant="square"
       />
       <Box>
-        <Typography variant="h6" component="div" fontWeight="bold">
+        <Typography sx={{ fontSize: '1.1rem'}} variant="h6" component="div" fontWeight="bold">
           {company.name}
         </Typography>
         <Typography variant="body2" color="text.secondary">
@@ -74,22 +73,22 @@ const handleCloseResumeDialog = () => {
     </Box>
 
     <Box sx={{ mt: 1 }}>
-      <Typography variant="body2" color="text.secondary">
+      <Typography variant="body2" color="text.secondary" >
         <span role="img" aria-label="employees">👥</span>{company.employees + " employees"}
       </Typography>
-      <Typography variant="body2" color="text.secondary">
+      <Typography variant="body2" color="text.secondary" className="custom-typography" >
         <span role="img" aria-label="location">📌</span>{" "}
         {company.headquarters || company.location || ""}
       </Typography>
-      <Typography variant="body2" color="text.secondary" sx={{ mr: 1 }}>
+      <Typography variant="body2" color="text.secondary" className="custom-typography" sx={{ mr: 1 }}>
         <span role="img" aria-label="users">👥</span> {company.users || "0"}
       </Typography>      
-      <Typography variant="body2" color="text.secondary" sx={{ mr: 1 }}>
+      <Typography variant="body2" color="text.secondary" className="custom-typography"  sx={{ mr: 1,  paddingTop: '0.5rem'}}>
         <span role="img" aria-label="description"></span> {company.description}
       </Typography>
     </Box>
 
-    <CardContent onClick={() => onClick(company)} sx={{padding: 0,}}>
+    <Box sx={{ paddingTop: '0.5rem' }}> 
       <Box display="flex" gap={1}>
         <Button
           variant="contained"
@@ -126,7 +125,7 @@ const handleCloseResumeDialog = () => {
           </span>
         </Button>
       </Box>
-    </CardContent>
+    </Box>
   </Box>
   <ResumeDialog
   open={openResumeDialog}
