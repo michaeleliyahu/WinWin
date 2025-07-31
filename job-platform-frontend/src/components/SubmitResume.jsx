@@ -23,7 +23,8 @@ export default function ResumeDialog({ open, onClose, company }) {
   const [lastName, setLastName] = useState("");
   const [mobileNumber, setMobileNumber] = useState("");
   const [email, setEmail] = useState("");
-  const [jobLink, setJobLink] = useState(""); // New state for job link
+  const [jobLink, setJobLink] = useState("");
+  const [success, setSuccess] = useState(false);
 
   const fileInputRef = useRef(null);
 
@@ -42,37 +43,59 @@ export default function ResumeDialog({ open, onClose, company }) {
     formData.append("jobLink", jobLink);
 
     try {
-        const user = JSON.parse(localStorage.getItem("user"));
-        formData.append("userId", user._id);
+      const user = JSON.parse(localStorage.getItem("user"));
+      formData.append("userId", user._id);
 
-        await createApplication(formData);
-        onClose();
-
+      await createApplication(formData);
+      setSuccess(true);
     } catch (error) {
-        console.error("error on update user", error);
+      console.error("error on update user", error);
     }
+  };
+
+  const handleClose = () => {
+    setSuccess(false);
+    onClose();
   };
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
   };
 
-  const handleUploadButtonClick = () => {
-    fileInputRef.current.click();
-  };
+  if (!open) return null;
 
-  return (
-    <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
-      <DialogTitle sx={{ m: 0, p: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+  return success ? (
+    <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
+      <DialogTitle>Application submitted!</DialogTitle>
+      <DialogContent dividers>
+        <Typography>
+          Your application to {company?.name} was submitted successfully.
+        </Typography>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleClose} variant="contained">
+          Close
+        </Button>
+      </DialogActions>
+    </Dialog>
+  ) : (
+    <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
+      <DialogTitle
+        sx={{
+          m: 0,
+          p: 2,
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
         <Typography variant="h6" component="div">
           Apply to {company?.name}
         </Typography>
         <IconButton
           aria-label="close"
-          onClick={onClose}
-          sx={{
-            color: (theme) => theme.palette.grey[500],
-          }}
+          onClick={handleClose}
+          sx={{ color: (theme) => theme.palette.grey[500] }}
         >
           <CloseIcon />
         </IconButton>
@@ -115,7 +138,9 @@ export default function ResumeDialog({ open, onClose, company }) {
           />
 
           <FormControl fullWidth margin="dense" sx={{ mb: 2 }}>
-            <InputLabel id="email-select-label" required>Email address</InputLabel>
+            <InputLabel id="email-select-label" required>
+              Email address
+            </InputLabel>
             <Select
               labelId="email-select-label"
               id="email-select"
@@ -127,16 +152,17 @@ export default function ResumeDialog({ open, onClose, company }) {
               <MenuItem value="">
                 <em>Select an option</em>
               </MenuItem>
-              <MenuItem value="michaeleliyahu65@gmail.com">michaeleliyahu65@gmail.com</MenuItem>
+              <MenuItem value="michaeleliyahu65@gmail.com">
+                michaeleliyahu65@gmail.com
+              </MenuItem>
               <MenuItem value="mmyy605@gmail.com">mmyy605@gmail.com</MenuItem>
             </Select>
           </FormControl>
 
-          {/* New Job Link TextField */}
           <TextField
             margin="dense"
             label="Job Link"
-            type="url" // Use type="url" for website links
+            type="url"
             fullWidth
             variant="outlined"
             value={jobLink}
@@ -145,24 +171,26 @@ export default function ResumeDialog({ open, onClose, company }) {
             placeholder="e.g., https://example.com/job-posting"
           />
 
-          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', mb: 2 }}>
-            <Button
-              variant="contained"
-              component="label"
-              onClick={handleUploadButtonClick}
-            >
-              Upload resume
-              <input
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "flex-start",
+              mb: 2,
+            }}
+          >
+            <Button variant="contained" component="label">
+            Upload resume
+            <input
                 type="file"
                 accept=".pdf,.doc,.docx"
                 onChange={handleFileChange}
-                style={{ display: 'none' }}
-                ref={fileInputRef}
-              />
+                style={{ display: "none" }}
+            />
             </Button>
             {file && (
               <Typography variant="body2" color="textSecondary" sx={{ mt: 1 }}>
-                Selected file: **{file.name}**
+                Selected file: <strong>{file.name}</strong>
               </Typography>
             )}
             <Typography variant="caption" color="textSecondary" sx={{ mt: 0.5 }}>
@@ -172,7 +200,7 @@ export default function ResumeDialog({ open, onClose, company }) {
         </Box>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose}>Cancel</Button>
+        <Button onClick={handleClose}>Cancel</Button>
         <Button variant="contained" onClick={handleSubmit} disabled={!file}>
           Submit
         </Button>
