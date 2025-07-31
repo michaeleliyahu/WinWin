@@ -14,48 +14,49 @@ import {
   FormControl,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { useState, useRef } from "react"; // Import useRef
+import { useState, useRef } from "react";
+import { createApplication } from "../services/applicationService";
 
 export default function ResumeDialog({ open, onClose, company }) {
-  const [notes, setNotes] = useState("");
   const [file, setFile] = useState(null);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [mobileNumber, setMobileNumber] = useState("");
   const [email, setEmail] = useState("");
+  const [jobLink, setJobLink] = useState(""); // New state for job link
 
-  // Create a ref for the hidden file input
   const fileInputRef = useRef(null);
 
-  const handleSubmit = () => {
+  const handleSubmit = async (e) => {
+    e.stopPropagation();
+
     if (!file) return;
 
     const formData = new FormData();
     formData.append("resume", file);
-    formData.append("notes", notes);
     formData.append("companyId", company._id);
     formData.append("firstName", firstName);
     formData.append("lastName", lastName);
     formData.append("mobileNumber", mobileNumber);
     formData.append("email", email);
+    formData.append("jobLink", jobLink);
 
-    // In a real application, you would send this formData to your backend
-    console.log("Submitting resume for:", company?.name);
-    console.log("File:", file.name);
-    console.log("Notes:", notes);
-    console.log("First Name:", firstName);
-    console.log("Last Name:", lastName);
-    console.log("Mobile Number:", mobileNumber);
-    console.log("Email:", email);
+    try {
+        const user = JSON.parse(localStorage.getItem("user"));
+        formData.append("userId", user._id);
 
-    onClose();
+        await createApplication(formData);
+        onClose();
+
+    } catch (error) {
+        console.error("error on update user", error);
+    }
   };
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
   };
 
-  // Function to trigger the hidden file input
   const handleUploadButtonClick = () => {
     fileInputRef.current.click();
   };
@@ -131,11 +132,23 @@ export default function ResumeDialog({ open, onClose, company }) {
             </Select>
           </FormControl>
 
-          {/* --- File Upload Section --- */}
+          {/* New Job Link TextField */}
+          <TextField
+            margin="dense"
+            label="Job Link"
+            type="url" // Use type="url" for website links
+            fullWidth
+            variant="outlined"
+            value={jobLink}
+            onChange={(e) => setJobLink(e.target.value)}
+            sx={{ mb: 2 }}
+            placeholder="e.g., https://example.com/job-posting"
+          />
+
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', mb: 2 }}>
             <Button
-              variant="contained" // Use 'contained' for a prominent button, or 'outlined'/'text'
-              component="label" // Important: makes the button act as a label for the input
+              variant="contained"
+              component="label"
               onClick={handleUploadButtonClick}
             >
               Upload resume
@@ -143,8 +156,8 @@ export default function ResumeDialog({ open, onClose, company }) {
                 type="file"
                 accept=".pdf,.doc,.docx"
                 onChange={handleFileChange}
-                style={{ display: 'none' }} // Hide the default file input
-                ref={fileInputRef} // Attach the ref here
+                style={{ display: 'none' }}
+                ref={fileInputRef}
               />
             </Button>
             {file && (
@@ -156,8 +169,6 @@ export default function ResumeDialog({ open, onClose, company }) {
               DOC, DOCX, PDF (2 MB)
             </Typography>
           </Box>
-          {/* --- End File Upload Section --- */}
-
         </Box>
       </DialogContent>
       <DialogActions>
