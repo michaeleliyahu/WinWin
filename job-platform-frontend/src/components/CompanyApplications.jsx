@@ -1,1 +1,8 @@
-<h>ime company application</h>
+
+export default function CompanyApplications() {
+
+  return (
+    <div>
+    </div>
+  );
+}

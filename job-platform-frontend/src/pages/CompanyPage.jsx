@@ -1,7 +1,5 @@
-import { useNavigate } from "react-router-dom";
-import PillButton from "../components/PillButton";
-import companyCover from "../components/CompanyCover";
-import companyApplications from "../components/CompanyApplications";
+import CompanyCover from "../components/CompanyCover";
+import CompanyApplications from "../components/CompanyApplications";
 import { useLocation, useParams } from "react-router-dom";
 
 export default function ApplicationPage() {
@@ -11,8 +9,8 @@ export default function ApplicationPage() {
 
   return (
     <div>
-      <companyApplications />
-      <companyCover />
+      <CompanyApplications />
+      <CompanyCover company={company} />
     </div>
   );
 }

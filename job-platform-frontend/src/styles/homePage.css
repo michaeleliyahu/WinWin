@@ -11,13 +11,6 @@
   direction: rtl;
   padding-top: 2rem;
 }
-.p-card {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  background-color: white;
-  border-radius: 16px;
-  padding: 4rem;
-  margin: 0 auto;
-}
 .framer-style-header {
   padding-top: 2rem;
   margin-bottom: 2rem;
