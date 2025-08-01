@@ -81,7 +81,7 @@ const handleCloseResumeDialog = () => {
           </Typography>
           <Typography variant="body2" color="text.secondary" className="custom-typography">
             <span role="img" aria-label="location">📌</span>{" "}
-            {company.headquarters || company.location || ""}
+            {company.branches_in_israel || company.location || ""}
           </Typography>
           <Typography variant="body2" color="text.secondary" className="custom-typography" sx={{ mr: 1 }}>
             <span role="img" aria-label="users">👥</span> {company.users || "0"}
@@ -94,7 +94,7 @@ const handleCloseResumeDialog = () => {
               sx={{ mr: 1, paddingTop: '0.5rem' }}
             >
               <span role="img" aria-label="description"></span>
-              {company.description.length > 150
+              {company.description && company.description.length > 130
                 ? company.description.slice(0, 130) + '...'
                 : company.description}
             </Typography>
