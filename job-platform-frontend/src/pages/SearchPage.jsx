@@ -27,17 +27,19 @@ export default function SearchPage() {
     fetchCompanies();
   }, []);
 
-  const handleCardClick = (company) => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      navigate("/login", {
-        state: { redirectTo: `/submit/${company._id}`, company },
-      });
-      return;
-    }
+const handleCardClick = (company) => {
+  console.log("Navigating to company:", company);
+  const token = localStorage.getItem("token");
 
-    navigate(`/submit/${company._id}`, { state: { company } });
-  };
+  if (!token) {
+    navigate("/login", {
+      state: { redirectTo: `/company/${company._id}`, company },
+    });
+    return;
+  }
+
+  navigate(`/company/${company._id}`, { state: { company } });
+};
 
   const handleInputKeyDown = async (e) => {
     if (e.key === "Enter" && searchTerm.trim()) {

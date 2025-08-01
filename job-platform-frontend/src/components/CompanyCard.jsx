@@ -37,112 +37,118 @@ const handleCloseResumeDialog = () => {
   setOpenResumeDialog(false);
 };
   return (
-<Card
-  className="custom-company-card"
-  sx={{
-    minWidth: 300,
-    maxWidth: 350,
-    m: 1,
-    direction: 'ltr',
-    textAlign: 'left',
-    borderRadius: 5,
-  }}
->
-  <Box sx={{
-    padding: '1rem'
-  }}>
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
-      }}
-    >
-      <Avatar
-        src={company.logo}
-        sx={{ width: 50, height: 50, mr: 1, borderRadius: 2}}
-        variant="square"
-      />
-      <Box>
-        <Typography sx={{ fontSize: '1.1rem'}} variant="h6" component="div" fontWeight="bold">
-          {company.name}
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
-          {company.industry || "Software Development"}
-        </Typography>
+  <Card
+    className="custom-company-card"
+    sx={{
+      minWidth: 300,
+      maxWidth: 350,
+      m: 1,
+      direction: 'ltr',
+      textAlign: 'left',
+      borderRadius: 5,
+    }}
+  >
+    <Box sx={{ padding: '1rem' }}>
+      {/* אזור לחיץ בלבד */}
+      <Box
+        onClick={onClick}
+        sx={{
+          cursor: 'pointer',
+          '&:hover': { backgroundColor: 'rgba(0, 0, 0, 0.03)' },
+          borderRadius: 2,
+          paddingBottom: 1,
+        }}
+      >
+        <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+          <Avatar
+            src={company.logo}
+            sx={{ width: 50, height: 50, mr: 1, borderRadius: 2 }}
+            variant="square"
+          />
+          <Box>
+            <Typography sx={{ fontSize: '1.1rem' }} variant="h6" component="div" fontWeight="bold">
+              {company.name}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              {company.industry || "Software Development"}
+            </Typography>
+          </Box>
+        </Box>
+
+        <Box sx={{ mt: 1 }}>
+          <Typography variant="body2" color="text.secondary">
+            <span role="img" aria-label="employees">👥</span>{company.employees + " employees"}
+          </Typography>
+          <Typography variant="body2" color="text.secondary" className="custom-typography">
+            <span role="img" aria-label="location">📌</span>{" "}
+            {company.headquarters || company.location || ""}
+          </Typography>
+          <Typography variant="body2" color="text.secondary" className="custom-typography" sx={{ mr: 1 }}>
+            <span role="img" aria-label="users">👥</span> {company.users || "0"}
+          </Typography>
+          <Tooltip title={company.description}>
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              className="custom-typography"
+              sx={{ mr: 1, paddingTop: '0.5rem' }}
+            >
+              <span role="img" aria-label="description"></span>
+              {company.description.length > 150
+                ? company.description.slice(0, 130) + '...'
+                : company.description}
+            </Typography>
+          </Tooltip>
+        </Box>
+      </Box>
+
+      {/* אזור כפתורים נפרד, לא לחיץ */}
+      <Box sx={{ paddingTop: '0.5rem' }}>
+        <Box display="flex" gap={1}>
+          <Button
+            variant="contained"
+            color="primary"
+            size="small"
+            sx={{
+              textTransform: "none",
+              display: "flex",
+              alignItems: "center",
+              whiteSpace: "nowrap",
+              borderRadius: 3,
+            }}
+            onClick={handleJoinCompany}
+          >
+            <span style={{ display: "flex", alignItems: "center" }}>
+              <span style={{ marginRight: 4, fontSize: 16 }}>✈️</span> i work here
+            </span>
+          </Button>
+          <Button
+            variant="outlined"
+            color="primary"
+            size="small"
+            sx={{
+              textTransform: "none",
+              display: "flex",
+              alignItems: "center",
+              whiteSpace: "nowrap",
+              borderRadius: 3,
+            }}
+            onClick={handleOpenResumeDialog}
+          >
+            <span style={{ display: "flex", alignItems: "center" }}>
+              <span style={{ marginRight: 4, fontSize: 16 }}>📄</span> Submit Resume
+            </span>
+          </Button>
+        </Box>
       </Box>
     </Box>
 
-    <Box sx={{ mt: 1 }}>
-      <Typography variant="body2" color="text.secondary" >
-        <span role="img" aria-label="employees">👥</span>{company.employees + " employees"}
-      </Typography>
-      <Typography variant="body2" color="text.secondary" className="custom-typography" >
-        <span role="img" aria-label="location">📌</span>{" "}
-        {company.headquarters || company.location || ""}
-      </Typography>
-      <Typography variant="body2" color="text.secondary" className="custom-typography" sx={{ mr: 1 }}>
-        <span role="img" aria-label="users">👥</span> {company.users || "0"}
-      </Typography>      
-      <Tooltip title={company.description}>
-        <Typography
-          variant="body2"
-          color="text.secondary"
-          className="custom-typography"
-          sx={{ mr: 1, paddingTop: '0.5rem' }}
-        >
-          <span role="img" aria-label="description"></span>
-          {company.description.length > 150
-            ? company.description.slice(0, 130) + '...'
-            : company.description}
-        </Typography>
-      </Tooltip>
-    </Box>
+    <ResumeDialog
+      open={openResumeDialog}
+      onClose={handleCloseResumeDialog}
+      company={company}
+    />
+  </Card>
 
-    <Box sx={{ paddingTop: '0.5rem' }}> 
-      <Box display="flex" gap={1}>
-        <Button
-          variant="contained"
-          color="primary"
-          size="small"
-          sx={{
-            textTransform: "none",
-            display: "flex",
-            alignItems: "center",
-            whiteSpace: "nowrap",
-            borderRadius: 3,
-          }}
-          onClick={handleJoinCompany}
-        >
-          <span style={{ display: "flex", alignItems: "center" }}>
-            <span style={{ marginRight: 4, fontSize: 16 }}>✈️</span> i work here
-          </span>
-        </Button>
-        <Button
-          variant="outlined"
-          color="primary"
-          size="small"
-          sx={{
-            textTransform: "none",
-            display: "flex",
-            alignItems: "center",
-            whiteSpace: "nowrap",
-            borderRadius: 3,
-          }}
-          onClick={handleOpenResumeDialog}
-        >
-          <span style={{ display: "flex", alignItems: "center" }}>
-            <span style={{ marginRight: 4, fontSize: 16 }}>📄</span> Submit Resume
-          </span>
-        </Button>
-      </Box>
-    </Box>
-  </Box>
-  <ResumeDialog
-  open={openResumeDialog}
-  onClose={handleCloseResumeDialog}
-  company={company}
-  />
-</Card>
   );
 }

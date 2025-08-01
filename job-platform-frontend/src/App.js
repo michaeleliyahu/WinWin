@@ -6,6 +6,7 @@ import SearchPage from "./pages/SearchPage";
 import HomePage from "./pages/HomePage";
 import LoginSuccess from "./components/LoginSuccess.jsx";
 import AppLayout from "./components/AppLayout";
+import CompanyPage from "./pages/CompanyPage.jsx";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="/login-success" element={<LoginSuccess />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/SearchPage" element={<SearchPage />} />
+        <Route path="/company/:id" element={<CompanyPage />} />
       </Routes>
     </AppLayout>
   );
