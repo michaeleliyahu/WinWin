@@ -15,7 +15,7 @@ export default function HomePage() {
 
         <div className="framer-style-buttons">
           <PillButton label="Add Company" variant="dark" />
-          <PillButton label="View Companies" onClick={() => navigate("/CompanyPage")} />
+          <PillButton label="View Companies" onClick={() => navigate("/SearchPage")} />
         </div>
       </div>
     </div>
