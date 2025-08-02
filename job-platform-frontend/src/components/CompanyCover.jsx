@@ -1,6 +1,5 @@
 import "../styles/searchPage.css";
-import { Card, CardContent, Typography, Box, Avatar, Button } from "@mui/material";
-import { Tooltip } from "@mui/material";
+import {Typography, Box, Avatar} from "@mui/material";
 
 
 export default function CompanyCover({ company }) {
