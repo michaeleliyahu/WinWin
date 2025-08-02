@@ -3,9 +3,10 @@
   background-color: white;
   border-radius: 16px;
   padding: 4rem;
-  margin: 0 auto;
+  margin: 1rem auto;
   direction: ltr;
-  width: 70%;
+  width: 75%;
+  max-width: 70rem;
 }
 
 
