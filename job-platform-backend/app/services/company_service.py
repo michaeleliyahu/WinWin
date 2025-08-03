@@ -19,7 +19,7 @@ The user provides the name of a company. Your task is to check if the company ex
   "long_description": "<Extended description (min 200 characters, max 300 characters)>",
   "industry": "<Industry>",
   "category": "<Product or Service Category>",
-  "branches_in_israel": "<City 1>,<City 2>,..."],
+  "branches_in_israel": "<City 1>,<City 2>,...",
   "employees": "<Estimated number of employees, e.g., '1K–5K'>",
   "followers": "<Approximate follower count, e.g., '340K'>",
   "tagline": "<Short promotional sentence>"
