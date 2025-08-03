@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getAllCompanies, createCompany } from '../services/companyService';
-
+import { CircularProgress } from '@mui/material';
 import {
   Container,
   Typography,
@@ -20,36 +20,41 @@ export function CompanySearchPage() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  // קריאה לכל החברות
   useEffect(() => {
     const fetchCompanies = async () => {
+      setLoading(true); // התחלת טעינה
       try {
         const all = await getAllCompanies();
         setCompanies(all);
       } catch (err) {
         console.error("שגיאה בשליפת חברות", err);
+      } finally {
+        setLoading(false); // סיום טעינה
       }
     };
     fetchCompanies();
   }, []);
 
-const handleCardClick = (company) => {
-  console.log("Navigating to company:", company);
-  const token = localStorage.getItem("token");
+  // מעבר לדף חברה
+  const handleCardClick = (company) => {
+    const token = localStorage.getItem("token");
 
-  if (!token) {
-    navigate("/login", {
-      state: { redirectTo: `/company/${company._id}`, company },
-    });
-    return;
-  }
+    if (!token) {
+      navigate("/login", {
+        state: { redirectTo: `/company/${company._id}`, company },
+      });
+      return;
+    }
 
-  navigate(`/company/${company._id}`, { state: { company } });
-};
+    navigate(`/company/${company._id}`, { state: { company } });
+  };
 
+  // יצירת חברה חדשה בהזנת טקסט ולחיצה על Enter
   const handleInputKeyDown = async (e) => {
     if (e.key === "Enter" && searchTerm.trim()) {
       e.preventDefault();
-      setLoading(true);
+      setLoading(true); // התחלת טעינה
       try {
         const newCompany = await createCompany({ name: searchTerm.trim() });
         setCompanies((prev) => [...prev, newCompany]);
@@ -57,7 +62,7 @@ const handleCardClick = (company) => {
       } catch (err) {
         alert(err.message || "Failed to create company");
       } finally {
-        setLoading(false);
+        setLoading(false); // סיום טעינה
       }
     }
   };
@@ -129,17 +134,37 @@ const handleCardClick = (company) => {
             </Grid>
           ))}
         </Grid>
-
-        {/* No Results Message */}
-        {filteredCompanies.length === 0 && (
-          <Box sx={{ textAlign: 'center', mt: 6 }}>
-            <Typography variant="h6" sx={{ color: 'text.secondary', mb: 1 }}>
-              No companies found
-            </Typography>
-            <Typography variant="body1" sx={{ color: 'text.secondary' }}>
-              Try adjusting your search terms
-            </Typography>
+        {loading ? (
+          <Box sx={{ display: 'flex', justifyContent: 'center', mt: 6 }}>
+            <CircularProgress />
           </Box>
+        ) : (
+          <>
+            {/* Companies Grid */}
+            <Grid container spacing={3}>
+              {filteredCompanies.map((company, index) => (
+                <Grid item xs={12} sm={6} md={4} key={index}>
+                  <CompanyCard
+                    key={company._id}
+                    company={company}
+                    onClick={() => handleCardClick(company)}
+                  />
+                </Grid>
+              ))}
+            </Grid>
+
+            {/* No Results Message */}
+            {filteredCompanies.length === 0 && (
+              <Box sx={{ textAlign: 'center', mt: 6 }}>
+                <Typography variant="h6" sx={{ color: 'text.secondary', mb: 1 }}>
+                  No companies found
+                </Typography>
+                <Typography variant="body1" sx={{ color: 'text.secondary' }}>
+                  Try adjusting your search terms
+                </Typography>
+              </Box>
+            )}
+          </>
         )}
       </Container>
     </Box>
