@@ -5,7 +5,7 @@ import { getCurrentUser } from "../services/userService";
 export default function LoginSuccess() {
   const location = useLocation();
   const navigate = useNavigate();
-  const redirectTo = location.state?.redirectTo || "/HomePage";
+  const redirectTo = location.state?.redirectTo || "/";
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);

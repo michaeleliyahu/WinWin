@@ -1,4 +1,6 @@
 import React from 'react';
+import { Link, useNavigate } from "react-router-dom";
+
 import { 
   AppBar, 
   Toolbar, 
@@ -11,6 +13,18 @@ import {
 import { Check } from '@mui/icons-material';
 
 export function Header() {
+  const navigate = useNavigate();
+
+  const userJson = localStorage.getItem("user");
+  const user = userJson ? JSON.parse(userJson) : null;
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    navigate("/login");
+  };
+  const handleLogin = () => {
+    navigate("/login");
+  };
   return (
     <AppBar 
       position="static" 
@@ -72,7 +86,31 @@ export function Header() {
           >
             Candidates
           </Button>
-          <Avatar sx={{ width: 32, height: 32, bgcolor: 'grey.300' }} />
+           {user ? (
+            <Avatar
+              src={user.picture}
+              alt={user.name}
+              sx={{ width: 32, height: 32, cursor: 'pointer' }}
+              onClick={handleLogout}
+              title="Logout"
+            />
+          ) : (
+            <Button
+              variant="outlined"
+              onClick={handleLogin}
+              sx={{
+                textTransform: 'none',
+                borderColor: '#1976d2',
+                color: '#1976d2',
+                '&:hover': {
+                  backgroundColor: '#e3f2fd',
+                  borderColor: '#1976d2'
+                }
+              }}
+            >
+              Login / Sign Up
+            </Button>
+          )}
         </Box>
       </Toolbar>
     </AppBar>
