@@ -1,30 +1,33 @@
 from fastapi import APIRouter, HTTPException, Depends
-from app.schemas.user_schema import UserCreate, UserLogin, UserOut
+from app.schemas.user_schema import UserCreate,UserUpdate, UserLogin, UserOut, TokenUserResponse
 from app.services import user_service
 from fastapi.responses import JSONResponse
+from fastapi import Path
+from app.dependencies import get_current_user
 
 router = APIRouter(prefix="/users", tags=["users"])
 
 
-@router.post("/register", response_model=UserOut)
+@router.post("/register", response_model=TokenUserResponse)
 async def register(user: UserCreate):
-    new_user = await user_service.create_user(user)
-    return new_user
+    return await user_service.create_user(user)
 
 
-@router.post("/login")
+@router.post("/login", response_model=TokenUserResponse)
 async def login(user: UserLogin):
-    token = await user_service.authenticate_user(user)
-    return token
+    token_data = await user_service.authenticate_user(user)
+    return token_data
 
 
-@router.put("/{user_id}")
-async def update(user_id: str, data: dict):
-    await user_service.update_user(user_id, data)
+@router.put("/updateUserCompany/{id}")
+async def updateUserCompany(id: str, data: UserUpdate, current_user: TokenUserResponse = Depends(get_current_user)):
+
+    if id != current_user.id:
+        raise HTTPException(status_code=403, detail="You can only update your own profile.")
+    
+    await user_service.updateUserCompany(id, data.dict(exclude_unset=True))
     return JSONResponse(content={"message": "User updated successfully"})
 
-
-@router.delete("/{user_id}")
-async def delete(user_id: str):
-    await user_service.delete_user(user_id)
-    return JSONResponse(content={"message": "User deleted successfully"})
+@router.get("/me")
+async def get_current_user_data(user: UserOut = Depends(get_current_user)):
+    return user

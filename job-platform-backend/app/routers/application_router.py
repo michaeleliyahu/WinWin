@@ -1,30 +1,26 @@
-from fastapi import APIRouter
-from app.schemas.application_schema import ApplicationCreate, ApplicationOut
-from app.services import application_service
-from fastapi.responses import JSONResponse
-from typing import List
+from fastapi import Depends, UploadFile, File, APIRouter, status
+from fastapi.responses import StreamingResponse, Response
+from app.schemas.application_schema import ApplicationForm
+from motor.motor_asyncio import  AsyncIOMotorGridFSBucket
+from app.services.application_service import insert_application, get_applications_by_company
+from app.db import db
 
-router = APIRouter(prefix="/applications", tags=["applications"])
+fs = AsyncIOMotorGridFSBucket(db)
 
+router = APIRouter(prefix="/application", tags=["application"])
 
-@router.post("/", response_model=ApplicationOut)
-async def create_application(app: ApplicationCreate):
-    new_app = await application_service.create_application(app)
-    return new_app
-
-
-@router.get("/", response_model=List[ApplicationOut])
-async def get_applications():
-    return await application_service.get_all_applications()
+@router.post("/", status_code=status.HTTP_204_NO_CONTENT)
+async def create_application(form: ApplicationForm = Depends(), resume: UploadFile = File(...)):
+    await insert_application(form, resume)
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
-@router.put("/{application_id}/submit")
-async def mark_submitted(application_id: str):
-    await application_service.mark_as_submitted(application_id)
-    return JSONResponse(content={"message": "Application marked as submitted"})
+@router.get("/applications/company/{company_id}")
+async def applications_for_company(company_id: str):
+    return await get_applications_by_company(company_id)
 
-
-@router.delete("/{application_id}")
-async def delete_application(application_id: str):
-    await application_service.delete_application(application_id)
-    return JSONResponse(content={"message": "Application deleted successfully"})
+    
+@router.get("/resume/{file_id}")
+async def download_resume(file_id: str):
+    grid_out = await fs.open_download_stream(file_id)
+    return StreamingResponse(grid_out, media_type="application/octet-stream")
