@@ -121,8 +121,6 @@ export function CompanySearchPage() {
             />
           </Box>
         </Card>
-
-        {/* Companies Grid */}
         <Grid container spacing={3}>
           {filteredCompanies.map((company, index) => (
             <Grid item xs={4} sm={6} md={4} key={index}>
