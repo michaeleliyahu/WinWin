@@ -12,7 +12,7 @@ import {
   Card
 } from '@mui/material';
 import { Search } from '@mui/icons-material';
-import { CompanyCard } from '../components/CompanyCard copy';
+import { CompanyCard } from '../components/CompanyCard';
 
 export function CompanySearchPage() {
   const [companies, setCompanies] = useState([]);
@@ -120,7 +120,7 @@ const handleCardClick = (company) => {
         {/* Companies Grid */}
         <Grid container spacing={3}>
           {filteredCompanies.map((company, index) => (
-            <Grid item xs={12} sm={6} md={4} key={index}>
+            <Grid item xs={4} sm={6} md={4} key={index}>
               <CompanyCard
                 key={company._id}
                 company={company}
