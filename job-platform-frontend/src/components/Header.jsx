@@ -36,7 +36,7 @@ export function Header() {
       }}
     >
       <Toolbar sx={{ justifyContent: 'space-between', px: 3 }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+        <Box onClick={() => navigate("/")} sx={{ display: 'flex', alignItems: 'center', gap: 1, cursor: 'pointer'  }}>
           <Box
             sx={{
               width: 32,
