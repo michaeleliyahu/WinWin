@@ -1,19 +1,19 @@
-import CompanyCover from "../components/CompanyCover";
-import CompanyApplications from "../components/CompanyApplications";
-import CompanyProgress from "../components/CompanyProgress";
 // import { useLocation, useParams } from "react-router-dom";
 import { useLocation} from "react-router-dom";
+import { CompanyProfile } from "../components/CompanyProfile";
+import { CVSubmissions } from "../components/CVSubmissions";
+import { StatsCards } from "../components/StatsCards";
 
-export default function ApplicationPage() {
-  // const { id } = useParams();
+
+export default function CompanyPage() {
   const location = useLocation();
   const company = location.state?.company
-
   return (
-    <div className="homepage-container">
-      <CompanyCover company={company} />
-      <CompanyProgress company={company} />
-      <CompanyApplications company={company}/>
+    <div>
+      <CompanyProfile company={company}></CompanyProfile>
+      <StatsCards company={company}></StatsCards>
+      <CVSubmissions company={company}></CVSubmissions>
+
     </div>
   );
 }
