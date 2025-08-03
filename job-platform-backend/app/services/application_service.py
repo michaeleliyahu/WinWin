@@ -30,3 +30,11 @@ async def insert_application(form: ApplicationForm, resume: UploadFile):
     await applications_collection.insert_one(document)
 
 
+async def get_applications_by_company(company_id: str) -> list[dict]:
+    cursor = applications_collection.find({"companyId": company_id})
+    applications = []
+    async for doc in cursor:
+        doc["_id"] = str(doc["_id"])  # הפוך את ObjectId למחרוזת
+        doc["resume_file_id"] = str(doc["resume_file_id"])
+        applications.append(doc)
+    return applications

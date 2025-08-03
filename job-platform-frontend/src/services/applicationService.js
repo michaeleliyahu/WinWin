@@ -23,3 +23,34 @@ export const createApplication = async (applicationData) => {
     throw new Error(error.response?.data?.detail || "Failed to create application");
   }
 };
+/**
+ * @param {string} companyId
+ */
+export const getApplicationsByCompany = async (companyId) => {
+  try {
+    const res = await api.get(`/applications/company/${companyId}`);
+    return res.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.detail || "Failed to fetch applications");
+  }
+};
+
+export const downloadResume = async (fileId) => {
+  try {
+    const response = await api.get(`/resume/${fileId}`, {
+      responseType: "blob"
+    });
+
+    const blob = new Blob([response.data]);
+    const url = window.URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `resume_${fileId}.pdf`;
+    link.click();
+
+    window.URL.revokeObjectURL(url);
+  } catch (err) {
+    console.error("Failed to download resume:", err);
+  }
+};
