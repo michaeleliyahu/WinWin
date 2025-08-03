@@ -1,6 +1,16 @@
 import React from 'react';
-import { Card, CardContent, Typography, Box, Avatar } from '@mui/material';
-import { People, Description, TrendingUp } from '@mui/icons-material';
+import { 
+  Card, 
+  CardContent, 
+  Typography, 
+  Box,
+  Avatar
+} from '@mui/material';
+import { 
+  People, 
+  Description, 
+  TrendingUp 
+} from '@mui/icons-material';
 
 export function StatsCards() {
   const stats = [
@@ -32,56 +42,76 @@ export function StatsCards() {
 
   return (
     <Box 
-      sx={{ 
-        display: 'grid', 
-        gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' }, 
-        gap: 3, 
-        mb: 4, 
-        pt: 2 
+      sx={{
+        display: 'flex',
+        flexWrap: 'wrap',
+        gap: 3,
+        mb: 4,
+        pt: 2,
+        justifyContent: 'center'
       }}
     >
       {stats.map((stat, index) => (
-        <Card
+        <Box
           key={index}
-          elevation={0}
-          sx={{ 
-            p: 2, 
-            border: '1px solid #e0e0e0', 
-            borderRadius: 2 
+          sx={{
+            flex: '1 1 300px', // גודל מינימלי + גמישות להתרחב
+            minWidth: 280,
           }}
         >
-          <CardContent
+          <Card
+            elevation={0}
             sx={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              p: 3,
-              '&:last-child': { pb: 3 }
+              p: 2,
+              border: '1px solid #e0e0e0',
+              borderRadius: 2,
+              height: '100%',
             }}
           >
-            <Box>
-              <Typography variant="body2" sx={{ color: 'text.secondary', mb: 0.5 }}>
-                {stat.title}
-              </Typography>
-              <Typography variant="h3" sx={{ fontWeight: 600, color: 'text.primary', mb: 0.5 }}>
-                {stat.value}
-              </Typography>
-              <Typography variant="body2" sx={{ color: '#388e3c' }}>
-                {stat.change}
-              </Typography>
-            </Box>
-            <Avatar
+            <CardContent
               sx={{
-                width: 48,
-                height: 48,
-                backgroundColor: stat.iconBg,
-                borderRadius: 1.5
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                p: 3,
+                '&:last-child': { pb: 3 },
+                width: '100%',
               }}
             >
-              <stat.icon sx={{ color: stat.iconColor, fontSize: 24 }} />
-            </Avatar>
-          </CardContent>
-        </Card>
+              <Box>
+                <Typography
+                  variant="body2"
+                  sx={{ color: 'text.secondary', mb: 0.5 }}
+                >
+                  {stat.title}
+                </Typography>
+                <Typography
+                  variant="h3"
+                  sx={{ fontWeight: 600, color: 'text.primary', mb: 0.5 }}
+                >
+                  {stat.value}
+                </Typography>
+                <Typography
+                  variant="body2"
+                  sx={{ color: '#388e3c' }}
+                >
+                  {stat.change}
+                </Typography>
+              </Box>
+
+              <Avatar
+                sx={{
+                  width: 48,
+                  height: 48,
+                  backgroundColor: stat.iconBg,
+                  borderRadius: 1.5
+                }}
+              >
+                <stat.icon sx={{ color: stat.iconColor, fontSize: 24 }} />
+              </Avatar>
+            </CardContent>
+          </Card>
+        </Box>
       ))}
     </Box>
   );
