@@ -3,10 +3,11 @@ import { useState, useEffect } from "react";
 import { CompanyProfile } from "../components/CompanyProfile";
 import { CVSubmissions } from "../components/CVSubmissions";
 import { StatsCards } from "../components/StatsCards";
-import { getCompanyById } from "../services/companyService"; // נניח שזה המקום של הפונקציה
+import { getCompanyById } from "../services/companyService";
+import { Box, CircularProgress } from "@mui/material";  // <-- ייבוא CircularProgress
 
 export default function CompanyPage() {
-  const { id: companyId } = useParams(); // קבלת companyId מכתובת ה-URL
+  const { id: companyId } = useParams();
   const [company, setCompany] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -28,7 +29,13 @@ export default function CompanyPage() {
       });
   }, [companyId]);
 
-  if (loading) return <div>Loading company data...</div>;
+  if (loading) 
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 6 }}>
+        <CircularProgress />
+      </Box>
+    );
+
   if (error) return <div>Error: {error}</div>;
 
   return (
