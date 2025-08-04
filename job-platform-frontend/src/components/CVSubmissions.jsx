@@ -96,7 +96,7 @@ export function CVSubmissions() {
 
       <Divider />
 
-      <Box sx={{ p: 3 }}>
+      <Box sx={{ p: 3 , paddingTop: 0}}>
         <Box>
           {submissions.map((submission, index) => (
             <CVSubmissionItem key={index} candidate={submission} />

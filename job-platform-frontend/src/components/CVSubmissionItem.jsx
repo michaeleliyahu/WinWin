@@ -27,7 +27,7 @@ export function CVSubmissionItem({ candidate }) {
   const fileTypeStyle = getFileTypeColor(candidate.fileType);
 
   return (
-    <Box>
+    <Box sx={{}}>
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', py: 2 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
           <Avatar
@@ -42,11 +42,25 @@ export function CVSubmissionItem({ candidate }) {
           </Avatar>
           
           <Box sx={{ flex: 1 }}>
-            <Typography variant="body1" sx={{ fontWeight: 500, color: 'text.primary', mb: 0.5 }}>
+            <Typography variant="body1" sx={{ fontWeight: 500, color: 'text.primary', mb: 0.5, marginBottom: 0  }}>
               {candidate.name}
             </Typography>
-            <Typography variant="body2" sx={{ color: 'text.secondary', mb: 0.5 }}>
-              {candidate.role}
+            <Typography
+              variant="body2"
+              component="a"
+              href={candidate.role}
+              target="_blank"
+              rel="noopener noreferrer"
+              sx={{
+                color: 'primary.main',
+                textDecoration: 'underline',
+                mb: 0.5,
+                '&:hover': {
+                  textDecoration: 'none',
+                },
+              }}
+            >
+              View Job Posting
             </Typography>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
               <Typography variant="caption" sx={{ color: 'text.secondary' }}>
