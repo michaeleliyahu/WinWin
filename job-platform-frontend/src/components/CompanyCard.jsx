@@ -2,7 +2,8 @@ import { useState } from "react";
 import { updateUserCompany } from "../services/userService"; 
 import { incrementUsers } from "../services/companyService";
 import ResumeDialog from "./SubmitResume";
-  
+import { useUserStore } from "../store/useUserStore";
+
 import {
   Card,
   CardContent,
@@ -20,7 +21,8 @@ export function CompanyCard({ company: initialCompany, onClick }) {
 
     const [company, setCompany] = useState(initialCompany);
     const [openResumeDialog, setOpenResumeDialog] = useState(false);
-  
+    const updateUserCompanyId = useUserStore(state => state.updateUserCompanyId);
+
     const handleJoinCompany = async (e) => {
       e.stopPropagation();
   
@@ -34,6 +36,9 @@ export function CompanyCard({ company: initialCompany, onClick }) {
         ...prev,
         users: (prev.users || 0) + 1
       }));
+
+      updateUserCompanyId(company._id);
+
       } catch (error) {
         console.error("error on update user", error);
       }
