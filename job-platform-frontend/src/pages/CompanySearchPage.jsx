@@ -30,7 +30,7 @@ export function CompanySearchPage() {
       } catch (err) {
         console.error("שגיאה בשליפת חברות", err);
       } finally {
-        setLoading(false);
+        setLoading(false); // סיום טעינה
       }
     };
     fetchCompanies();
@@ -125,18 +125,24 @@ const handleCardClick = (company) => {
           </Box>
         ) : (
           <>
-            <Grid container spacing={3}>
-              {filteredCompanies.map((company, index) => (
-                <Grid item xs={12} sm={6} md={4} key={index}>
-                  <CompanyCard
-                    key={company._id}
-                    company={company}
-                    onClick={() => handleCardClick(company)}
-                  />
-                </Grid>
+            <Grid container spacing={3} sx={{ gap: '0' }}>
+              {filteredCompanies.map((company) => (
+                <Box
+                  key={company._id}
+                  sx={{
+                    width: {
+                      xs: '100%',      
+                      sm: '50%',       
+                      md: '33.33%',    
+                    },
+                    padding: 1,
+                    boxSizing: 'border-box',
+                  }}
+                >
+                  <CompanyCard company={company} onClick={() => handleCardClick(company)} />
+                </Box>
               ))}
             </Grid>
-
             {/* No Results Message */}
             {filteredCompanies.length === 0 && (
               <Box sx={{ textAlign: 'center', mt: 6 }}>

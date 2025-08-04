@@ -54,7 +54,6 @@ export function CompanyCard({ company: initialCompany, onClick }) {
         height: '100%',
         border: '1px solid #e0e0e0',
         borderRadius: 2,
-        maxWidth: 350,
         transition: 'all 0.2s ease-in-out',
         '&:hover': {
           boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
