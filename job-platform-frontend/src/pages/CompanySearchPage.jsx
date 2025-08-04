@@ -21,41 +21,38 @@ export function CompanySearchPage() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  // קריאה לכל החברות
   useEffect(() => {
     const fetchCompanies = async () => {
-      setLoading(true); // התחלת טעינה
+      setLoading(true);
       try {
         const all = await getAllCompanies();
         setCompanies(all);
       } catch (err) {
         console.error("שגיאה בשליפת חברות", err);
       } finally {
-        setLoading(false); // סיום טעינה
+        setLoading(false);
       }
     };
     fetchCompanies();
   }, []);
 
-  // מעבר לדף חברה
-  const handleCardClick = (company) => {
-    const token = localStorage.getItem("token");
+const handleCardClick = (company) => {
+  const token = localStorage.getItem("token");
 
-    if (!token) {
-      navigate("/login", {
-        state: { redirectTo: `/company/${company._id}`, company },
-      });
-      return;
-    }
+  if (!token) {
+    navigate("/login", {
+      state: { redirectTo: `/company/${company._id}` },
+    });
+    return;
+  }
 
-    navigate(`/company/${company._id}`, { state: { company } });
-  };
+  navigate(`/company/${company._id}`);
+};
 
-  // יצירת חברה חדשה בהזנת טקסט ולחיצה על Enter
   const handleInputKeyDown = async (e) => {
     if (e.key === "Enter" && searchTerm.trim()) {
       e.preventDefault();
-      setLoading(true); // התחלת טעינה
+      setLoading(true);
       try {
         const newCompany = await createCompany({ name: searchTerm.trim() });
         setCompanies((prev) => [...prev, newCompany]);
@@ -63,7 +60,7 @@ export function CompanySearchPage() {
       } catch (err) {
         alert(err.message || "Failed to create company");
       } finally {
-        setLoading(false); // סיום טעינה
+        setLoading(false);
       }
     }
   };

@@ -1,19 +1,41 @@
-// import { useLocation, useParams } from "react-router-dom";
-import { useLocation} from "react-router-dom";
+import { useParams } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { CompanyProfile } from "../components/CompanyProfile";
 import { CVSubmissions } from "../components/CVSubmissions";
 import { StatsCards } from "../components/StatsCards";
-
+import { getCompanyById } from "../services/companyService"; // נניח שזה המקום של הפונקציה
 
 export default function CompanyPage() {
-  const location = useLocation();
-  const company = location.state?.company
+  const { id: companyId } = useParams(); // קבלת companyId מכתובת ה-URL
+  const [company, setCompany] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    if (!companyId) return;
+
+    setLoading(true);
+    getCompanyById(companyId)
+      .then((data) => {
+        setCompany(data);
+        setError(null);
+      })
+      .catch((err) => {
+        setError(err.message || "Error fetching company data");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [companyId]);
+
+  if (loading) return <div>Loading company data...</div>;
+  if (error) return <div>Error: {error}</div>;
+
   return (
     <div>
-      <CompanyProfile company={company}></CompanyProfile>
-      <StatsCards company={company}></StatsCards>
-      <CVSubmissions company={company}></CVSubmissions>
-
+      <CompanyProfile company={company} />
+      <StatsCards company={company} />
+      <CVSubmissions company={company} />
     </div>
   );
 }
