@@ -97,6 +97,7 @@ export default function App() {
       <Box 
       sx={{
         width: '80%',
+        maxWidth: '72rem',
         marginLeft: 'auto',
         marginRight: 'auto',
         paddingTop: '2rem',

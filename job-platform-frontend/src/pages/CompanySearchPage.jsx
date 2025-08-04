@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getAllCompanies, createCompany } from '../services/companyService';
-import { CircularProgress } from '@mui/material';
+import { Search } from '@mui/icons-material';
+import { CompanyCard } from '../components/CompanyCard';
 import {
   Container,
   Typography,
   TextField,
+  CircularProgress,
   InputAdornment,
   Grid,
   Box,
   Card
 } from '@mui/material';
-import { Search } from '@mui/icons-material';
-import { CompanyCard } from '../components/CompanyCard';
+
 
 export function CompanySearchPage() {
   const [companies, setCompanies] = useState([]);
@@ -121,24 +122,12 @@ export function CompanySearchPage() {
             />
           </Box>
         </Card>
-        <Grid container spacing={3}>
-          {filteredCompanies.map((company, index) => (
-            <Grid item xs={4} sm={6} md={4} key={index}>
-              <CompanyCard
-                key={company._id}
-                company={company}
-                onClick={() => handleCardClick(company)}
-              />
-            </Grid>
-          ))}
-        </Grid>
         {loading ? (
           <Box sx={{ display: 'flex', justifyContent: 'center', mt: 6 }}>
             <CircularProgress />
           </Box>
         ) : (
           <>
-            {/* Companies Grid */}
             <Grid container spacing={3}>
               {filteredCompanies.map((company, index) => (
                 <Grid item xs={12} sm={6} md={4} key={index}>

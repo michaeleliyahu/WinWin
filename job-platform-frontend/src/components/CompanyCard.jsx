@@ -54,7 +54,6 @@ export function CompanyCard({ company: initialCompany, onClick }) {
         height: '100%',
         border: '1px solid #e0e0e0',
         borderRadius: 2,
-        minWidth: 300,
         maxWidth: 350,
         transition: 'all 0.2s ease-in-out',
         '&:hover': {
@@ -129,13 +128,13 @@ export function CompanyCard({ company: initialCompany, onClick }) {
               color: 'text.secondary',
               mb: 3,
               flex: 1,
-              display: '-webkit-box',
-              WebkitLineClamp: 3,
+              display: '-webkit-box', 
+              WebkitLineClamp: 3, 
               WebkitBoxOrient: 'vertical',
-              overflow: 'hidden'
+              overflow: 'hidden',
+              display: { xs: 'none', sm: '-webkit-box' }
             }}
-          onClick={onClick}
-
+            onClick={onClick}
           >
             {company.description}
           </Typography>
@@ -150,7 +149,8 @@ export function CompanyCard({ company: initialCompany, onClick }) {
               backgroundColor: '#1976d2',
               '&:hover': { backgroundColor: '#1565c0' },
               textTransform: 'none',
-              flex: 1
+              flex: 1,
+              fontSize: { xs: '0.7rem', sm: '0.875rem' }
             }}
             onClick={handleJoinCompany}
           >
@@ -167,7 +167,8 @@ export function CompanyCard({ company: initialCompany, onClick }) {
                 borderColor: '#2e7d32'
               },
               textTransform: 'none',
-              flex: 1
+              flex: 1,
+              fontSize: { xs: '0.7rem', sm: '0.875rem' }
             }}
             onClick={handleOpenResumeDialog}
 
