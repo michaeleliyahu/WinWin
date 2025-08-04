@@ -8,39 +8,33 @@ import {
   TextField,
   IconButton,
   Typography,
-  MenuItem,
-  Select,
-  InputLabel,
-  FormControl,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { useState, useRef } from "react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { createApplication } from "../services/applicationService";
 
 export default function ResumeDialog({ open, onClose, company }) {
   const [file, setFile] = useState(null);
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [mobileNumber, setMobileNumber] = useState("");
-  const [email, setEmail] = useState("");
-  const [jobLink, setJobLink] = useState("");
   const [success, setSuccess] = useState(false);
 
-  const fileInputRef = useRef(null);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isValid },
+    reset,
+    watch,
+  } = useForm({ mode: "onChange" });
 
-  const handleSubmit = async (e) => {
-    e.stopPropagation();
-
-    if (!file) return;
-
+  const onSubmit = async (data) => {
     const formData = new FormData();
     formData.append("resume", file);
     formData.append("companyId", company._id);
-    formData.append("firstName", firstName);
-    formData.append("lastName", lastName);
-    formData.append("mobileNumber", mobileNumber);
-    formData.append("email", email);
-    formData.append("jobLink", jobLink);
+    formData.append("firstName", data.firstName);
+    formData.append("lastName", data.lastName);
+    formData.append("mobileNumber", data.mobileNumber);
+    formData.append("email", data.email);
+    formData.append("jobLink", data.jobLink);
 
     try {
       const user = JSON.parse(localStorage.getItem("user"));
@@ -48,19 +42,26 @@ export default function ResumeDialog({ open, onClose, company }) {
 
       await createApplication(formData);
       setSuccess(true);
+      reset();
+      setFile(null);
     } catch (error) {
-      console.error("error on update user", error);
+      console.error("error on submit application", error);
     }
   };
 
   const handleClose = () => {
     setSuccess(false);
+    reset();
+    setFile(null);
     onClose();
   };
 
   const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
+    const selected = e.target.files[0];
+    setFile(selected);
   };
+
+  const fileIsValid = !!file;
 
   if (!open) return null;
 
@@ -101,74 +102,93 @@ export default function ResumeDialog({ open, onClose, company }) {
         </IconButton>
       </DialogTitle>
       <DialogContent dividers>
-        <Box component="form" sx={{ mt: 1 }}>
+        <Box
+          component="form"
+          onSubmit={handleSubmit(onSubmit)}
+          sx={{ mt: 1 }}
+        >
           <TextField
             margin="dense"
-            label="First name"
-            type="text"
+              label={
+              <>
+                First name<Typography component="span" color="error">*</Typography>
+              </>
+            }
             fullWidth
-            variant="outlined"
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
-            required
+            {...register("firstName", { required: "First name is required" })}
+            error={!!errors.firstName}
+            helperText={errors.firstName?.message}
             sx={{ mb: 2 }}
           />
 
           <TextField
             margin="dense"
-            label="Last name"
-            type="text"
+            label={
+              <>
+                Last name<Typography component="span" color="error">*</Typography>
+              </>
+            }
             fullWidth
-            variant="outlined"
-            value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
-            required
+            {...register("lastName", { required: "Last name is required" })}
+            error={!!errors.lastName}
+            helperText={errors.lastName?.message}
             sx={{ mb: 2 }}
           />
 
           <TextField
             margin="dense"
-            label="Mobile phone number"
-            type="tel"
+            label={
+              <>
+                Mobile phone number<Typography component="span" color="error">*</Typography>
+              </>
+            }
             fullWidth
-            variant="outlined"
-            value={mobileNumber}
-            onChange={(e) => setMobileNumber(e.target.value)}
+            {...register("mobileNumber", {
+              required: "Mobile number is required",
+              pattern: {
+                value: /^\d{10}$/,
+                message: "Phone must be 10 digits",
+              },
+            })}
+            error={!!errors.mobileNumber}
+            helperText={errors.mobileNumber?.message}
             sx={{ mb: 2 }}
           />
 
-          <FormControl fullWidth margin="dense" sx={{ mb: 2 }}>
-            <InputLabel id="email-select-label" required>
-              Email address
-            </InputLabel>
-            <Select
-              labelId="email-select-label"
-              id="email-select"
-              value={email}
-              label="Email address"
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            >
-              <MenuItem value="">
-                <em>Select an option</em>
-              </MenuItem>
-              <MenuItem value="michaeleliyahu65@gmail.com">
-                michaeleliyahu65@gmail.com
-              </MenuItem>
-              <MenuItem value="mmyy605@gmail.com">mmyy605@gmail.com</MenuItem>
-            </Select>
-          </FormControl>
+          <TextField
+            margin="dense"
+            label={
+              <>
+                Email address<Typography component="span" color="error">*</Typography>
+              </>
+            }
+            fullWidth
+            {...register("email", {
+              required: "Email is required",
+              pattern: {
+                value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                message: "Invalid email format",
+              },
+            })}
+            error={!!errors.email}
+            helperText={errors.email?.message}
+            sx={{ mb: 2 }}
+          />
 
           <TextField
             margin="dense"
-            label="Job Link"
-            type="url"
+            label={
+              <>
+                Job Link<Typography component="span" color="error">*</Typography>
+              </>
+            }
             fullWidth
-            variant="outlined"
-            value={jobLink}
-            onChange={(e) => setJobLink(e.target.value)}
+            {...register("jobLink", {
+              required: "Job link is required",
+            })}
+            error={!!errors.jobLink}
+            helperText={errors.jobLink?.message}
             sx={{ mb: 2 }}
-            placeholder="e.g., https://example.com/job-posting"
           />
 
           <Box
@@ -180,31 +200,42 @@ export default function ResumeDialog({ open, onClose, company }) {
             }}
           >
             <Button variant="contained" component="label">
-            Upload resume
-            <input
+              Upload resume
+              <input
                 type="file"
                 accept=".pdf,.doc,.docx"
                 onChange={handleFileChange}
-                style={{ display: "none" }}
-            />
+                hidden
+              />
             </Button>
+            {!fileIsValid && (
+              <Typography
+                variant="caption"
+                color="error"
+                sx={{ mt: 1 }}
+              >
+                Resume file is required<Typography component="span" color="error">*</Typography>
+              </Typography>
+            )}
             {file && (
               <Typography variant="body2" color="textSecondary" sx={{ mt: 1 }}>
                 Selected file: <strong>{file.name}</strong>
               </Typography>
             )}
-            <Typography variant="caption" color="textSecondary" sx={{ mt: 0.5 }}>
-              DOC, DOCX, PDF (2 MB)
-            </Typography>
           </Box>
+
+          <DialogActions sx={{ px: 0 }}>
+            <Button onClick={handleClose}>Cancel</Button>
+            <Button
+              type="submit"
+              variant="contained"
+              disabled={!isValid || !fileIsValid}
+            >
+              Submit
+            </Button>
+          </DialogActions>
         </Box>
       </DialogContent>
-      <DialogActions>
-        <Button onClick={handleClose}>Cancel</Button>
-        <Button variant="contained" onClick={handleSubmit} disabled={!file}>
-          Submit
-        </Button>
-      </DialogActions>
     </Dialog>
   );
 }
