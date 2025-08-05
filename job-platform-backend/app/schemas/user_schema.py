@@ -4,27 +4,22 @@ from .company_schema import CompanyOut
 
 
 class UserCreate(BaseModel):
-    firstName: str
-    lastName: str
+    fullName: str
     email: EmailStr
     password: str
-
 
 class UserLogin(BaseModel):
     email: EmailStr
     password: str
 
-
 class UserOut(BaseModel):
     id: str = Field(alias="_id")
-    firstName: str
-    lastName: str
+    fullName: str
     email: EmailStr
     authProvider: str
     googleId: Optional[str] = None
     companyId: Optional[str] = None
-    company: Optional[CompanyOut] = None
-
+    picture: Optional[str] = None
 
 class TokenUserResponse(BaseModel):
     access_token: str
@@ -32,6 +27,4 @@ class TokenUserResponse(BaseModel):
     user: UserOut
 
 class UserUpdate(BaseModel):
-    # name: Optional[str]
-    # email: Optional[str]
     companyId: Optional[str] = Field(None, alias="companyId")
