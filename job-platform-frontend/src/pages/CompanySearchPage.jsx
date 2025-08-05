@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getAllCompanies, createCompany } from '../services/companyService';
-
+import { Search } from '@mui/icons-material';
+import { CompanyCard } from '../components/CompanyCard';
 import {
   Container,
   Typography,
   TextField,
+  CircularProgress,
   InputAdornment,
   Grid,
   Box,
   Card
 } from '@mui/material';
-import { Search } from '@mui/icons-material';
-import { CompanyCard } from '../components/CompanyCard';
+
 
 export function CompanySearchPage() {
   const [companies, setCompanies] = useState([]);
@@ -22,28 +23,30 @@ export function CompanySearchPage() {
 
   useEffect(() => {
     const fetchCompanies = async () => {
+      setLoading(true);
       try {
         const all = await getAllCompanies();
         setCompanies(all);
       } catch (err) {
         console.error("שגיאה בשליפת חברות", err);
+      } finally {
+        setLoading(false); // סיום טעינה
       }
     };
     fetchCompanies();
   }, []);
 
 const handleCardClick = (company) => {
-  console.log("Navigating to company:", company);
   const token = localStorage.getItem("token");
 
   if (!token) {
     navigate("/login", {
-      state: { redirectTo: `/company/${company._id}`, company },
+      state: { redirectTo: `/company/${company._id}` },
     });
     return;
   }
 
-  navigate(`/company/${company._id}`, { state: { company } });
+  navigate(`/company/${company._id}`);
 };
 
   const handleInputKeyDown = async (e) => {
@@ -116,30 +119,42 @@ const handleCardClick = (company) => {
             />
           </Box>
         </Card>
-
-        {/* Companies Grid */}
-        <Grid container spacing={3}>
-          {filteredCompanies.map((company, index) => (
-            <Grid item xs={4} sm={6} md={4} key={index}>
-              <CompanyCard
-                key={company._id}
-                company={company}
-                onClick={() => handleCardClick(company)}
-              />
-            </Grid>
-          ))}
-        </Grid>
-
-        {/* No Results Message */}
-        {filteredCompanies.length === 0 && (
-          <Box sx={{ textAlign: 'center', mt: 6 }}>
-            <Typography variant="h6" sx={{ color: 'text.secondary', mb: 1 }}>
-              No companies found
-            </Typography>
-            <Typography variant="body1" sx={{ color: 'text.secondary' }}>
-              Try adjusting your search terms
-            </Typography>
+        {loading ? (
+          <Box sx={{ display: 'flex', justifyContent: 'center', mt: 6 }}>
+            <CircularProgress />
           </Box>
+        ) : (
+          <>
+            <Grid container spacing={3} sx={{ gap: '0' }}>
+              {filteredCompanies.map((company) => (
+                <Box
+                  key={company._id}
+                  sx={{
+                    width: {
+                      xs: '100%',      
+                      sm: '50%',       
+                      md: '33.33%',    
+                    },
+                    padding: 1,
+                    boxSizing: 'border-box',
+                  }}
+                >
+                  <CompanyCard company={company} onClick={() => handleCardClick(company)} />
+                </Box>
+              ))}
+            </Grid>
+            {/* No Results Message */}
+            {filteredCompanies.length === 0 && (
+              <Box sx={{ textAlign: 'center', mt: 6 }}>
+                <Typography variant="h6" sx={{ color: 'text.secondary', mb: 1 }}>
+                  No companies found
+                </Typography>
+                <Typography variant="body1" sx={{ color: 'text.secondary' }}>
+                  Try adjusting your search terms
+                </Typography>
+              </Box>
+            )}
+          </>
         )}
       </Container>
     </Box>

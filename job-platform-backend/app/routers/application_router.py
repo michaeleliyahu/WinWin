@@ -1,9 +1,11 @@
-from fastapi import Depends, UploadFile, File, APIRouter, status
+from fastapi import Depends, UploadFile, File, APIRouter, status, HTTPException
 from fastapi.responses import StreamingResponse, Response
 from app.schemas.application_schema import ApplicationForm
 from motor.motor_asyncio import  AsyncIOMotorGridFSBucket
 from app.services.application_service import insert_application, get_applications_by_company
 from app.db import db
+import gridfs 
+from bson import ObjectId
 
 fs = AsyncIOMotorGridFSBucket(db)
 
@@ -20,7 +22,16 @@ async def applications_for_company(company_id: str):
     return await get_applications_by_company(company_id)
 
     
-@router.get("/resume/{file_id}")
+@router.get("/application/resume/{file_id}")
 async def download_resume(file_id: str):
-    grid_out = await fs.open_download_stream(file_id)
-    return StreamingResponse(grid_out, media_type="application/octet-stream")
+    try:
+        object_id = ObjectId(file_id)
+    except Exception:
+        raise HTTPException(status_code=400, detail="Invalid file ID format")
+
+    try:
+        grid_out = await fs.open_download_stream(object_id)
+    except gridfs.errors.NoFile:
+        raise HTTPException(status_code=404, detail="File not found")
+
+    return StreamingResponse(grid_out, media_type="application/pdf")

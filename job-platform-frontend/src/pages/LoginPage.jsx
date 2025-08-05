@@ -9,7 +9,7 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const location = useLocation();
   const navigate = useNavigate();
-  const redirectTo = location.state?.redirectTo || "/HomePage";
+  const redirectTo = location.state?.redirectTo || "/";
 
   const handleSubmit = async (e) => {
     e.preventDefault();

@@ -12,12 +12,8 @@ import {
   Download
 } from '@mui/icons-material';
 import { getApplicationsByCompany } from '../services/applicationService';
-import { useLocation } from 'react-router-dom';
 
-export function CVSubmissions() {
-  const location = useLocation();
-  const company = location.state?.company;
-
+export function CVSubmissions({ company }) {
   const [submissions, setSubmissions] = useState([]);
 
   useEffect(() => {
@@ -27,14 +23,13 @@ export function CVSubmissions() {
       try {
         const data = await getApplicationsByCompany(company._id);
 
-        // התאמה למבנה של CVSubmissionItem
         const formatted = data.map(app => ({
           name: `${app.firstName} ${app.lastName}`,
           role: app.jobLink || "N/A",
           submittedTime: new Date(app.uploaded_at).toLocaleString(),
-          fileType: "PDF", // נניח PDF כל עוד אין מידע מדויק
-          fileSize: "—",   // אפשר להוסיף אם יש דרך לשלוף מה־GridFS
-          isHandled: false, // אפשר לשנות אם יש שדה כזה
+          fileType: "PDF",
+          fileSize: "—",
+          isHandled: false,
           avatar: app.firstName[0] + app.lastName[0] || "??",
           fileId: app.resume_file_id
         }));
@@ -46,7 +41,7 @@ export function CVSubmissions() {
     };
 
     fetchSubmissions();
-  }, [company]);
+  }, [company?._id]); 
 
   return (
     <Paper
@@ -96,7 +91,7 @@ export function CVSubmissions() {
 
       <Divider />
 
-      <Box sx={{ p: 3 }}>
+      <Box sx={{ p: 3 , paddingTop: 0}}>
         <Box>
           {submissions.map((submission, index) => (
             <CVSubmissionItem key={index} candidate={submission} />

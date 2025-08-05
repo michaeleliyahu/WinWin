@@ -1,6 +1,5 @@
 import React from 'react';
 import { 
-  Grid, 
   Card, 
   CardContent, 
   Typography, 
@@ -42,16 +41,31 @@ export function StatsCards() {
   ];
 
   return (
-    <Grid container spacing={3} sx={{ mb: 4, paddingTop: 2 }}>
+    <Box 
+      sx={{
+        display: 'flex',
+        flexWrap: 'wrap',
+        gap: 3,
+        mb: 4,
+        pt: 2,
+        justifyContent: 'center'
+      }}
+    >
       {stats.map((stat, index) => (
-        <Grid item xs={12} md={4} key={index}>
-          <Card 
+        <Box
+          key={index}
+          sx={{
+            flex: '1 1 300px', // גודל מינימלי + גמישות להתרחב
+            minWidth: 280,
+          }}
+        >
+          <Card
             elevation={0}
-            sx={{ 
+            sx={{
               p: 2,
               border: '1px solid #e0e0e0',
               borderRadius: 2,
-              
+              height: '100%',
             }}
           >
             <CardContent
@@ -61,7 +75,7 @@ export function StatsCards() {
                 alignItems: 'center',
                 p: 3,
                 '&:last-child': { pb: 3 },
-                width: '100%'  // מוסיף
+                width: '100%',
               }}
             >
               <Box>
@@ -96,10 +110,9 @@ export function StatsCards() {
                 <stat.icon sx={{ color: stat.iconColor, fontSize: 24 }} />
               </Avatar>
             </CardContent>
-
           </Card>
-        </Grid>
+        </Box>
       ))}
-    </Grid>
+    </Box>
   );
 }

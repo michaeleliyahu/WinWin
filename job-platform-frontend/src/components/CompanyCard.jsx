@@ -2,7 +2,8 @@ import { useState } from "react";
 import { updateUserCompany } from "../services/userService"; 
 import { incrementUsers } from "../services/companyService";
 import ResumeDialog from "./SubmitResume";
-  
+import { useUserStore } from "../store/useUserStore";
+
 import {
   Card,
   CardContent,
@@ -20,7 +21,8 @@ export function CompanyCard({ company: initialCompany, onClick }) {
 
     const [company, setCompany] = useState(initialCompany);
     const [openResumeDialog, setOpenResumeDialog] = useState(false);
-  
+    const updateUserCompanyId = useUserStore(state => state.updateUserCompanyId);
+
     const handleJoinCompany = async (e) => {
       e.stopPropagation();
   
@@ -34,6 +36,9 @@ export function CompanyCard({ company: initialCompany, onClick }) {
         ...prev,
         users: (prev.users || 0) + 1
       }));
+
+      updateUserCompanyId(company._id);
+
       } catch (error) {
         console.error("error on update user", error);
       }
@@ -54,8 +59,6 @@ export function CompanyCard({ company: initialCompany, onClick }) {
         height: '100%',
         border: '1px solid #e0e0e0',
         borderRadius: 2,
-        minWidth: 300,
-        maxWidth: 350,
         transition: 'all 0.2s ease-in-out',
         '&:hover': {
           boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
@@ -121,21 +124,18 @@ export function CompanyCard({ company: initialCompany, onClick }) {
               </Typography>
             </Box> */}
           </Box>
-
-          {/* Company Description */}
           <Typography
             variant="body2"
             sx={{
               color: 'text.secondary',
               mb: 3,
               flex: 1,
-              display: '-webkit-box',
-              WebkitLineClamp: 3,
+              WebkitLineClamp: 3, 
               WebkitBoxOrient: 'vertical',
-              overflow: 'hidden'
+              overflow: 'hidden',
+              display: { xs: 'none', sm: '-webkit-box' }
             }}
-          onClick={onClick}
-
+            onClick={onClick}
           >
             {company.description}
           </Typography>
@@ -150,7 +150,8 @@ export function CompanyCard({ company: initialCompany, onClick }) {
               backgroundColor: '#1976d2',
               '&:hover': { backgroundColor: '#1565c0' },
               textTransform: 'none',
-              flex: 1
+              flex: 1,
+              fontSize: { xs: '0.7rem', sm: '0.875rem' }
             }}
             onClick={handleJoinCompany}
           >
@@ -167,7 +168,8 @@ export function CompanyCard({ company: initialCompany, onClick }) {
                 borderColor: '#2e7d32'
               },
               textTransform: 'none',
-              flex: 1
+              flex: 1,
+              fontSize: { xs: '0.7rem', sm: '0.875rem' }
             }}
             onClick={handleOpenResumeDialog}
 
