@@ -12,7 +12,6 @@ import {
   Download
 } from '@mui/icons-material';
 import { getApplicationsByCompany } from '../services/applicationService';
-import { useLocation } from 'react-router-dom';
 
 export function CVSubmissions({ company }) {
   const [submissions, setSubmissions] = useState([]);

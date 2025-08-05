@@ -124,15 +124,12 @@ export function CompanyCard({ company: initialCompany, onClick }) {
               </Typography>
             </Box> */}
           </Box>
-
-          {/* Company Description */}
           <Typography
             variant="body2"
             sx={{
               color: 'text.secondary',
               mb: 3,
               flex: 1,
-              display: '-webkit-box', 
               WebkitLineClamp: 3, 
               WebkitBoxOrient: 'vertical',
               overflow: 'hidden',
