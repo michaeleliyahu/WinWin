@@ -11,10 +11,12 @@ export default function CompanyPage() {
   const [company, setCompany] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  // User state for reactivity (must be before any return)
+  const [user, setUser] = useState(() => JSON.parse(localStorage.getItem("user")));
+  const isCompanyOwner = user && user.companyId === companyId;
 
   useEffect(() => {
     if (!companyId) return;
-
     setLoading(true);
     getCompanyById(companyId)
       .then((data) => {
@@ -29,7 +31,14 @@ export default function CompanyPage() {
       });
   }, [companyId]);
 
-  if (loading) 
+  // Callback to update user after joining company
+  const handleUserCompanyUpdate = (companyId) => {
+    const updatedUser = { ...user, companyId };
+    localStorage.setItem("user", JSON.stringify(updatedUser));
+    setUser(updatedUser);
+  };
+
+  if (loading)
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', mt: 6 }}>
         <CircularProgress />
@@ -38,13 +47,9 @@ export default function CompanyPage() {
 
   if (error) return <div>Error: {error}</div>;
 
-  // Get current user from localStorage or global store
-  const user = JSON.parse(localStorage.getItem("user"));
-  const isCompanyOwner = user && user.companyId === companyId;
-
   return (
     <div>
-      <CompanyProfile company={company} />
+      <CompanyProfile company={company} onJoinCompany={handleUserCompanyUpdate} />
       <StatsCards company={company} />
       {isCompanyOwner && <CVSubmissions company={company} />}
     </div>
