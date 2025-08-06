@@ -90,21 +90,11 @@ export function Header() {
                 title="Logout"
               />
             ) : (
-              <Button
-                variant="outlined"
+              <Avatar
+                sx={{ width: 32, height: 32, cursor: 'pointer' }}
                 onClick={handleLogin}
-                sx={{
-                  textTransform: 'none',
-                  borderColor: '#1976d2',
-                  color: '#1976d2',
-                  '&:hover': {
-                    backgroundColor: '#e3f2fd',
-                    borderColor: '#1976d2'
-                  }
-                }}
-              >
-                Login
-              </Button>
+                title="Logout"
+              />
             )}
           </Box>
         </Toolbar>
