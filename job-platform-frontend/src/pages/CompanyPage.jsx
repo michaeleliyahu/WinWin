@@ -38,11 +38,15 @@ export default function CompanyPage() {
 
   if (error) return <div>Error: {error}</div>;
 
+  // Get current user from localStorage or global store
+  const user = JSON.parse(localStorage.getItem("user"));
+  const isCompanyOwner = user && user.companyId === companyId;
+
   return (
     <div>
       <CompanyProfile company={company} />
       <StatsCards company={company} />
-      <CVSubmissions company={company} />
+      {isCompanyOwner && <CVSubmissions company={company} />}
     </div>
   );
 }
