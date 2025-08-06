@@ -46,7 +46,6 @@ def get_clearbit_logo(company_name):
 
 
 async def create_company(company: CompanyCreate):
-    print(f"Creating company with data service: {company}")
 
     existing = await companies_collection.find_one({"name": company.name})
     if existing:
@@ -57,9 +56,7 @@ async def create_company(company: CompanyCreate):
         {"role": "user", "content": company.name}
     ]
     response = await ask_openai(context)
-    print(f"OpenAI response: {response}")   
 
-    # Parse the response string to a dict
     try:
         response_data = json.loads(response)
     except Exception:
@@ -68,7 +65,7 @@ async def create_company(company: CompanyCreate):
     # Get logo from Clearbit
     logo_url = get_clearbit_logo(company.name)
 
-    result = await companies_collection.insert_one({
+    company_doc = {
         "name": company.name,
         "description": response_data.get("description", ""),
         "long_description": response_data.get("long_description", ""),
@@ -80,9 +77,10 @@ async def create_company(company: CompanyCreate):
         "tagline": response_data.get("tagline", ""),
         "logo": logo_url,
         "users": 1
-    })
-    response_data["_id"] = str(result.inserted_id)
-    return response_data
+    }
+    result = await companies_collection.insert_one(company_doc)
+    company_doc["_id"] = str(result.inserted_id)
+    return company_doc
 
 
 async def get_all_companies():
