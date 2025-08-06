@@ -118,12 +118,19 @@ export default function LoginPage() {
     event.preventDefault();
     
     if (validateForm()) {
-      const data = await loginUser({ email: formData.email, password: formData.password });
-      setUser(data.user);
-      localStorage.setItem("token", data.access_token);
-      localStorage.setItem("token_type", data.token_type);
-      setSubmitMessage('Sign in successful! (This is a demo)');
-      navigate("/");
+      try {
+        const data = await loginUser({ email: formData.email, password: formData.password });
+        setUser(data.user);
+        localStorage.setItem("token", data.access_token);
+        localStorage.setItem("token_type", data.token_type);
+        navigate("/");
+      } catch (error) {
+        setSubmitMessage(
+          error?.response?.data?.detail ||
+          error?.message ||
+          "Login failed. Please check your credentials and try again."
+        );
+      }
     }
   };
 

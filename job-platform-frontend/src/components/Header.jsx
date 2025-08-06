@@ -44,7 +44,6 @@ export function Header() {
       });
       return;
     }
-
     navigate(`/company/${companyId}`);
   };
 
@@ -104,7 +103,7 @@ export function Header() {
                   }
                 }}
               >
-                Login / Sign Up
+                Login
               </Button>
             )}
           </Box>
