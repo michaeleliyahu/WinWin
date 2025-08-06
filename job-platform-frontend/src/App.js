@@ -11,7 +11,6 @@ import HomePage from './pages/HomePage';
 import { Route, Routes } from 'react-router-dom';
 import { Header } from './components/Header';
 import LoginPage from './pages/LoginPage';
-import LoginSuccess from './components/LoginSuccess';
 import RegisterPage from './pages/RegisterPage';
 // Create a custom theme to match the design
 const theme = createTheme({
@@ -105,7 +104,6 @@ export default function App() {
         <Routes>
           <Route path="/" element={<CompanySearchPage />} />
           <Route path="/Login" element={<LoginPage />} />
-          <Route path="/login-success" element={<LoginSuccess />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/company/:id" element={<CompanyPage />} />
         </Routes>
