@@ -1,5 +1,7 @@
 import { useState } from "react";
 import ResumeDialog from "./SubmitResume";
+import { useNavigate } from "react-router-dom";
+import { isTokenValid } from "../services/authUtils";
 
 import {
   Card,
@@ -18,10 +20,16 @@ export function CompanyCard({ company: initialCompany, onClick }) {
 
     const [company] = useState(initialCompany);
     const [openResumeDialog, setOpenResumeDialog] = useState(false);
+    const navigate = useNavigate();
 
   
   const handleOpenResumeDialog = (e) => {
     e.stopPropagation();
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (!isTokenValid() || !user) {
+      navigate("/login", { state: { redirectTo: "/" } });
+      return;
+    }
     setOpenResumeDialog(true);
   };
   

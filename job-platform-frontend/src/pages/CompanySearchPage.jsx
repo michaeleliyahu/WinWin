@@ -13,12 +13,14 @@ import {
   Box,
   Card
 } from '@mui/material';
+import { isTokenValid } from "../services/authUtils";
 
 
 export function CompanySearchPage() {
   const [companies, setCompanies] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(false);
+  const user = JSON.parse(localStorage.getItem("user"));
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -28,24 +30,19 @@ export function CompanySearchPage() {
         const all = await getAllCompanies();
         setCompanies(all);
       } catch (err) {
-        console.error("שגיאה בשליפת חברות", err);
+        console.error("error get all company", err);
       } finally {
-        setLoading(false); // סיום טעינה
+        setLoading(false); // End loading
       }
     };
     fetchCompanies();
   }, []);
 
 const handleCardClick = (company) => {
-  const token = localStorage.getItem("token");
-
-  if (!token) {
-    navigate("/login", {
-      state: { redirectTo: `/company/${company._id}` },
-    });
-    return;
-  }
-
+    if (!isTokenValid() || !user || !user._id) {
+      navigate(`/login`);
+      return;
+    }
   navigate(`/company/${company._id}`);
 };
 
@@ -81,8 +78,6 @@ const handleCardClick = (company) => {
               color: 'text.primary',
               mb: 4,
               fontSize: 'clamp(1.5rem, 4vw, 2.2rem)'
-
-            
             }}
           >
             Find Your Next Opportunity

@@ -14,18 +14,23 @@ import {
 import { updateUserCompany } from '../services/userService';
 import { incrementUsers } from '../services/companyService';
 import { useUserStore } from '../store/useUserStore';
+import { useNavigate } from "react-router-dom";
+import { isTokenValid } from "../services/authUtils";
 
 export function CompanyProfile({ company: initialCompany, onJoinCompany }) {
   const updateUserCompanyId = useUserStore(state => state.updateUserCompanyId);
   const [company, setCompany] = useState(initialCompany);
-  // Get user from localStorage
+  const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem("user"));
   const isCompanyOwner = user && user.companyId === company._id;
 
   const handleJoinCompany = async (e) => {
     e.stopPropagation();
+    if (!isTokenValid() || !user || !user._id) {
+      navigate(`/login`);
+      return;
+    }
     try {
-      const user = JSON.parse(localStorage.getItem("user"));
       const userId = user._id;
       await updateUserCompany(userId, { companyId: company._id });
       await incrementUsers(company._id);
