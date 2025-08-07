@@ -32,7 +32,7 @@ export function CompanySearchPage() {
       } catch (err) {
         console.error("error get all company", err);
       } finally {
-        setLoading(false); // End loading
+        setLoading(false); 
       }
     };
     fetchCompanies();
@@ -46,21 +46,34 @@ const handleCardClick = (company) => {
   navigate(`/company/${company._id}`);
 };
 
-  const handleInputKeyDown = async (e) => {
-    if (e.key === "Enter" && searchTerm.trim()) {
-      e.preventDefault();
-      setLoading(true);
-      try {
-        const newCompany = await createCompany({ name: searchTerm.trim() });
-        setCompanies((prev) => [...prev, newCompany]);
-        setSearchTerm("");
-      } catch (err) {
-        alert(err.message || "Failed to create company");
-      } finally {
-        setLoading(false);
+const handleInputKeyDown = async (e) => {
+  if (e.key === "Enter" && searchTerm.trim()) {
+    e.preventDefault();
+    const trimmed = searchTerm.trim().toLowerCase();
+
+    const existing = companies.find((c) =>
+      c.name.toLowerCase() === trimmed
+    );
+
+    if (existing) {
+      navigate(`/company/${existing._id}`);
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const newCompany = await createCompany({ name: searchTerm.trim() });
+      navigate(`/company/${newCompany._id}`);
+    } catch (err) {
+      setLoading(false); 
+      if (err.status === 404) {
+        alert("We couldn’t find this company online. Please check the name and try again.");
+      } else {
+        alert(err.detail || "Something went wrong.");
       }
     }
-  };
+  }
+};
 
   const filteredCompanies = companies.filter((company) =>
     company.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -142,10 +155,10 @@ const handleCardClick = (company) => {
             {filteredCompanies.length === 0 && (
               <Box sx={{ textAlign: 'center', mt: 6 }}>
                 <Typography variant="h6" sx={{ color: 'text.secondary', mb: 1 }}>
-                  No companies found
+                  Looks like no one added this company yet.
                 </Typography>
                 <Typography variant="body1" sx={{ color: 'text.secondary' }}>
-                  Try adjusting your search terms
+                  Press Enter to try a global search.
                 </Typography>
               </Box>
             )}
