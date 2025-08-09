@@ -3,41 +3,11 @@ from app.schemas.company_schema import CompanyCreate
 from fastapi import HTTPException
 from bson import ObjectId
 from .llmService import ask_openai
+from ..llm.prompts.searchCompany import agent_instructions
 import json
 import requests
 
 companies_collection = db["company"]
-
-agent_instructions = """
-## 🎯 Goal
-The user provides the name of a company. Your task is to check if the company exists and return relevant profile information.
-
-## ✅ If the company exists, return a JSON object with the following fields:
-{
-  "name": "<Company Name>",
-  "description": "<One-line description (min 110 characters, max 130 characters)>",
-  "long_description": "<Extended description (min 200 characters, max 300 characters)>",
-  "industry": "<Industry>",
-  "category": "<Product or Service Category>",
-  "branches_in_israel": "<City 1>,<City 2>,...",
-  "employees": "<Estimated number of employees, e.g., '1K–5K'>",
-  "followers": "<Approximate follower count, e.g., '340K'>",
-  "tagline": "<Short promotional sentence>"
-}
-
-## ❌ Strict Rules (Read Carefully):
-- ❗ You **MUST** return **only valid JSON** — no markdown, no bullet points, no prose or explanation.
-- ❗ You **MUST NOT** hallucinate. Only use real, verifiable data from reliable sources.
-- ❗ If the company does not exist or there is not enough accurate data, return exactly:
-  { "error": "Company not found or not enough data available." }
-
-## ⚠️ Warning:
-Failure to follow these rules — including returning invalid JSON, guessing unknown values, or adding extra explanation — will be considered a **critical error**. Always validate your output.
-
-## 📌 Output format:
-Return **only** valid JSON as specified above.
-"""
-
 
 def get_clearbit_logo(company_name):
     fallback_domain = company_name.replace(" ", "") + ".com"
@@ -46,29 +16,23 @@ def get_clearbit_logo(company_name):
 
 
 async def create_company(company: CompanyCreate):
-    print(f"Creating company with data service: {company}")
-
-    existing = await companies_collection.find_one({"name": company.name})
-    if existing:
-        raise HTTPException(status_code=400, detail="Company already exists")
-    
     context = [
         {"role": "system", "content": agent_instructions},
         {"role": "user", "content": company.name}
     ]
     response = await ask_openai(context)
-    print(f"OpenAI response: {response}")   
 
-    # Parse the response string to a dict
     try:
         response_data = json.loads(response)
     except Exception:
         raise HTTPException(status_code=500, detail="Invalid response from LLM")
 
-    # Get logo from Clearbit
+    if "error" in response_data:
+        raise HTTPException(status_code=404, detail="Company not found or not enough data available.")
+
     logo_url = get_clearbit_logo(company.name)
 
-    result = await companies_collection.insert_one({
+    company_doc = {
         "name": company.name,
         "description": response_data.get("description", ""),
         "long_description": response_data.get("long_description", ""),
@@ -80,9 +44,12 @@ async def create_company(company: CompanyCreate):
         "tagline": response_data.get("tagline", ""),
         "logo": logo_url,
         "users": 1
-    })
-    response_data["_id"] = str(result.inserted_id)
-    return response_data
+    }
+
+    result = await companies_collection.insert_one(company_doc)
+    company_doc["_id"] = str(result.inserted_id)
+    return company_doc
+
 
 
 async def get_all_companies():

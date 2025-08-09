@@ -13,6 +13,14 @@ userApi.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("token");
     if (token) {
+      // Check if token is expired
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const now = Math.floor(Date.now() / 1000);
+      if (payload.exp && payload.exp < now) {
+        localStorage.removeItem("token");
+        window.location.href = "/login";
+        throw new axios.Cancel("Token expired");
+      }
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;

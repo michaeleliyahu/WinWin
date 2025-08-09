@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   Box, 
   Typography, 
@@ -11,8 +11,42 @@ import {
   People, 
   Language 
 } from '@mui/icons-material';
+import { updateUserCompany } from '../services/userService';
+import { incrementUsers } from '../services/companyService';
+import { useUserStore } from '../store/useUserStore';
+import { useNavigate } from "react-router-dom";
+import { isTokenValid } from "../services/authUtils";
 
-export function CompanyProfile({ company }) {
+export function CompanyProfile({ company: initialCompany, onJoinCompany }) {
+  const updateUserCompanyId = useUserStore(state => state.updateUserCompanyId);
+  const [company, setCompany] = useState(initialCompany);
+  const navigate = useNavigate();
+  const user = JSON.parse(localStorage.getItem("user"));
+  const isCompanyOwner = user && user.companyId === company._id;
+
+  const handleJoinCompany = async (e) => {
+    e.stopPropagation();
+    if (!isTokenValid() || !user || !user._id) {
+      navigate(`/login`);
+      return;
+    }
+    try {
+      const userId = user._id;
+      await updateUserCompany(userId, { companyId: company._id });
+      await incrementUsers(company._id);
+      setCompany(prev => ({
+        ...prev,
+        users: (prev.users || 0) + 1
+      }));
+      updateUserCompanyId(company._id);
+      if (onJoinCompany) {
+        onJoinCompany(company._id);
+      }
+    } catch (error) {
+      console.error("error on update user", error);
+    }
+  };
+  
   return (
     <Paper 
       elevation={0}
@@ -53,17 +87,20 @@ export function CompanyProfile({ company }) {
               {company.long_description || "No description available."}
               </Typography>
             </Box>
-            <Button 
-              variant="contained" 
-              sx={{ 
-                backgroundColor: '#1976d2',
-                '&:hover': { backgroundColor: '#1565c0' },
-                textTransform: 'none',
-                fontWeight: 500
-              }}
-            >
-              Edit Profile
-            </Button>
+            {!isCompanyOwner && (
+              <Button 
+                variant="contained" 
+                sx={{ 
+                  backgroundColor: '#1976d2',
+                  '&:hover': { backgroundColor: '#1565c0' },
+                  textTransform: 'none',
+                  fontWeight: 500
+                }}
+                onClick={handleJoinCompany}
+              >
+                i work here
+              </Button>
+            )}
           </Box>
           
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>

@@ -12,7 +12,7 @@ companies_collection = db["company"]
 async def create_user(user: UserCreate):
     existing = await users_collection.find_one({"email": user.email})
     if existing:
-        raise HTTPException(status_code=400, detail="Email already registered")
+        raise HTTPException(status_code=400, detail="Email already registered. Please use a different email or sign in.")
 
     hashed_pwd = hash_password(user.password)
     user_dict = user.dict()
@@ -24,9 +24,7 @@ async def create_user(user: UserCreate):
     result = await users_collection.insert_one(user_dict)
     user_dict["_id"] = str(result.inserted_id)
 
-    # מחיקה של הסיסמה מהתגובה
     user_dict.pop("password")
-
     user_data = UserOut(**user_dict)
 
     token = create_access_token({"sub": user_dict["_id"]})
@@ -47,7 +45,6 @@ async def authenticate_user(user: UserLogin):
 
     db_user["_id"] = str(db_user["_id"])
 
-    company = None
     if db_user.get("companyId"):
         company_doc = await companies_collection.find_one({"_id": ObjectId(db_user["companyId"])})
         if company_doc:
@@ -61,6 +58,22 @@ async def authenticate_user(user: UserLogin):
         "token_type": "bearer",
         "user": user_data
     }
+
+
+async def get_user_by_id(user_id: str):
+    return await users_collection.find_one({"_id": ObjectId(user_id)})
+
+
+async def updateUserCompany(user_id: str, data: dict):
+    result = await users_collection.update_one(
+        {"_id": ObjectId(user_id)},
+        {"$set": data}
+    )
+    if result.matched_count == 0:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    return True
+
 
 
 async def authenticate_google_user(user_info: dict):
@@ -77,16 +90,13 @@ async def authenticate_google_user(user_info: dict):
         if user.get("authProvider") != "google":
             raise HTTPException(status_code=400, detail="Email already registered with password")
     else:
-        first_name = name.split(" ")[0] if name else ""
-        last_name = " ".join(name.split(" ")[1:]) if len(name.split(" ")) > 1 else ""
-
         user_data = {
-            "firstName": first_name,
-            "lastName": last_name,
+            "fullName": name,
             "email": email,
             "password": None,
             "authProvider": "google",
             "googleId": google_id,
+            "picture": user_info.get("picture"),
         }
         result = await users_collection.insert_one(user_data)
         user = user_data
@@ -108,20 +118,3 @@ async def authenticate_google_user(user_info: dict):
         "token_type": "bearer",
         "user": user_out
     }
-
-
-async def get_user_by_id(user_id: str):
-    return await users_collection.find_one({"_id": ObjectId(user_id)})
-
-
-async def updateUserCompany(user_id: str, data: dict):
-    result = await users_collection.update_one(
-        {"_id": ObjectId(user_id)},
-        {"$set": data}
-    )
-    if result.matched_count == 0:
-        raise HTTPException(status_code=404, detail="User not found")
-
-    return True
-
-

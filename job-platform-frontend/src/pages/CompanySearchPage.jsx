@@ -13,12 +13,14 @@ import {
   Box,
   Card
 } from '@mui/material';
+import { isTokenValid } from "../services/authUtils";
 
 
 export function CompanySearchPage() {
   const [companies, setCompanies] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(false);
+  const user = JSON.parse(localStorage.getItem("user"));
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -28,42 +30,50 @@ export function CompanySearchPage() {
         const all = await getAllCompanies();
         setCompanies(all);
       } catch (err) {
-        console.error("שגיאה בשליפת חברות", err);
+        console.error("error get all company", err);
       } finally {
-        setLoading(false); // סיום טעינה
+        setLoading(false); 
       }
     };
     fetchCompanies();
   }, []);
 
 const handleCardClick = (company) => {
-  const token = localStorage.getItem("token");
-
-  if (!token) {
-    navigate("/login", {
-      state: { redirectTo: `/company/${company._id}` },
-    });
-    return;
-  }
-
+    if (!isTokenValid() || !user || !user._id) {
+      navigate(`/login`);
+      return;
+    }
   navigate(`/company/${company._id}`);
 };
 
-  const handleInputKeyDown = async (e) => {
-    if (e.key === "Enter" && searchTerm.trim()) {
-      e.preventDefault();
-      setLoading(true);
-      try {
-        const newCompany = await createCompany({ name: searchTerm.trim() });
-        setCompanies((prev) => [...prev, newCompany]);
-        setSearchTerm("");
-      } catch (err) {
-        alert(err.message || "Failed to create company");
-      } finally {
-        setLoading(false);
+const handleInputKeyDown = async (e) => {
+  if (e.key === "Enter" && searchTerm.trim()) {
+    e.preventDefault();
+    const trimmed = searchTerm.trim().toLowerCase();
+
+    const existing = companies.find((c) =>
+      c.name.toLowerCase() === trimmed
+    );
+
+    if (existing) {
+      navigate(`/company/${existing._id}`);
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const newCompany = await createCompany({ name: searchTerm.trim() });
+      navigate(`/company/${newCompany._id}`);
+    } catch (err) {
+      setLoading(false); 
+      if (err.status === 404) {
+        alert("We couldn’t find this company online. Please check the name and try again.");
+      } else {
+        alert(err.detail || "Something went wrong.");
       }
     }
-  };
+  }
+};
 
   const filteredCompanies = companies.filter((company) =>
     company.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -81,8 +91,6 @@ const handleCardClick = (company) => {
               color: 'text.primary',
               mb: 4,
               fontSize: 'clamp(1.5rem, 4vw, 2.2rem)'
-
-            
             }}
           >
             Find Your Next Opportunity
@@ -147,10 +155,10 @@ const handleCardClick = (company) => {
             {filteredCompanies.length === 0 && (
               <Box sx={{ textAlign: 'center', mt: 6 }}>
                 <Typography variant="h6" sx={{ color: 'text.secondary', mb: 1 }}>
-                  No companies found
+                  Looks like no one added this company yet.
                 </Typography>
                 <Typography variant="body1" sx={{ color: 'text.secondary' }}>
-                  Try adjusting your search terms
+                  Press Enter to try a global search.
                 </Typography>
               </Box>
             )}

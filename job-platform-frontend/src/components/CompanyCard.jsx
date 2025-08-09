@@ -1,8 +1,7 @@
 import { useState } from "react";
-import { updateUserCompany } from "../services/userService"; 
-import { incrementUsers } from "../services/companyService";
 import ResumeDialog from "./SubmitResume";
-import { useUserStore } from "../store/useUserStore";
+import { useNavigate } from "react-router-dom";
+import { isTokenValid } from "../services/authUtils";
 
 import {
   Card,
@@ -19,33 +18,18 @@ import {
 
 export function CompanyCard({ company: initialCompany, onClick }) {
 
-    const [company, setCompany] = useState(initialCompany);
+    const [company] = useState(initialCompany);
     const [openResumeDialog, setOpenResumeDialog] = useState(false);
-    const updateUserCompanyId = useUserStore(state => state.updateUserCompanyId);
+    const navigate = useNavigate();
 
-    const handleJoinCompany = async (e) => {
-      e.stopPropagation();
-  
-      try {
-        const user = JSON.parse(localStorage.getItem("user"));
-        const userId = user._id;
-        await updateUserCompany(userId, { companyId: company._id });
-        await incrementUsers(company._id);
-  
-        setCompany(prev => ({
-        ...prev,
-        users: (prev.users || 0) + 1
-      }));
-
-      updateUserCompanyId(company._id);
-
-      } catch (error) {
-        console.error("error on update user", error);
-      }
-    };
   
   const handleOpenResumeDialog = (e) => {
     e.stopPropagation();
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (!isTokenValid() || !user) {
+      navigate("/login", { state: { redirectTo: "/" } });
+      return;
+    }
     setOpenResumeDialog(true);
   };
   
@@ -111,18 +95,6 @@ export function CompanyCard({ company: initialCompany, onClick }) {
                 👥 {company.users || 0} users
               </Typography>
             </Box>
-            {/* <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <Rating
-                value={company.rating}
-                precision={0.1}
-                size="small"
-                readOnly
-                sx={{ color: '#ffa726' }}
-              />
-              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                {company.rating} rating
-              </Typography>
-            </Box> */}
           </Box>
           <Typography
             variant="body2"
@@ -143,20 +115,7 @@ export function CompanyCard({ company: initialCompany, onClick }) {
 
         {/* Action Buttons */}
         <Box sx={{ display: 'flex', gap: 1, mt: 'auto' }}>
-          <Button
-            variant="contained"
-            size="small"
-            sx={{
-              backgroundColor: '#1976d2',
-              '&:hover': { backgroundColor: '#1565c0' },
-              textTransform: 'none',
-              flex: 1,
-              fontSize: { xs: '0.7rem', sm: '0.875rem' }
-            }}
-            onClick={handleJoinCompany}
-          >
-            I Work Here
-          </Button>
+
           <Button
             variant="outlined"
             size="small"
