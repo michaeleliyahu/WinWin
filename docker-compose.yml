@@ -2,30 +2,17 @@ version: "3.8"
 
 services:
   frontend:
-    build: ./job-platform-frontend # נתיב לתיקיית פרויקט ה-React שלך
+    build: ./job-platform-frontend
     ports:
       - "80:80"
-    volumes:
-      - ./job-platform-frontend:/app
-      - /app/node_modules
 
   backend:
-    build: ./job-platform-backend # נתיב לתיקיית פרויקט ה-FastAPI שלך
+    build: ./job-platform-backend
     ports:
       - "8000:8000"
     volumes:
       - ./job-platform-backend:/app
     env_file:
-      - ./job-platform-backend/.env # טוען את משתני הסביבה
+      - ./job-platform-backend/.env
     depends_on:
       - frontend
-
-  mongo:
-    image: mongo:latest
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongo-data:/data/db
-
-volumes:
-  mongo-data:
