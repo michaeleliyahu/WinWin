@@ -12,7 +12,7 @@ class Settings(BaseSettings):
     google_redirect_uri: str = Field(..., env="GOOGLE_REDIRECT_URI")
     jwt_secret: str = Field(..., env="JWT_SECRET")
     openAi_api_key: str = Field(..., env="OPENAI_API_KEY")
-
+    n8n_webhook_url: str = Field(..., env="N8N_WEBHOOK_URL")
 
     class Config:
         env_file = ".env"
