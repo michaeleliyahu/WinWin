@@ -7,7 +7,6 @@ import {
 } from '@mui/material';
 import { CompanySearchPage } from './pages/CompanySearchPage';
 import CompanyPage from './pages/CompanyPage';
-import HomePage from './pages/HomePage';
 import { Route, Routes } from 'react-router-dom';
 import { Header } from './components/Header';
 import LoginPage from './pages/LoginPage';
