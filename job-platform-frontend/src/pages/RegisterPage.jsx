@@ -138,7 +138,7 @@ export default function RegisterPage() {
   };
 
   const handleGoogleAuth = () => {
-    window.location.href = "http://localhost:8000/auth/google/login";
+    window.location.href = `${process.env.REACT_APP_API_URL}/auth/google/login`;
     setSubmitMessage('Google authentication would be implemented here (This is a demo)');
   };
 
