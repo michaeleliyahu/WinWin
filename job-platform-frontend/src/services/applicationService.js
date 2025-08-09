@@ -16,7 +16,6 @@ api.interceptors.request.use((config) => {
 
 export const createApplication = async (applicationData) => {
   try {
-    console.log("client:", applicationData);
     const res = await api.post("/", applicationData);
     return res.data;
   } catch (error) {

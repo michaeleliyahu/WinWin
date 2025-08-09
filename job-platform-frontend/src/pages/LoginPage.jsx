@@ -140,7 +140,6 @@ export default function LoginPage() {
 
   const handleForgotPassword = () => {
     setSubmitMessage('Password reset would be implemented here');
-    console.log('Forgot password clicked');
   };
 
   const togglePasswordVisibility = () => {
