@@ -80,10 +80,10 @@ const handleInputKeyDown = async (e) => {
   );
 
   return (
-    <Box sx={{ backgroundColor: '#f5f5f5', minHeight: '100vh', py: 4, paddingTop: '0rem' }}>
+    <Box sx={{ backgroundColor: '#f5f5f5', minHeight: '100vh', py: 4, paddingTop: '0rem' , p: 2}}>
       <Container maxWidth="xl">
         {/* Header Section */}
-        <Card sx={{ textAlign: 'center', mb: 6, paddingTop: 4, paddingBottom: 4 }}>
+        <Card sx={{ textAlign: 'center', paddingTop: 4, paddingBottom: 4 }}>
           <Typography
             variant="h3"
             sx={{
@@ -128,12 +128,12 @@ const handleInputKeyDown = async (e) => {
           </Box>
         </Card>
         {loading ? (
-          <Box sx={{ display: 'flex', justifyContent: 'center', mt: 6 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'center'}}>
             <CircularProgress />
           </Box>
         ) : (
           <>
-            <Grid container spacing={3} sx={{ gap: '0' }}>
+            <Grid container spacing={3} sx={{ gap: '0' , paddingTop: 2 }}>
               {filteredCompanies.map((company) => (
                 <Box
                   key={company._id}
@@ -143,7 +143,6 @@ const handleInputKeyDown = async (e) => {
                       sm: '50%',       
                       md: '33.33%',    
                     },
-                    padding: 1,
                     boxSizing: 'border-box',
                   }}
                 >

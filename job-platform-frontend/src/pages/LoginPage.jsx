@@ -153,7 +153,7 @@ export default function LoginPage() {
         sx={{
           minHeight: '100vh',
           display: 'flex',
-          alignItems: 'center',
+          alignItems: 'flex-start',
           justifyContent: 'center',
           bgcolor: '#f5f5f5',
           p: 2

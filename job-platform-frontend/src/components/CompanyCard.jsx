@@ -131,9 +131,9 @@ export function CompanyCard({ company: initialCompany, onClick }) {
               fontSize: { xs: '0.7rem', sm: '0.875rem' }
             }}
             onClick={handleOpenResumeDialog}
-
+s
           >
-            Submit Resume
+            Submit Application
           </Button>
         </Box>
       </CardContent>
