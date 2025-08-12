@@ -9,7 +9,6 @@ import {
 import { 
   LocationOn, 
   People, 
-  Language 
 } from '@mui/icons-material';
 import { updateUserCompany } from '../services/userService';
 import { incrementUsers } from '../services/companyService';

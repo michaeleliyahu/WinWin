@@ -47,7 +47,6 @@ async def get_all_companies():
     async for company in await find_all_companies():
         company["_id"] = str(company["_id"])
         companies.append(company)
-    print(f"Retrieved {len(companies)} companies from the database.")
     return companies
 
 

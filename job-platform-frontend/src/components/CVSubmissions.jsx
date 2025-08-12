@@ -7,10 +7,6 @@ import {
   Divider
 } from '@mui/material';
 import { CVSubmissionItem } from './CVSubmissionItem';
-import {
-  FilterList,
-  Download
-} from '@mui/icons-material';
 import { getApplicationsByCompany } from '../services/applicationService';
 
 export function CVSubmissions({ company }) {

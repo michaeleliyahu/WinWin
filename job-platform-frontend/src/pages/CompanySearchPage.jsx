@@ -4,7 +4,6 @@ import { getAllCompanies, createCompany } from '../services/companyService';
 import { Search } from '@mui/icons-material';
 import { CompanyCard } from '../components/CompanyCard';
 import {
-  Container,
   Typography,
   TextField,
   CircularProgress,

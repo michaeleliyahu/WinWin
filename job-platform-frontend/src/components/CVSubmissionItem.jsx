@@ -10,13 +10,11 @@ import {
   Typography, 
   Button, 
   Avatar,
-  Chip,
   Divider,
   Snackbar,
   Alert
 } from '@mui/material';
 import { 
-  Download, 
   Check, 
   Language 
 } from '@mui/icons-material';
@@ -24,7 +22,6 @@ import {
 export function CVSubmissionItem({ candidate }) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  // Local handled state so we can update UI immediately after success
   const [isHandled, setIsHandled] = useState(candidate.isHandled);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarError, setSnackbarError] = useState("");

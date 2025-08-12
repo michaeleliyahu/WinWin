@@ -28,7 +28,8 @@ export default function LoginSuccess() {
     }
 
     finalizeLogin();
-  }, [location, navigate]);
+    // redirectTo derived from location.state; included to satisfy exhaustive-deps
+  }, [location.search, location.state, navigate, redirectTo]);
 
   return <p>Signing in with Google...</p>;
 }
