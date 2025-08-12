@@ -27,7 +27,7 @@ export const createApplication = async (applicationData) => {
  */
 export const getApplicationsByCompany = async (companyId) => {
   try {
-    const res = await api.get(`/applications/company/${companyId}`);
+    const res = await api.get(`/company/${companyId}`);
     return res.data;
   } catch (error) {
     throw new Error(error.response?.data?.detail || "Failed to fetch applications");

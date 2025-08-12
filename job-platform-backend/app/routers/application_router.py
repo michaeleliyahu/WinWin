@@ -17,19 +17,22 @@ async def create_application(form: ApplicationForm = Depends(), resume: UploadFi
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
-@router.get("/applications/company/{company_id}")
+@router.get("/company/{company_id}")
 async def applications_for_company(company_id: str):
     return await get_applications_by_company(company_id)
 
     
-@router.get("/application/resume/{file_id}")
+@router.get("/resume/{file_id}")
 async def download_resume(file_id: str):
+    print("Fetching file with ID:", file_id)
     try:
         object_id = ObjectId(file_id)
+        print("Parsed ObjectId:", object_id)
     except Exception:
         raise HTTPException(status_code=400, detail="Invalid file ID format")
 
     try:
+        print("Fetching file with ID:", object_id)
         grid_out = await fs.open_download_stream(object_id)
     except gridfs.errors.NoFile:
         raise HTTPException(status_code=404, detail="File not found")

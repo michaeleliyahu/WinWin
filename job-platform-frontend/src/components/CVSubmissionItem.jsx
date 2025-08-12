@@ -22,17 +22,7 @@ import {
 export function CVSubmissionItem({ candidate }) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const getFileTypeColor = (fileType) => {
-    if (fileType.includes('PDF')) {
-      return { color: '#d32f2f', backgroundColor: '#ffebee' };
-    }
-    if (fileType.includes('DOCX')) {
-      return { color: '#1976d2', backgroundColor: '#e3f2fd' };
-    }
-    return { color: '#616161', backgroundColor: '#f5f5f5' };
-  };
 
-  const fileTypeStyle = getFileTypeColor(candidate.fileType);
 
   return (
     <Box sx={{}}>
