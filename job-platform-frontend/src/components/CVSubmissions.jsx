@@ -22,19 +22,7 @@ export function CVSubmissions({ company }) {
     const fetchSubmissions = async () => {
       try {
         const data = await getApplicationsByCompany(company._id);
-
-        const formatted = data.map(app => ({
-          name: `${app.firstName} ${app.lastName}`,
-          role: app.jobLink || "N/A",
-          submittedTime: new Date(app.uploaded_at).toLocaleString(),
-          fileType: "PDF",
-          fileSize: "—",
-          isHandled: false,
-          avatar: app.firstName[0] + app.lastName[0] || "??",
-          fileId: app.resume_file_id
-        }));
-
-        setSubmissions(formatted);
+        setSubmissions(data);
       } catch (err) {
         console.error("Failed to load applications:", err);
       }

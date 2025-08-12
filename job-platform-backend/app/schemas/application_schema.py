@@ -1,6 +1,7 @@
 from fastapi import Form
-from pydantic import EmailStr
-from typing import Annotated
+from pydantic import BaseModel, EmailStr, Field
+from typing import Optional
+from datetime import datetime
 
 class ApplicationForm:
     def __init__(
@@ -20,3 +21,19 @@ class ApplicationForm:
         self.jobLink = jobLink
         self.companyId = companyId
         self.userId = userId
+
+
+class ApplicationOut(BaseModel):
+    id: str = Field(alias="_id")
+    firstName: str
+    lastName: str
+    mobileNumber: str
+    email: EmailStr
+    jobLink: str
+    companyId: str
+    userId: str
+    resume_file_id: str
+    submit: bool
+    uploaded_at: datetime
+
+

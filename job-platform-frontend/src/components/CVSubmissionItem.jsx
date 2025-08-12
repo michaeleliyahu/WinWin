@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
-import { downloadResume } from "../services/applicationService";
+import { downloadResume, submitApplication } from "../services/applicationService";
 import { FaRegFileWord  } from "react-icons/fa";
 import { FaDownload } from "react-icons/fa6";
 import { BsFiletypePdf } from "react-icons/bs";
@@ -11,7 +11,9 @@ import {
   Button, 
   Avatar,
   Chip,
-  Divider
+  Divider,
+  Snackbar,
+  Alert
 } from '@mui/material';
 import { 
   Download, 
@@ -22,6 +24,31 @@ import {
 export function CVSubmissionItem({ candidate }) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  // Local handled state so we can update UI immediately after success
+  const [isHandled, setIsHandled] = useState(candidate.isHandled);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarError, setSnackbarError] = useState("");
+
+  // Assumes candidate.id contains the application id required by backend
+  const handleMarkHandled = async () => {
+    if (isHandled) return; // avoid duplicate calls
+    try {
+  // Better debug logging: log id separately and full object
+  console.log('Candidate object:', candidate);
+      const res = await submitApplication(candidate.id);
+      if (res?.success) {
+        setIsHandled(true);
+        setSnackbarError("");
+        setSnackbarOpen(true);
+      } else {
+        setSnackbarError("Failed to mark handled");
+        setSnackbarOpen(true);
+      }
+    } catch (e) {
+      setSnackbarError(e.message || "Failed to mark handled");
+      setSnackbarOpen(true);
+    }
+  };
 
 
   return (
@@ -89,7 +116,10 @@ export function CVSubmissionItem({ candidate }) {
           {isMobile ? (
             <>
               <FaDownload style={{ fontSize: '1.2rem', color: '#1976d2', cursor: 'pointer' }} onClick={() => downloadResume(candidate.fileId)} />
-              <Check sx={{ fontSize: '1.2rem', color: candidate.isHandled ? '#388e3c' : '#616161', ml: 1, cursor: 'pointer' }} />
+              <Check 
+                onClick={handleMarkHandled}
+                sx={{ fontSize: '1.2rem', color: isHandled ? '#388e3c' : '#616161', ml: 1, cursor: 'pointer' }} 
+              />
             </>
           ) : (
             <>
@@ -116,10 +146,11 @@ export function CVSubmissionItem({ candidate }) {
                 variant="outlined"
                 size="small"
                 startIcon={<Check />}
+                onClick={handleMarkHandled}
                 sx={{
-                  color: candidate.isHandled ? '#388e3c' : '#616161',
-                  borderColor: candidate.isHandled ? '#c8e6c9' : '#e0e0e0',
-                  backgroundColor: candidate.isHandled ? '#e8f5e8' : 'transparent',
+                  color: isHandled ? '#388e3c' : '#616161',
+                  borderColor: isHandled ? '#c8e6c9' : '#e0e0e0',
+                  backgroundColor: isHandled ? '#e8f5e8' : 'transparent',
                   minWidth: undefined,
                   px: 2,
                   '&:hover': {
@@ -130,13 +161,27 @@ export function CVSubmissionItem({ candidate }) {
                   textTransform: 'none',
                 }}
               >
-                Mark Handled
+                {isHandled ? 'Handled' : 'Mark Handled'}
               </Button>
             </>
           )}
         </Box>
       </Box>
       <Divider />
+      <Snackbar 
+        open={snackbarOpen} 
+        autoHideDuration={3000} 
+        onClose={() => setSnackbarOpen(false)}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert 
+          onClose={() => setSnackbarOpen(false)} 
+          severity={snackbarError ? 'error' : 'success'} 
+          sx={{ width: '100%' }}
+        >
+          {snackbarError || 'Application marked as handled'}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }

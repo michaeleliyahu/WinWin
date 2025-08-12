@@ -53,3 +53,12 @@ export const downloadResume = async (fileId) => {
     console.error("Failed to download resume:", err);
   }
 };
+
+export const submitApplication = async (applicationId) => {
+  try {
+    const res = await api.put(`/${applicationId}/submit`);
+    return res.data; // expected { success: true }
+  } catch (error) {
+    throw new Error(error.response?.data?.detail || "Failed to submit application");
+  }
+};
