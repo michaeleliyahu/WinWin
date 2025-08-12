@@ -41,28 +41,30 @@ export function StatsCards() {
   ];
 
   return (
-    <Box 
+    <Box
       sx={{
         display: 'flex',
         flexWrap: 'wrap',
-        gap: 3,
-        mb: 4,
-        pt: 2,
-        justifyContent: 'center'
+        gap: { xs: 2, sm: 3 },
+        mb: { xs: 2, sm: 4 },
+        pt: { xs: 1, sm: 2 },
+        justifyContent: 'center',
       }}
     >
       {stats.map((stat, index) => (
         <Box
           key={index}
           sx={{
-            flex: '1 1 300px', // גודל מינימלי + גמישות להתרחב
-            minWidth: 280,
+            flex: { xs: '1 1 100%', sm: '1 1 300px' },
+            minWidth: { xs: '90vw', sm: 280 },
+            maxWidth: { xs: '100vw', sm: 400 },
+            px: { xs: 0},
           }}
         >
           <Card
             elevation={0}
             sx={{
-              p: 2,
+              p: { xs: 1, sm: 2 },
               border: '1px solid #e0e0e0',
               borderRadius: 2,
               height: '100%',
@@ -73,27 +75,33 @@ export function StatsCards() {
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
-                p: 3,
-                '&:last-child': { pb: 3 },
+                p: { xs: 2, sm: 3 },
+                '&:last-child': { pb: { xs: 2, sm: 3 } },
                 width: '100%',
               }}
             >
               <Box>
                 <Typography
                   variant="body2"
-                  sx={{ color: 'text.secondary', mb: 0.5 }}
+                  sx={{ color: 'text.secondary', mb: { xs: 0.25, sm: 0.5 }, fontSize: { xs: 14, sm: 16 } }}
                 >
                   {stat.title}
                 </Typography>
                 <Typography
                   variant="h3"
-                  sx={{ fontWeight: 600, color: 'text.primary', mb: 0.5 }}
+                  sx={{
+                    fontWeight: 600,
+                    color: 'text.primary',
+                    mb: { xs: 0.25, sm: 0.5 },
+                    fontSize: { xs: '1rem', sm: '1.25rem' },
+                    lineHeight: 1.2,
+                  }}
                 >
                   {stat.value}
                 </Typography>
                 <Typography
                   variant="body2"
-                  sx={{ color: '#388e3c' }}
+                  sx={{ color: '#388e3c', fontSize: { xs: 13, sm: 15 } }}
                 >
                   {stat.change}
                 </Typography>
@@ -101,13 +109,14 @@ export function StatsCards() {
 
               <Avatar
                 sx={{
-                  width: 48,
-                  height: 48,
+                  width: { xs: 36, sm: 48 },
+                  height: { xs: 36, sm: 48 },
                   backgroundColor: stat.iconBg,
-                  borderRadius: 1.5
+                  borderRadius: 1.5,
+                  ml: { xs: 1, sm: 0 },
                 }}
               >
-                <stat.icon sx={{ color: stat.iconColor, fontSize: 24 }} />
+                <stat.icon sx={{ color: stat.iconColor, fontSize: { xs: 20, sm: 24 } }} />
               </Avatar>
             </CardContent>
           </Card>

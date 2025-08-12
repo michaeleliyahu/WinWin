@@ -6,6 +6,7 @@ db = client["job_platform"]
 users_collection = db["users"]
 companies_collection = db["companies"]
 conversation_collection = db["conversation"]
+applications_collection = db["applications"]
 
 def get_database():
     return db

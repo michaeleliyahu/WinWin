@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = process.env.REACT_APP_API_URL || "http://localhost:8000";
+const API_URL = process.env.REACT_APP_API_URL;
 
 const api = axios.create({
   baseURL: `${API_URL}/application`,  // שימוש נכון ב־template literal
@@ -16,7 +16,6 @@ api.interceptors.request.use((config) => {
 
 export const createApplication = async (applicationData) => {
   try {
-    console.log("client:", applicationData);
     const res = await api.post("/", applicationData);
     return res.data;
   } catch (error) {
@@ -28,7 +27,7 @@ export const createApplication = async (applicationData) => {
  */
 export const getApplicationsByCompany = async (companyId) => {
   try {
-    const res = await api.get(`/applications/company/${companyId}`);
+    const res = await api.get(`/company/${companyId}`);
     return res.data;
   } catch (error) {
     throw new Error(error.response?.data?.detail || "Failed to fetch applications");
@@ -52,5 +51,14 @@ export const downloadResume = async (fileId) => {
     window.URL.revokeObjectURL(url);
   } catch (err) {
     console.error("Failed to download resume:", err);
+  }
+};
+
+export const submitApplication = async (applicationId) => {
+  try {
+    const res = await api.put(`/${applicationId}/submit`);
+    return res.data; // expected { success: true }
+  } catch (error) {
+    throw new Error(error.response?.data?.detail || "Failed to submit application");
   }
 };

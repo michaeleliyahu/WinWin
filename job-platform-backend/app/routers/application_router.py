@@ -3,6 +3,7 @@ from fastapi.responses import StreamingResponse, Response
 from app.schemas.application_schema import ApplicationForm
 from motor.motor_asyncio import  AsyncIOMotorGridFSBucket
 from app.services.application_service import insert_application, get_applications_by_company
+from app.services.application_service import submit_application
 from app.db import db
 import gridfs 
 from bson import ObjectId
@@ -17,12 +18,17 @@ async def create_application(form: ApplicationForm = Depends(), resume: UploadFi
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
-@router.get("/applications/company/{company_id}")
+@router.get("/company/{company_id}")
 async def applications_for_company(company_id: str):
     return await get_applications_by_company(company_id)
 
+
+@router.put("/{application_id}/submit")
+async def update_application_submit(application_id: str):
+    return await submit_application(application_id)
+
     
-@router.get("/application/resume/{file_id}")
+@router.get("/resume/{file_id}")
 async def download_resume(file_id: str):
     try:
         object_id = ObjectId(file_id)

@@ -1,13 +1,17 @@
 from app.db import db
 from app.schemas.company_schema import CompanyCreate
 from fastapi import HTTPException
-from bson import ObjectId
 from .llmService import ask_openai
 from ..llm.prompts.searchCompany import agent_instructions
 import json
-import requests
-
-companies_collection = db["company"]
+from app.mappers.company_mapper import map_company_to_document
+from app.repositories.company_repository import (
+    insert_company,
+    find_all_companies,
+    delete_company_by_id,
+    increment_company_users,
+    find_company_by_id,
+)
 
 def get_clearbit_logo(company_name):
     fallback_domain = company_name.replace(" ", "") + ".com"
@@ -32,53 +36,36 @@ async def create_company(company: CompanyCreate):
 
     logo_url = get_clearbit_logo(company.name)
 
-    company_doc = {
-        "name": company.name,
-        "description": response_data.get("description", ""),
-        "long_description": response_data.get("long_description", ""),
-        "industry": response_data.get("industry", ""),
-        "category": response_data.get("category", ""),
-        "branches_in_israel": response_data.get("branches_in_israel", ""),
-        "employees": response_data.get("employees", ""),
-        "followers": response_data.get("followers", ""),
-        "tagline": response_data.get("tagline", ""),
-        "logo": logo_url,
-        "users": 1
-    }
+    company_doc = map_company_to_document(company, response_data, logo_url)
 
-    result = await companies_collection.insert_one(company_doc)
-    company_doc["_id"] = str(result.inserted_id)
+    inserted_id = await insert_company(company_doc)
+    company_doc["_id"] = inserted_id
     return company_doc
-
-
 
 async def get_all_companies():
     companies = []
-    async for company in companies_collection.find():
+    async for company in await find_all_companies():
         company["_id"] = str(company["_id"])
         companies.append(company)
     return companies
 
 
 async def delete_company(company_id: str):
-    result = await companies_collection.delete_one({"_id": ObjectId(company_id)})
-    if result.deleted_count == 0:
+    deleted = await delete_company_by_id(company_id)
+    if not deleted:
         raise HTTPException(status_code=404, detail="Company not found")
     return True
 
 
 async def increase_company_user_count(company_id: str):
-    result = await companies_collection.update_one(
-        {"_id": ObjectId(company_id)},
-        {"$inc": {"users": 0}}  # הגדלה בטוחה של השדה
-    )
-    if result.matched_count == 0:
+    updated = await increment_company_users(company_id, amount=0)
+    if not updated:
         raise HTTPException(status_code=404, detail="Company not found")
-    return await companies_collection.find_one({"_id": ObjectId(company_id)})
+    return await find_company_by_id(company_id)
 
 
 async def get_company_by_id(company_id: str):
-    company = await companies_collection.find_one({"_id": ObjectId(company_id)})
+    company = await find_company_by_id(company_id)
     if company:
         company["_id"] = str(company["_id"])
     return company

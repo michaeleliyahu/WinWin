@@ -94,13 +94,13 @@ export default function App() {
       <CssBaseline />
       <Header />
       <Box 
-      sx={{
-        width: '80%',
-        maxWidth: '72rem',
-        marginLeft: 'auto',
-        marginRight: 'auto',
-        paddingTop: '2rem',
-        }}>
+        sx={{
+          width: { xs: '100%', sm: '80%' },
+          maxWidth: { xs: '100%', sm: '72rem' },
+          marginLeft: 'auto',
+          marginRight: 'auto',
+        }}
+      >
         <Routes>
           <Route path="/" element={<CompanySearchPage />} />
           <Route path="/Login" element={<LoginPage />} />

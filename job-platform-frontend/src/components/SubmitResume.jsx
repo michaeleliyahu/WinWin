@@ -23,7 +23,6 @@ export default function ResumeDialog({ open, onClose, company }) {
     handleSubmit,
     formState: { errors, isValid },
     reset,
-    watch,
   } = useForm({ mode: "onChange" });
 
   const onSubmit = async (data) => {

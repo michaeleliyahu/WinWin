@@ -1,8 +1,10 @@
 let sessionId = null;
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 export async function sendMessage(prompt) {
   try {
-    const res = await fetch('http://localhost:8000/chat', {
+    const res = await fetch(`${API_URL}/chat`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ prompt, session_id: sessionId })

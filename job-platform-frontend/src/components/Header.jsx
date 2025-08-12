@@ -1,24 +1,19 @@
 import React, { useState } from 'react';
-import { useNavigate } from "react-router-dom";
-import {
-  AppBar,
-  Toolbar,
-  Box,
-  Typography,
-  Button,
-  Avatar,
-  Snackbar,
-  Alert
-} from '@mui/material';
-import { Check } from '@mui/icons-material';
+import { AppBar, Toolbar, Box, Typography, Button, Avatar, Drawer, List, ListItem, ListItemButton, ListItemText, IconButton } from '@mui/material';
+import { Check, Menu as MenuIcon } from '@mui/icons-material';
+import { useNavigate } from 'react-router-dom';
 import { useUserStore } from "../store/useUserStore";
 
 export function Header() {
   const navigate = useNavigate();
   const user = useUserStore((state) => state.user);
   const logout = useUserStore((state) => state.logout);
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const toggleDrawer = (open) => () => {
+    setDrawerOpen(open);
+  };
+
 
   const handleLogout = () => {
     logout();
@@ -33,11 +28,6 @@ export function Header() {
     const token = localStorage.getItem("token");
     const companyId = user?.companyId || user?.company?._id;
 
-    if (!companyId) {
-      setSnackbarOpen(true);
-      return;
-    }
-
     if (!token) {
       navigate("/login", {
         state: { redirectTo: `/company/${companyId}` },
@@ -47,27 +37,91 @@ export function Header() {
     navigate(`/company/${companyId}`);
   };
 
-  const handleSnackbarClose = () => {
-    setSnackbarOpen(false);
-  };
+  const navItems = [
+    { label: 'Companies', onClick: () => navigate('/') },
+    { label: 'Candidates', onClick: handleNavigateCandidates }
+  ];
 
   return (
     <>
-      <AppBar position="static" elevation={0} sx={{ backgroundColor: 'white', borderBottom: '1px solid #e0e0e0', color: 'text.primary' }}>
-        <Toolbar sx={{ justifyContent: 'space-between', px: 3, width: '80%', maxWidth: '72rem', margin: '0 auto' }}>
-          <Box onClick={() => navigate("/")} sx={{ display: 'flex', alignItems: 'center', gap: 1, cursor: 'pointer' }}>
-            <Box sx={{ width: 32, height: 32, backgroundColor: '#1976d2', borderRadius: 1.5, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+    <AppBar
+      position="sticky"
+      elevation={0}
+      sx={{
+        backgroundColor: 'white',
+        borderBottom: '1px solid #e0e0e0',
+        color: 'text.primary',
+        top: 0,
+        zIndex: (theme) => theme.zIndex.appBar,
+      }}
+    >
+      <Toolbar
+        sx={{
+          justifyContent: 'space-between',
+          px: { xs: 2, sm: 3 },
+          width: { xs: '100%', sm: '80%' },
+          maxWidth: { xs: '100%', sm: '72rem' },
+          margin: '0 auto',
+        }}
+      >
+        {/* Left side: hamburger + logo */}
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+          {/* Hamburger (mobile only) */}
+          <Box sx={{ display: { xs: 'flex', sm: 'none' } }}>
+            <IconButton onClick={toggleDrawer(true)}>
+              <MenuIcon />
+            </IconButton>
+          </Box>
+
+          {/* Logo */}
+          <Box
+            onClick={() => navigate('/')}
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 1,
+              cursor: 'pointer',
+            }}
+          >
+            <Box
+              sx={{
+                width: 32,
+                height: 32,
+                backgroundColor: '#1976d2',
+                borderRadius: 1.5,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
               <Check sx={{ color: 'white', fontSize: 16 }} />
             </Box>
-            <Typography variant="h6" sx={{ fontWeight: 500, color: 'text.primary' }}>
+            <Typography
+              variant="h6"
+              sx={{ fontWeight: 500, color: 'text.primary' }}
+            >
               JobConnect
             </Typography>
           </Box>
+        </Box>
 
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
+        {/* Right side: nav (desktop) + avatar */}
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+          {/* Desktop navigation */}
+          <Box
+            sx={{
+              display: { xs: 'none', sm: 'flex' },
+              alignItems: 'center',
+              gap: 2.5,
+            }}
+          >
             <Button
               color="inherit"
-              sx={{ color: 'text.secondary', '&:hover': { color: 'text.primary' }, textTransform: 'none' }}
+              sx={{
+                color: 'text.secondary',
+                '&:hover': { color: 'text.primary' },
+                textTransform: 'none',
+              }}
               onClick={() => navigate('/')}
             >
               Companies
@@ -75,41 +129,54 @@ export function Header() {
 
             <Button
               color="inherit"
-              sx={{ color: '#1976d2', fontWeight: 500, textTransform: 'none' }}
+              sx={{
+                color: '#1976d2',
+                fontWeight: 500,
+                textTransform: 'none',
+              }}
               onClick={handleNavigateCandidates}
             >
               Candidates
             </Button>
-
-            {user ? (
-              <Avatar
-                src={user.picture}
-                alt={user.name}
-                sx={{ width: 32, height: 32, cursor: 'pointer' }}
-                onClick={handleLogout}
-                title="Logout"
-              />
-            ) : (
-              <Avatar
-                sx={{ width: 32, height: 32, cursor: 'pointer' }}
-                onClick={handleLogin}
-                title="Logout"
-              />
-            )}
           </Box>
-        </Toolbar>
-      </AppBar>
 
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={4000}
-        onClose={handleSnackbarClose}
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+          {/* Avatar (always visible) */}
+          {user ? (
+            <Avatar
+              src={user.picture}
+              alt={user.name}
+              sx={{ width: 32, height: 32, cursor: 'pointer' }}
+              onClick={handleLogout}
+              title="Logout"
+            />
+          ) : (
+            <Avatar
+              sx={{ width: 32, height: 32, cursor: 'pointer' }}
+              onClick={handleLogin}
+              title="Login"
+            />
+          )}
+        </Box>
+      </Toolbar>
+    </AppBar>
+    <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer(false)}>
+      <Box
+        sx={{ width: 250 }}
+        role="presentation"
+        onClick={toggleDrawer(false)}
+        onKeyDown={toggleDrawer(false)}
       >
-        <Alert onClose={handleSnackbarClose} severity="warning" variant="filled" sx={{ width: '100%' }}>
-          You must select or create a company first
-        </Alert>
-      </Snackbar>
+        <List>
+          {navItems.map((item, index) => (
+            <ListItem key={index} disablePadding>
+              <ListItemButton onClick={item.onClick}>
+                <ListItemText primary={item.label} />
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </List>
+      </Box>
+    </Drawer>
     </>
   );
 }

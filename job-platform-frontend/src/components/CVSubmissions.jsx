@@ -7,10 +7,6 @@ import {
   Divider
 } from '@mui/material';
 import { CVSubmissionItem } from './CVSubmissionItem';
-import {
-  FilterList,
-  Download
-} from '@mui/icons-material';
 import { getApplicationsByCompany } from '../services/applicationService';
 
 export function CVSubmissions({ company }) {
@@ -22,19 +18,7 @@ export function CVSubmissions({ company }) {
     const fetchSubmissions = async () => {
       try {
         const data = await getApplicationsByCompany(company._id);
-
-        const formatted = data.map(app => ({
-          name: `${app.firstName} ${app.lastName}`,
-          role: app.jobLink || "N/A",
-          submittedTime: new Date(app.uploaded_at).toLocaleString(),
-          fileType: "PDF",
-          fileSize: "—",
-          isHandled: false,
-          avatar: app.firstName[0] + app.lastName[0] || "??",
-          fileId: app.resume_file_id
-        }));
-
-        setSubmissions(formatted);
+        setSubmissions(data);
       } catch (err) {
         console.error("Failed to load applications:", err);
       }
@@ -49,49 +33,48 @@ export function CVSubmissions({ company }) {
       sx={{
         borderRadius: 2,
         border: '1px solid #e0e0e0',
-        overflow: 'hidden'
+        overflow: 'hidden',
+        width: '100%',
+        // maxWidth: { xs: '100vw', sm: 700, md: 900 },
+        // mx: 'auto',
       }}
     >
-      <Box sx={{ p: 3 }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
-          <Typography variant="h5" sx={{ fontWeight: 600, color: 'text.primary' }}>
+      <Box sx={{ p: { xs: 2, sm: 3 } }}>
+        <Box sx={{
+          display: 'flex',
+          flexDirection: { xs: 'column', sm: 'row' },
+          alignItems: { xs: 'flex-start', sm: 'center' },
+          justifyContent: 'space-between',
+          mb: 1,
+          gap: { xs: 1, sm: 0 },
+        }}>
+          <Typography
+            variant="h5"
+            sx={{
+              fontWeight: 600,
+              color: 'text.primary',
+              fontSize: { xs: '1rem', sm: '1rem' },
+              maxWidth: { xs: '100%', sm: '70%' },
+            }}
+          >
             Recent CV Submissions
           </Typography>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Button
-              variant="outlined"
-              size="small"
-              startIcon={<FilterList />}
-              sx={{
-                color: 'text.secondary',
-                borderColor: '#e0e0e0',
-                textTransform: 'none'
-              }}
-            >
-              Filter
-            </Button>
-            <Button
-              variant="contained"
-              size="small"
-              startIcon={<Download />}
-              sx={{
-                backgroundColor: '#1976d2',
-                '&:hover': { backgroundColor: '#1565c0' },
-                textTransform: 'none'
-              }}
-            >
-              Export All
-            </Button>
-          </Box>
         </Box>
-        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+        <Typography
+          variant="body2"
+          sx={{
+            color: 'text.secondary',
+            fontSize: { xs: '0.9rem', sm: '0.9rem' },
+            maxWidth: '100%',
+          }}
+        >
           Manage and review candidate applications
         </Typography>
       </Box>
 
       <Divider />
 
-      <Box sx={{ p: 3 , paddingTop: 0}}>
+      <Box sx={{ p: { xs: 2, sm: 3 }, paddingTop: 0 }}>
         <Box>
           {submissions.map((submission, index) => (
             <CVSubmissionItem key={index} candidate={submission} />
@@ -108,7 +91,9 @@ export function CVSubmissions({ company }) {
                 backgroundColor: '#e3f2fd',
                 borderColor: '#90caf9'
               },
-              textTransform: 'none'
+              textTransform: 'none',
+              fontSize: { xs: '0.8rem', sm: '0.9rem' },
+              minWidth: 120,
             }}
           >
             Load More Applications

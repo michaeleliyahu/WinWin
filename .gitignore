@@ -34,6 +34,7 @@ job-platform-backend/*.sln.docstates
 
 # environment files
 job-platform-backend/.env
+.env*
 
 # Rider IDE files
 .idea/

@@ -4,7 +4,6 @@ import { getAllCompanies, createCompany } from '../services/companyService';
 import { Search } from '@mui/icons-material';
 import { CompanyCard } from '../components/CompanyCard';
 import {
-  Container,
   Typography,
   TextField,
   CircularProgress,
@@ -80,10 +79,9 @@ const handleInputKeyDown = async (e) => {
   );
 
   return (
-    <Box sx={{ backgroundColor: '#f5f5f5', minHeight: '100vh', py: 4, paddingTop: '0rem' }}>
-      <Container maxWidth="xl">
+    <Box sx={{ backgroundColor: '#f5f5f5', minHeight: '100vh', py: 4, paddingTop: '0rem' , p: 2}}>
         {/* Header Section */}
-        <Card sx={{ textAlign: 'center', mb: 6, paddingTop: 4, paddingBottom: 4 }}>
+        <Card sx={{ textAlign: 'center', paddingTop: 4, paddingBottom: 4 }}>
           <Typography
             variant="h3"
             sx={{
@@ -128,29 +126,22 @@ const handleInputKeyDown = async (e) => {
           </Box>
         </Card>
         {loading ? (
-          <Box sx={{ display: 'flex', justifyContent: 'center', mt: 6 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'center'}}>
             <CircularProgress />
           </Box>
         ) : (
           <>
-            <Grid container spacing={3} sx={{ gap: '0' }}>
-              {filteredCompanies.map((company) => (
-                <Box
-                  key={company._id}
-                  sx={{
-                    width: {
-                      xs: '100%',      
-                      sm: '50%',       
-                      md: '33.33%',    
-                    },
-                    padding: 1,
-                    boxSizing: 'border-box',
-                  }}
-                >
-                  <CompanyCard company={company} onClick={() => handleCardClick(company)} />
-                </Box>
-              ))}
-            </Grid>
+<Grid container spacing={3} sx={{ paddingTop: 2 }}>
+  {filteredCompanies.map((company) => (
+    <Grid
+      key={company._id}
+      size={{ xs: 12, sm: 6, md: 4 }} // הגדרת הגודל החדש
+      sx={{ boxSizing: 'border-box' }}
+    >
+      <CompanyCard company={company} onClick={() => handleCardClick(company)} />
+    </Grid>
+  ))}
+</Grid> 
             {/* No Results Message */}
             {filteredCompanies.length === 0 && (
               <Box sx={{ textAlign: 'center', mt: 6 }}>
@@ -164,7 +155,6 @@ const handleInputKeyDown = async (e) => {
             )}
           </>
         )}
-      </Container>
     </Box>
   );
 }

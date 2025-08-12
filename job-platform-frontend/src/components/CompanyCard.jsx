@@ -76,23 +76,25 @@ export function CompanyCard({ company: initialCompany, onClick }) {
           </Box>
 
           {/* Company Details */}
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, mb: 2 }}>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: { xs: 'row', sm: 'column' },
+              gap: { xs: 2, sm: 1 },
+              alignItems: { xs: 'center', sm: 'flex-start' },
+              justifyContent: { xs: 'flex-start', sm: 'initial' },
+            }}
+          >
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-              <LocationOn sx={{ fontSize: 16, color: 'text.secondary' }} />
-              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+              <LocationOn sx={{ fontSize: { xs: 14, sm: 16 }, color: 'text.secondary' }} />
+              <Typography variant="body2" sx={{ color: 'text.secondary', fontSize: { xs: '0.8rem', sm: '0.8rem' } }}>
                 {company.branches_in_israel}
               </Typography>
             </Box>
-            
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-              <People sx={{ fontSize: 16, color: 'text.secondary' }} />
-              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+              <People sx={{ fontSize: { xs: 14, sm: 16 }, color: 'text.secondary' }} />
+              <Typography variant="body2" sx={{ color: 'text.secondary', fontSize: { xs: '0.8rem', sm: '0.80rem' } }}>
                 {company.employees}
-              </Typography>
-            </Box>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                👥 {company.users || 0} users
               </Typography>
             </Box>
           </Box>
@@ -100,12 +102,13 @@ export function CompanyCard({ company: initialCompany, onClick }) {
             variant="body2"
             sx={{
               color: 'text.secondary',
-              mb: 3,
+              mt: 1,
+              mb: 1,
               flex: 1,
               WebkitLineClamp: 3, 
               WebkitBoxOrient: 'vertical',
               overflow: 'hidden',
-              display: { xs: 'none', sm: '-webkit-box' }
+              fontSize: { xs: '0.8rem', sm: '0.80rem' },
             }}
             onClick={onClick}
           >
@@ -131,9 +134,8 @@ export function CompanyCard({ company: initialCompany, onClick }) {
               fontSize: { xs: '0.7rem', sm: '0.875rem' }
             }}
             onClick={handleOpenResumeDialog}
-
           >
-            Submit Resume
+            Submit Application
           </Button>
         </Box>
       </CardContent>

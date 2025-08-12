@@ -135,12 +135,11 @@ export default function LoginPage() {
   };
 
   const handleGoogleAuth = () => {
-    window.location.href = "http://localhost:8000/auth/google/login";
+    window.location.href = `${process.env.REACT_APP_API_URL}/auth/google/login`;
   };
 
   const handleForgotPassword = () => {
     setSubmitMessage('Password reset would be implemented here');
-    console.log('Forgot password clicked');
   };
 
   const togglePasswordVisibility = () => {
@@ -154,7 +153,7 @@ export default function LoginPage() {
         sx={{
           minHeight: '100vh',
           display: 'flex',
-          alignItems: 'center',
+          alignItems: 'flex-start',
           justifyContent: 'center',
           bgcolor: '#f5f5f5',
           p: 2

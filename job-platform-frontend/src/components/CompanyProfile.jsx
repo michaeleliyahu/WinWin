@@ -9,7 +9,6 @@ import {
 import { 
   LocationOn, 
   People, 
-  Language 
 } from '@mui/icons-material';
 import { updateUserCompany } from '../services/userService';
 import { incrementUsers } from '../services/companyService';
@@ -48,83 +47,97 @@ export function CompanyProfile({ company: initialCompany, onJoinCompany }) {
   };
   
   return (
-    <Paper 
-      elevation={0}
-      sx={{ 
-        p: 3, 
-        backgroundColor: 'white',
-        borderBottom: '1px solid #e0e0e0'
+<Paper 
+  elevation={0}
+  sx={{ 
+    p: { xs: 2, sm: 3 }, // padding קטן במובייל, גדול יותר בדסקטופ
+    backgroundColor: 'white',
+    borderBottom: '1px solid #e0e0e0'
+  }}
+>
+  <Box 
+    sx={{ 
+      display: 'flex', 
+      flexDirection: { xs: 'column', sm: 'row' }, // בעמודה במובייל, בשורה בדסקטופ
+      alignItems: { xs: 'center', sm: 'flex-start' }, 
+      gap: { xs: 2, sm: 3 }
+    }}
+  >
+    <Avatar
+      src={company.logo}
+      sx={{
+        width: { xs: 48, sm: 64 },
+        height: { xs: 48, sm: 64 },
+        fontSize: { xs: 20, sm: 24 },
+        fontWeight: 600,
+        borderRadius: 2,
+        mb: { xs: 2, sm: 0 } // רווח תחתון במובייל כשהוא בעמודה
       }}
-    >
-      <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 3 }}>
-        <Avatar
-          src={company.logo}
-          sx={{
-            width: 64,
-            height: 64,
-            fontSize: 24,
-            fontWeight: 600,
-            borderRadius: 2
-          }}
-        >
-          T
-        </Avatar>
-        
-        <Box sx={{ flex: 1 }}>
-          <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', mb: 2 }}>
-            <Box>
-              <Typography variant="h4" sx={{ fontWeight: 600, color: 'text.primary', mb: 1 }}>
-                {company.name}
-              </Typography>
-              <Typography 
-                variant="body1" 
-                sx={{ 
-                  color: 'text.secondary', 
-                  maxWidth: '600px',
-                  lineHeight: 1.6 
-                }}
-              >
-              {company.long_description || "No description available."}
-              </Typography>
-            </Box>
-            {!isCompanyOwner && (
-              <Button 
-                variant="contained" 
-                sx={{ 
-                  backgroundColor: '#1976d2',
-                  '&:hover': { backgroundColor: '#1565c0' },
-                  textTransform: 'none',
-                  fontWeight: 500
-                }}
-                onClick={handleJoinCompany}
-              >
-                i work here
-              </Button>
-            )}
-          </Box>
-          
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-              <LocationOn sx={{ fontSize: 16, color: 'text.secondary' }} />
-              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                {company.branches_in_israel || company.location || ""}
-              </Typography>
-            </Box>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-              <People sx={{ fontSize: 16, color: 'text.secondary' }} />
-              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                {company.employees + " employees"}
-              </Typography>
-            </Box>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-              <Language sx={{ fontSize: 16, color: 'text.secondary' }} />
-              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                techflow.com
-              </Typography>
-            </Box>
-          </Box>
+    />
+
+    <Box sx={{ flex: 1, width: '100%' }}>
+      <Box 
+        sx={{ 
+          display: 'flex', 
+          flexDirection: { xs: 'column', sm: 'row' }, 
+          alignItems: { xs: 'flex-start', sm: 'flex-start' }, 
+          justifyContent: 'space-between', 
+          mb: 2,
+          gap: { xs: 1, sm: 0 }
+        }}
+      >
+        <Box>
+          <Typography variant="h4" sx={{ fontWeight: 600, color: 'text.primary', mb: 1, fontSize: { xs: '1.25rem', sm: '1.5rem' } }}>
+            {company.name}
+          </Typography>
+          <Typography 
+            variant="body1" 
+            sx={{ 
+              color: 'text.secondary', 
+              maxWidth: { xs: '100%', sm: '600px' },
+              lineHeight: 1.6,
+              fontSize: { xs: '0.875rem', sm: '1rem' }
+            }}
+          >
+            {company.long_description || "No description available."}
+          </Typography>
+        </Box>
+
+        {!isCompanyOwner && (
+          <Button 
+            variant="contained" 
+            sx={{ 
+              backgroundColor: '#1976d2',
+              '&:hover': { backgroundColor: '#1565c0' },
+              textTransform: 'none',
+              fontWeight: 500,
+              mt: { xs: 2, sm: 0 }, // רווח עליון במובייל כי בעמודה
+              alignSelf: { xs: 'flex-start', sm: 'center' }
+            }}
+            onClick={handleJoinCompany}
+          >
+            i work here
+          </Button>
+        )}
+      </Box>
+
+      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+          <LocationOn sx={{ fontSize: 16, color: 'text.secondary' }} />
+          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+            {company.branches_in_israel || company.location || ""}
+          </Typography>
+        </Box>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+          <People sx={{ fontSize: 16, color: 'text.secondary' }} />
+          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+            {company.employees + " employees"}
+          </Typography>
         </Box>
       </Box>
-    </Paper>
+    </Box>
+  </Box>
+</Paper>
+
   );
 }

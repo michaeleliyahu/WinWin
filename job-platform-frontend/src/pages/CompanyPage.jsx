@@ -48,10 +48,13 @@ export default function CompanyPage() {
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div>
+    <Box
+      sx={{
+        p: 2
+      }}>
       <CompanyProfile company={company} onJoinCompany={handleUserCompanyUpdate} />
       <StatsCards company={company} />
       {isCompanyOwner && <CVSubmissions company={company} />}
-    </div>
+    </Box>
   );
 }

@@ -20,4 +20,3 @@ class Settings(BaseSettings):
 
 
 settings = Settings()
-print("JWT Secret:", settings.jwt_secret)
