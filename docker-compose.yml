@@ -2,17 +2,17 @@ version: "3.8"
 
 services:
   frontend:
-    build: ./job-platform-frontend
+    build: ./frontend
     ports:
       - "80:80"
 
   backend:
-    build: ./job-platform-backend
+    build: ./backend
     ports:
       - "8000:8000"
     volumes:
-      - ./job-platform-backend:/app
+      - ./backend:/app
     env_file:
-      - ./job-platform-backend/.env
+      - ./backend/.env
     depends_on:
       - frontend
