@@ -1,12 +1,12 @@
 services:
   frontend:
-    build: ./job-platform-frontend
+    image: your-dockerhub-username/job-platform-frontend:latest
     ports:
       - "80:80"
 
   backend:
-    build: ./job-platform-backend
+    image: your-dockerhub-username/job-platform-backend:latest
     ports:
       - "8000:8000"
     env_file:
-      - ./job-platform-backend/.env
+      - .env
