@@ -12,18 +12,33 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # --- Frontend build ---
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Build frontend React
+        working-directory: ./job-platform-frontend
+        run: |
+          npm install
+          npm run build
+
+      # --- Docker login ---
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build frontend image
+      # --- Build & push frontend image ---
+      - name: Build & push frontend Docker image
         run: |
           docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/job-platform-frontend ./job-platform-frontend
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/job-platform-frontend
 
-      - name: Build backend image
+      # --- Build & push backend image ---
+      - name: Build & push backend Docker image
         run: |
           docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/job-platform-backend ./job-platform-backend
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/job-platform-backend
