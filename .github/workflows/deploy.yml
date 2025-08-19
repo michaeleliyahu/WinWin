@@ -55,5 +55,7 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             cd ~/WinWin
+            git pull
+            docker-compose down
             docker-compose pull
             docker-compose up -d
