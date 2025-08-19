@@ -1,14 +1,14 @@
 version: '3.8'
 services:
   frontend:
-    image: your-dockerhub-username/job-platform-frontend:latest
+    image: ${DOCKERHUB_USERNAME}/job-platform-frontend:latest
     ports:
       - "3000:80"
     networks:
       - app-network
 
   backend:
-    image: your-dockerhub-username/job-platform-backend:latest
+    image: ${DOCKERHUB_USERNAME}/job-platform-backend:latest
     ports:
       - "8000:8000"
     env_file:
