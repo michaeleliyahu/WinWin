@@ -4,10 +4,13 @@ services:
     image: michaeleliyahu/job-platform-frontend:latest
     ports:
       - "80:80"
+      - "443:443"        # <-- מוסיפים HTTPS
     depends_on:
       - backend
     networks:
       - app-network
+    volumes:
+      - /etc/letsencrypt:/etc/letsencrypt:ro   # <-- מחברים את התעודה מה-host ל-container
 
   backend:
     image: michaeleliyahu/job-platform-backend:latest
