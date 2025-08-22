@@ -12,7 +12,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # --- Frontend build ---
+      # --- Frontend build (on GitHub Actions) ---
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
@@ -34,14 +34,14 @@ jobs:
       # --- Build & push frontend image ---
       - name: Build & push frontend Docker image
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/job-platform-frontend ./job-platform-frontend
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/job-platform-frontend
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/job-platform-frontend:latest ./job-platform-frontend
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/job-platform-frontend:latest
 
       # --- Build & push backend image ---
       - name: Build & push backend Docker image
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/job-platform-backend ./job-platform-backend
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/job-platform-backend
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/job-platform-backend:latest ./job-platform-backend
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/job-platform-backend:latest
 
   deploy:
     needs: build-and-push
@@ -58,5 +58,5 @@ jobs:
             cd ~/WinWin
             git pull
             docker-compose down
-            docker-compose pull
+            docker-compose pull # pulls new images from Docker Hub
             docker-compose up -d
