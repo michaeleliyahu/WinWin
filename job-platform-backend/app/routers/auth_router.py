@@ -61,6 +61,6 @@ async def google_callback(request: Request):
     result = await authenticate_google_user(user_info)
 
     jwt_token = result["access_token"]
-    redirect_url = f"http://localhost:3000/login-success?token={jwt_token}"
+    redirect_url = f"{settings.frontend_url}/login-success?token={jwt_token}"
 
     return RedirectResponse(redirect_url)
