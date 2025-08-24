@@ -13,6 +13,7 @@ class Settings(BaseSettings):
     jwt_secret: str = Field(..., env="JWT_SECRET")
     openAi_api_key: str = Field(..., env="OPENAI_API_KEY")
     n8n_webhook_url: str = Field(..., env="N8N_WEBHOOK_URL")
+    frontend_url: str = Field(..., env="FRONTEND_URL")
 
     class Config:
         env_file = ".env"
