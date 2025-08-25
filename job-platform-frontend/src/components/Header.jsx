@@ -100,7 +100,7 @@ export function Header() {
               variant="h6"
               sx={{ fontWeight: 500, color: 'text.primary' }}
             >
-              JobConnect
+              RefeChain
             </Typography>
           </Box>
         </Box>
