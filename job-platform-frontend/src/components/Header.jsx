@@ -1,3 +1,4 @@
+import { ReactComponent as Logo } from '../assets/favicon/favicon.svg';
 import React, { useState } from 'react';
 import { AppBar, Toolbar, Box, Typography, Button, Avatar, Drawer, List, ListItem, ListItemButton, ListItemText, IconButton } from '@mui/material';
 import { Check, Menu as MenuIcon } from '@mui/icons-material';
@@ -87,20 +88,20 @@ export function Header() {
               sx={{
                 width: 32,
                 height: 32,
-                backgroundColor: '#1976d2',
+                backgroundColor: '#ffffffff',
                 borderRadius: 1.5,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
               }}
             >
-              <Check sx={{ color: 'white', fontSize: 16 }} />
+              <Logo style={{ height: 32, width: 32 }} />
             </Box>
             <Typography
               variant="h6"
               sx={{ fontWeight: 500, color: 'text.primary' }}
             >
-              JobConnect
+              RefeChain
             </Typography>
           </Box>
         </Box>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getAllCompanies, createCompany } from '../services/companyService';
-import { Search } from '@mui/icons-material';
+import { Search, Send } from '@mui/icons-material';
 import { CompanyCard } from '../components/CompanyCard';
 import {
   Typography,
@@ -10,7 +10,8 @@ import {
   InputAdornment,
   Grid,
   Box,
-  Card
+  Card,
+  IconButton
 } from '@mui/material';
 import { isTokenValid } from "../services/authUtils";
 
@@ -45,32 +46,38 @@ const handleCardClick = (company) => {
   navigate(`/company/${company._id}`);
 };
 
-const handleInputKeyDown = async (e) => {
-  if (e.key === "Enter" && searchTerm.trim()) {
+const handleSearch = async () => {
+  if (!searchTerm.trim()) return;
+
+  const trimmed = searchTerm.trim().toLowerCase();
+
+  const existing = companies.find((c) =>
+    c.name.toLowerCase() === trimmed
+  );
+
+  if (existing) {
+    navigate(`/company/${existing._id}`);
+    return;
+  }
+
+  setLoading(true);
+  try {
+    const newCompany = await createCompany({ name: searchTerm.trim() });
+    navigate(`/company/${newCompany._id}`);
+  } catch (err) {
+    setLoading(false); 
+    if (err.status === 404) {
+      alert("We couldn’t find this company online. Please check the name and try again.");
+    } else {
+      alert(err.detail || "Something went wrong.");
+    }
+  }
+};
+
+const handleInputKeyDown = (e) => {
+  if (e.key === "Enter") {
     e.preventDefault();
-    const trimmed = searchTerm.trim().toLowerCase();
-
-    const existing = companies.find((c) =>
-      c.name.toLowerCase() === trimmed
-    );
-
-    if (existing) {
-      navigate(`/company/${existing._id}`);
-      return;
-    }
-
-    setLoading(true);
-    try {
-      const newCompany = await createCompany({ name: searchTerm.trim() });
-      navigate(`/company/${newCompany._id}`);
-    } catch (err) {
-      setLoading(false); 
-      if (err.status === 404) {
-        alert("We couldn’t find this company online. Please check the name and try again.");
-      } else {
-        alert(err.detail || "Something went wrong.");
-      }
-    }
+    handleSearch();
   }
 };
 
@@ -105,7 +112,14 @@ const handleInputKeyDown = async (e) => {
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <Search sx={{ color: 'text.secondary'}} />
+                    <Search sx={{ color: 'text.secondary' }} />
+                  </InputAdornment>
+                ),
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton onClick={handleSearch}>
+                      <Send sx={{ color: '#1976d2' }} />
+                    </IconButton>
                   </InputAdornment>
                 ),
               }}
@@ -131,17 +145,17 @@ const handleInputKeyDown = async (e) => {
           </Box>
         ) : (
           <>
-<Grid container spacing={3} sx={{ paddingTop: 2 }}>
-  {filteredCompanies.map((company) => (
-    <Grid
-      key={company._id}
-      size={{ xs: 12, sm: 6, md: 4 }} // הגדרת הגודל החדש
-      sx={{ boxSizing: 'border-box' }}
-    >
-      <CompanyCard company={company} onClick={() => handleCardClick(company)} />
-    </Grid>
-  ))}
-</Grid> 
+          <Grid container spacing={3} sx={{ paddingTop: 2 }}>
+            {filteredCompanies.map((company) => (
+              <Grid
+                key={company._id}
+                size={{ xs: 12, sm: 6, md: 4 }} // הגדרת הגודל החדש
+                sx={{ boxSizing: 'border-box' }}
+              >
+                <CompanyCard company={company} onClick={() => handleCardClick(company)} />
+              </Grid>
+            ))}
+          </Grid> 
             {/* No Results Message */}
             {filteredCompanies.length === 0 && (
               <Box sx={{ textAlign: 'center', mt: 6 }}>
