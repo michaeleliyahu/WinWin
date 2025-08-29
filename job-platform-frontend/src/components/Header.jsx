@@ -1,7 +1,7 @@
 import { ReactComponent as Logo } from '../assets/favicon/favicon.svg';
 import React, { useState } from 'react';
 import { AppBar, Toolbar, Box, Typography, Button, Avatar, Drawer, List, ListItem, ListItemButton, ListItemText, IconButton } from '@mui/material';
-import { Check, Menu as MenuIcon } from '@mui/icons-material';
+import { Menu as MenuIcon } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useUserStore } from "../store/useUserStore";
 
